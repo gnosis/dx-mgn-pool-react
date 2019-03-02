@@ -24,7 +24,7 @@ const PoolData = ({
             <div className="poolInnerContainer">
                 {/* POOL 1 */}
                 <pre className="poolDataContainer data-pre-blue">
-                    <h4>- {DX_MGN_POOL.POOL1.DEPOSIT_TOKEN} [{DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL.toLowerCase()}] -</h4>
+                    <h4>- {DX_MGN_POOL.POOL1.DEPOSIT_TOKEN.toLowerCase()} [{DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL.toLowerCase()}] -</h4>
                     <p>Status: <strong>{DX_MGN_POOL.POOL1.CURRENT_STATE.toUpperCase()}</strong></p>
                     {DX_MGN_POOL.POOL1.POOLING_PERIOD_END !== DATA_LOAD_STRING && <p>Pooling End Time: <strong>{new Date(DX_MGN_POOL.POOL1.POOLING_PERIOD_END * 1000).toDateString()}</strong></p>}
                     <hr />
@@ -47,7 +47,7 @@ const PoolData = ({
                             '[WETH] You may need to sign up to 3 TXs [Wrap, Approve, Deposit]' : 
                             `[${DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL}] You may need to sign up to 2 TXs [Approve, Deposit]`
                         }
-                        title={`deposit [${DX_MGN_POOL.POOL1.DEPOSIT_TOKEN}]`}
+                        title={`deposit [${DX_MGN_POOL.POOL1.DEPOSIT_TOKEN.toLowerCase()}]`}
                         {...DX_MGN_POOL}
                     />
                     <Countdown POOLING_PERIOD_END={DX_MGN_POOL.POOL1.POOLING_PERIOD_END} />

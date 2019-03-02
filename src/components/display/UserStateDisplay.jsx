@@ -18,12 +18,12 @@ const UserStateDisplay = ({ NETWORK, USER, MGN_BALANCES }) =>
   <DataDisplayVisualContainer
     title="Connected Wallet"
     colour="salmon"
-    height={560}
+    height="45em"
     transition
   >
     {() =>
       <>
-        <h5>- Account + netWoRk -</h5>
+        <h5>- account + netWork -</h5>
         <p>ACCOUNT: {USER.ACCOUNT}</p>
         <p>NETWORK: {NETWORK}</p>
         <p>[ETH] BALANCE: {USER.BALANCE && USER.BALANCE}</p>
@@ -34,10 +34,10 @@ const UserStateDisplay = ({ NETWORK, USER, MGN_BALANCES }) =>
         <hr />
         <LockMGN 
           asyncAction={lockAllMgn}
-          buttonText="Lock"
+          buttonText="lock"
           forceDisable={MGN_BALANCES.BALANCE === DATA_LOAD_STRING || MGN_BALANCES.BALANCE <= 0}
           info="Lock all your MGN at the end of the Pooling period - button will automatically enable itself"
-          title="Lock Mgn Tokens"
+          title="lock mgn tokens"
         />
       </>
     }
