@@ -265,6 +265,7 @@ input[type="text"] {
     
     font-family: 'Permanent Marker', cursive;
     font-size: 1.8em;
+    letter-spacing: 5px;
     margin: 0.5em 0;
 }
 
@@ -302,6 +303,7 @@ input[type="text"] {
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
     
     position: fixed;
     background: linear-gradient(-45deg, #4c68c4, #72bbf7/* #e5a1fc */, #a2b2fe, #eec6fc);
