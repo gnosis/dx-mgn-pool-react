@@ -3,16 +3,15 @@
 
 body {
     font-family: 'Major Mono Display', monospace;
-    min-width: 500px;
     
     display: flex;
     min-height: 100vh;
-    font-size: 14px;
+    font-size: 24px;
+    margin: 0;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 736px) {
     body {
-        min-width: 300px;
         font-size: 22px;
     }
 }
@@ -64,13 +63,18 @@ li {
 pre {
     padding: 10px 20px;
     border-radius: 30px;
+    white-space: pre-wrap;
 }
 
 p {
-    font-size: 1.5em;
+    font-size: 1em;
 }
 
-h1 {
+pre > p > span.data-title {
+    font-size: 0.6em;
+}
+
+/* h1 {
     font-size: 3.5em;
 }
 
@@ -92,7 +96,7 @@ h5 {
 
 h6 {
     font-size: 0.6em;
-}
+} */
 
 
 pre.poolDataContainer > p {
@@ -130,11 +134,11 @@ button {
     
     display: inline-block;
     font-family: inherit;
-    font-size: 1.4em;
+    font-size: 0.8em;
     font-weight: 900;
 
     margin: 4px 2px;
-    padding: 6px 22px;
+    padding: 5px 17px;
     text-align: center;
     text-decoration: none;
 
@@ -155,7 +159,7 @@ button:hover {
 }
 
 input {
-    padding: 0.8em;
+    padding: 0.6em 0;
     margin-bottom: 1.4em;
     font-family: monospace;
     font-size: 16px;
@@ -239,7 +243,7 @@ input[disabled], input:disabled {
 
 .data-pre-info {
     background: lightyellow;
-    font-size: 0.7em;
+    font-size: 0.5em;
     font-weight: 600;
     text-align: center;
     white-space: pre-wrap;
@@ -281,7 +285,8 @@ input[type="text"] {
     padding: 5px;
     
     font-family: 'Permanent Marker', cursive;
-    font-size: 2.1em;
+    font-size: 1.8em;
+    margin: 0.5em 0;
 }
 
 /* .providerChoice:hover {
@@ -364,6 +369,7 @@ input[type="text"] {
     flex-flow: column nowrap;
     align-items: center;
     
+    margin-top: 0.65em;
     padding: 0 5px 15px;
     font-family: 'Major Mono Display', monospace
 }

@@ -7,7 +7,7 @@ import Countdown from './Countdown'
 import { TextInput } from '../controls/ControlledInput'
 
 import { withdrawMGNandDepositsFromAllPools } from '../../api'
-import { POOL_STATES, DATA_LOAD_STRING } from '../../globals'
+import { POOL_STATES/* , DATA_LOAD_STRING */ } from '../../globals'
 
 const DepositToken = AsyncActionsHOC(TextInput)
 const WithdrawMGNandDepositsFromBothPools = AsyncActionsHOC()
@@ -24,17 +24,18 @@ const PoolData = ({
             <div className="poolInnerContainer">
                 {/* POOL 1 */}
                 <pre className="poolDataContainer data-pre-blue">
-                    <h4>- {DX_MGN_POOL.POOL1.DEPOSIT_TOKEN.toLowerCase()} [{DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL.toLowerCase()}] -</h4>
-                    <p>Status: <strong>{DX_MGN_POOL.POOL1.CURRENT_STATE.toUpperCase()}</strong></p>
-                    {DX_MGN_POOL.POOL1.POOLING_PERIOD_END !== DATA_LOAD_STRING && <p>Pooling End Time: <strong>{new Date(DX_MGN_POOL.POOL1.POOLING_PERIOD_END * 1000).toDateString()}</strong></p>}
+                    <h3>{DX_MGN_POOL.POOL1.DEPOSIT_TOKEN.toLowerCase()} [{DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL.toLowerCase()}]</h3>
+                    <p><span className="data-title">STATUS:</span> <strong>{DX_MGN_POOL.POOL1.CURRENT_STATE.toUpperCase()}</strong></p>
+                    {/* {DX_MGN_POOL.POOL1.POOLING_PERIOD_END !== DATA_LOAD_STRING && 
+                        <p><span className="data-title">POOLING END TIME:</span> <strong>{new Date(DX_MGN_POOL.POOL1.POOLING_PERIOD_END * 1000).toDateString()}</strong></p>} */}
                     <hr />
-                    <p>TOTAL POOL SHARE: {DX_MGN_POOL.POOL1.TOTAL_SHARE}</p>
-                    <p>YOUR CONTRIBUTION: {DX_MGN_POOL.POOL1.YOUR_SHARE}</p>
+                    <p><span className="data-title">TOTAL POOL SHARE:</span> {DX_MGN_POOL.POOL1.TOTAL_SHARE}</p>
+                    <p><span className="data-title">YOUR CONTRIBUTION:</span> {DX_MGN_POOL.POOL1.YOUR_SHARE}</p>
                     <hr />
-                    <p>TOTAL CLAIMABLE MGN: {DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_MGN}</p>
-                    <p>TOTAL CLAIMABLE DEPOSIT: {DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_DEPOSIT}</p>
+                    <p><span className="data-title">TOTAL CLAIMABLE MGN:</span> {DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_MGN}</p>
+                    <p><span className="data-title">TOTAL CLAIMABLE DEPOSIT:</span> {DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_DEPOSIT}</p>
                     <hr />
-                    <p>[<strong>{DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL}</strong>] WALLET BALANCE: {DX_MGN_POOL.POOL1.TOKEN_BALANCE}</p>
+                    <p><span className="data-title">[<strong>{DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL}</strong>] WALLET BALANCE:</span> {DX_MGN_POOL.POOL1.TOKEN_BALANCE}</p>
 
                     <hr />
                     <DepositToken
@@ -54,17 +55,18 @@ const PoolData = ({
                 </pre>
                 {/* POOL 2 */}
                 <pre className="poolDataContainer data-pre-purple">
-                    <h4>- {DX_MGN_POOL.POOL1.SECONDARY_TOKEN} [{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL.toLowerCase()}] -</h4>
-                    <p>Status: <strong>{DX_MGN_POOL.POOL2.CURRENT_STATE.toUpperCase()}</strong></p>
-                    {DX_MGN_POOL.POOL2.POOLING_PERIOD_END !== DATA_LOAD_STRING && <p>Pooling End Time: <strong>{new Date(DX_MGN_POOL.POOL2.POOLING_PERIOD_END * 1000).toDateString()}</strong></p>}
+                    <h3>{DX_MGN_POOL.POOL1.SECONDARY_TOKEN} [{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL.toLowerCase()}]</h3>
+                    <p><span className="data-title">STATUS:</span> <strong>{DX_MGN_POOL.POOL2.CURRENT_STATE.toUpperCase()}</strong></p>
+                    {/* {DX_MGN_POOL.POOL2.POOLING_PERIOD_END !== DATA_LOAD_STRING && 
+                        <p><span className="data-title">POOLING END TIME:</span> <strong>{new Date(DX_MGN_POOL.POOL2.POOLING_PERIOD_END * 1000).toDateString()}</strong></p>} */}
                     <hr />
-                    <p>TOTAL POOL SHARE: {DX_MGN_POOL.POOL2.TOTAL_SHARE}</p>
-                    <p>YOUR CONTRIBUTION: {DX_MGN_POOL.POOL2.YOUR_SHARE}</p>
+                    <p><span className="data-title">TOTAL POOL SHARE:</span> {DX_MGN_POOL.POOL2.TOTAL_SHARE}</p>
+                    <p><span className="data-title">YOUR CONTRIBUTION:</span> {DX_MGN_POOL.POOL2.YOUR_SHARE}</p>
                     <hr />
-                    <p>TOTAL CLAIMABLE MGN: {DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_MGN}</p>
-                    <p>TOTAL CLAIMABLE DEPOSIT: {DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_DEPOSIT}</p>
+                    <p><span className="data-title">TOTAL CLAIMABLE MGN:</span> {DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_MGN}</p>
+                    <p><span className="data-title">TOTAL CLAIMABLE DEPOSIT:</span> {DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_DEPOSIT}</p>
                     <hr />
-                    <p>[<strong>{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL}</strong>] WALLET BALANCE: {DX_MGN_POOL.POOL2.TOKEN_BALANCE}</p>
+                    <p><span className="data-title">[<strong>{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL}</strong>] WALLET BALANCE:</span> {DX_MGN_POOL.POOL2.TOKEN_BALANCE}</p>
 
                     <hr />
                     <DepositToken

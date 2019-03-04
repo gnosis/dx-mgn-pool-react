@@ -18,19 +18,19 @@ const UserStateDisplay = ({ NETWORK, USER, MGN_BALANCES }) =>
   <DataDisplayVisualContainer
     title="Connected Wallet"
     colour="salmon"
-    height="45em"
+    height="28.2em"
     transition
   >
     {() =>
       <>
-        <h5>- account + netWork -</h5>
-        <p>ACCOUNT: {USER.ACCOUNT}</p>
-        <p>NETWORK: {NETWORK}</p>
-        <p>[ETH] BALANCE: {USER.BALANCE && USER.BALANCE}</p>
+        <h5>account & netWork</h5>
+        <p><span className="data-title">ACCOUNT:</span> {USER.ACCOUNT}</p>
+        <p><span className="data-title">NETWORK:</span> {NETWORK}</p>
+        <p><span className="data-title">[ETH] BALANCE:</span> {USER.BALANCE && USER.BALANCE}</p>
         <hr />
 
-        <h5>- mgn bAlances -</h5>
-        {Object.keys(MGN_BALANCES).map(key => <p key={key + Math.random()}>{key.toUpperCase().split('_').join(' ')}: {cleanDataFromWei(MGN_BALANCES[key])}</p>)}
+        <h5>mgn bAlances</h5>
+        {Object.keys(MGN_BALANCES).map(key => <p key={key + Math.random()}><span className="data-title">{key.toUpperCase().split('_').join(' ')}:</span> {cleanDataFromWei(MGN_BALANCES[key])}</p>)}
         <hr />
         <LockMGN 
           asyncAction={lockAllMgn}
