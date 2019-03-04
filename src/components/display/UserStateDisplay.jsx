@@ -24,7 +24,7 @@ const UserStateDisplay = ({ NETWORK, USER, MGN_BALANCES }) =>
     {() =>
       <>
         <h5>account & netWork</h5>
-        <p><span className="data-title">ACCOUNT:</span> <span title={USER.ACCOUNT}>{splitAddress(USER.ACCOUNT)}</span></p>
+        <p><span className="data-title">ACCOUNT:</span> <span title={USER.ACCOUNT}>{USER.ACCOUNT === DATA_LOAD_STRING ? DATA_LOAD_STRING : splitAddress(USER.ACCOUNT)}</span></p>
         <p><span className="data-title">NETWORK:</span> <strong>{NETWORK.toUpperCase()}</strong></p>
         <p><span className="data-title">[ETH] BALANCE:</span> {USER.BALANCE && USER.BALANCE}</p>
         <hr />
