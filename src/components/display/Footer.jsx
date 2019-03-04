@@ -9,7 +9,7 @@ const UserStateDisplay = () =>
   >
     {() =>
     <>
-        <h6 className="footerH">- dx-Mgn-pool interface -</h6>
+        <h6 className="footerH">dx-Mgn-pool Web</h6>
         <p className="footerP">APP VERSION: {version}</p>
         <p className="footerP">CONTRACTS VERSION: {dependencies['@gnosis.pm/dx-mgn-pool']}</p>
     </>
