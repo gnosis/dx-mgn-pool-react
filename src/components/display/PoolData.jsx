@@ -56,7 +56,7 @@ const PoolData = ({
                 </pre>
                 {/* POOL 2 */}
                 <pre className="poolDataContainer data-pre-purple">
-                    <h3>{DX_MGN_POOL.POOL1.SECONDARY_TOKEN} [{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL.toLowerCase()}]</h3>
+                    <h3>{DX_MGN_POOL.POOL1.SECONDARY_TOKEN.toLowerCase()} [{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL.toLowerCase()}]</h3>
                     <p><span className="data-title">STATUS:</span> <strong>{DX_MGN_POOL.POOL2.CURRENT_STATE.toUpperCase()}</strong></p>
                     {DX_MGN_POOL.POOL2.POOLING_PERIOD_END !== DATA_LOAD_STRING && 
                         <p><span className="data-title">POOLING END TIME:</span> <span className="data-date">{new Date(DX_MGN_POOL.POOL2.POOLING_PERIOD_END * 1000).toUTCString()}</span></p>}
