@@ -128,7 +128,7 @@ const shallowDifferent = (obj1, obj2) => {
 }
 
 const splitAddress = (addr) => {
-	const length = addr.length
+	const { length } = addr
 	return addr.slice(0, 6) + '...' + addr.slice(length - 4)
 }
 
