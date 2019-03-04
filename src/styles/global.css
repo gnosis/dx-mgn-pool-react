@@ -74,31 +74,6 @@ pre > p > span.data-title {
     font-size: 0.6em;
 }
 
-/* h1 {
-    font-size: 3.5em;
-}
-
-h2 {
-    font-size: 2.9em;
-}
-
-h3 {
-    font-size: 2.3em;
-}
-
-h4 {
-    font-size: 1.8em;
-}
-
-h5 {
-    font-size: 1.5em;
-}
-
-h6 {
-    font-size: 0.6em;
-} */
-
-
 pre.poolDataContainer > p {
     text-align: left;
 }
@@ -331,10 +306,9 @@ input[type="text"] {
     -webkit-animation: GradientAnimation 9s ease infinite;
     -moz-animation: GradientAnimation 9s ease infinite;
     animation: GradientAnimation 9s ease infinite;
-    /* background: linear-gradient(-45deg, #72bbf7, #4c68c4);
-    animation: RetroGradient 2s ease infinite; */
 
     top: 0; left: 0; right: 0; bottom: 0;
+    padding: 20px;
 }
 
 .poolContainer, .poolInnerContainer {
