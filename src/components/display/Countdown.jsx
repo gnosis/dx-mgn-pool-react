@@ -18,7 +18,7 @@ function Countdown({
 
     return (
         <div>
-            <h6>CLAIM/WITHDRAW IN APPROX. {timeDifference > 0 ? timeDifference : 0} hours</h6>
+            <h6>CLAIM & WITHDRAW IN APPROX. {timeDifference > 0 ? timeDifference : 0} hours</h6>
         </div>
     )
 }

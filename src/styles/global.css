@@ -74,6 +74,10 @@ pre > p > span.data-title {
     font-size: 0.6em;
 }
 
+pre > p > span.data-date {
+    font-size: 0.72em;
+}
+
 pre.poolDataContainer > p {
     text-align: left;
 }
