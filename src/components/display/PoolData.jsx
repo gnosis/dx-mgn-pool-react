@@ -6,18 +6,24 @@ import DataDisplayVisualContainer from './DataDisplay'
 import Countdown from './Countdown'
 import { TextInput } from '../controls/ControlledInput'
 
-import { withdrawMGNandDepositsFromAllPools } from '../../api'
-import { POOL_STATES, DATA_LOAD_STRING } from '../../globals'
+// import { withdrawMGNandDepositsFromAllPoolsManually } from '../../api'
+import { checkLoadingOrNonZero } from '../../api/utils'
+
+import { POOL_STATES, DATA_LOAD_STRING, FIXED_DECIMAL_AMOUNT } from '../../globals'
 
 const DepositToken = AsyncActionsHOC(TextInput)
 const WithdrawMGNandDepositsFromBothPools = AsyncActionsHOC()
 
 const PoolData = ({
+    // state,
     BALANCE,
     DX_MGN_POOL,
-    INPUT_AMOUNT,
+    // dispatch
     setDepositAmount,
-    setInputAmount,
+    withdrawDepositAndMGN,
+    // misc
+    hasClaimables1,
+    hasClaimables2,
 }) =>
     <>
         <h2>Mgn pool - {DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL.toLowerCase()}/{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL.toLowerCase()}</h2>
@@ -28,7 +34,7 @@ const PoolData = ({
                     <h3>{DX_MGN_POOL.POOL1.DEPOSIT_TOKEN.toLowerCase()} [{DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL.toLowerCase()}]</h3>
                     <p><span className="data-title">STATUS:</span> <strong>{DX_MGN_POOL.POOL1.CURRENT_STATE.toUpperCase()}</strong></p>
                     {DX_MGN_POOL.POOL1.POOLING_PERIOD_END !== DATA_LOAD_STRING && 
-                        <p><span className="data-title">POOLING END TIME:</span> <span className="data-date">{new Date(DX_MGN_POOL.POOL1.POOLING_PERIOD_END * 1000).toUTCString()}</span></p>}
+                        <p><span className="data-title">POOLING END TIME:</span> <span className="data-date">{new Date(DX_MGN_POOL.POOL1.POOLING_PERIOD_END * 1000).toLocaleString()}</span></p>}
                     <hr />
                     <p><span className="data-title">TOTAL POOL SHARE:</span> {DX_MGN_POOL.POOL1.TOTAL_SHARE}</p>
                     <p><span className="data-title">YOUR CONTRIBUTION:</span> {DX_MGN_POOL.POOL1.YOUR_SHARE}</p>
@@ -36,14 +42,14 @@ const PoolData = ({
                     <p><span className="data-title">TOTAL CLAIMABLE MGN:</span> {DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_MGN}</p>
                     <p><span className="data-title">TOTAL CLAIMABLE DEPOSIT:</span> {DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_DEPOSIT}</p>
                     <hr />
-                    <p><span className="data-title">[<strong>{DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL}</strong>] WALLET BALANCE:</span> {DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL === 'WETH' ? (+DX_MGN_POOL.POOL1.TOKEN_BALANCE) + (+BALANCE) : DX_MGN_POOL.POOL1.TOKEN_BALANCE}</p>
+                    <p><span className="data-title">[<strong>{DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL}</strong>] WALLET BALANCE:</span> {DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL === 'WETH' ? ((+DX_MGN_POOL.POOL1.TOKEN_BALANCE) + (+BALANCE)).toFixed(FIXED_DECIMAL_AMOUNT) : DX_MGN_POOL.POOL1.TOKEN_BALANCE}</p>
                     <hr />
                     {DX_MGN_POOL.POOL1.CURRENT_STATE === POOL_STATES.POOLING 
                         && <DepositToken
-                            asyncAction={() => setDepositAmount(1)}
+                            asyncAction={params => setDepositAmount({ poolNumber: 1, ...params })}
                             forceDisable={DX_MGN_POOL.POOL1.CURRENT_STATE !== POOL_STATES.POOLING}
-                            inputChangeDispatch={setInputAmount}
-                            globalInput={INPUT_AMOUNT}
+                            // inputChangeDispatch={setInputAmount}
+                            // globalInput={INPUT_AMOUNT}
                             info={
                                 DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL === 'WETH' ? 
                                 '[WETH] You may need to sign up to 3 TXs [Wrap, Approve, Deposit]' : 
@@ -53,13 +59,35 @@ const PoolData = ({
                             {...DX_MGN_POOL}
                         />}
                     <Countdown POOLING_PERIOD_END={DX_MGN_POOL.POOL1.POOLING_PERIOD_END} />
+                    {
+                        // Non zero, claimable values?
+                        hasClaimables1
+                            &&
+                        // Contract states must be final
+                        (DX_MGN_POOL.POOL1.CURRENT_STATE === POOL_STATES.MGN_UNLOCKED) 
+                            && 
+                        <DataDisplayVisualContainer
+                            colour="greenGradient"
+                            title={null}
+                        >
+                            {() =>
+                                <WithdrawMGNandDepositsFromBothPools 
+                                    asyncAction={() => withdrawDepositAndMGN('POOL1')}
+                                    title="Withdraw"
+                                    buttonText="Withdraw"
+                                    buttonOnly
+                                    info="Withdraw any of your MGN + Deposits"
+                                />
+                            }
+                        </DataDisplayVisualContainer>
+                    }
                 </pre>
                 {/* POOL 2 */}
                 <pre className="poolDataContainer data-pre-purple">
                     <h3>{DX_MGN_POOL.POOL1.SECONDARY_TOKEN.toLowerCase()} [{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL.toLowerCase()}]</h3>
                     <p><span className="data-title">STATUS:</span> <strong>{DX_MGN_POOL.POOL2.CURRENT_STATE.toUpperCase()}</strong></p>
                     {DX_MGN_POOL.POOL2.POOLING_PERIOD_END !== DATA_LOAD_STRING && 
-                        <p><span className="data-title">POOLING END TIME:</span> <span className="data-date">{new Date(DX_MGN_POOL.POOL2.POOLING_PERIOD_END * 1000).toUTCString()}</span></p>}
+                        <p><span className="data-title">POOLING END TIME:</span> <span className="data-date">{new Date(DX_MGN_POOL.POOL2.POOLING_PERIOD_END * 1000).toLocaleString()}</span></p>}
                     <hr />
                     <p><span className="data-title">TOTAL POOL SHARE:</span> {DX_MGN_POOL.POOL2.TOTAL_SHARE}</p>
                     <p><span className="data-title">YOUR CONTRIBUTION:</span> {DX_MGN_POOL.POOL2.YOUR_SHARE}</p>
@@ -67,15 +95,15 @@ const PoolData = ({
                     <p><span className="data-title">TOTAL CLAIMABLE MGN:</span> {DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_MGN}</p>
                     <p><span className="data-title">TOTAL CLAIMABLE DEPOSIT:</span> {DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_DEPOSIT}</p>
                     <hr />
-                    <p><span className="data-title">[<strong>{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL}</strong>] WALLET BALANCE:</span> {DX_MGN_POOL.POOL1.SECONDARY_SYMBOL === 'WETH' ? (+DX_MGN_POOL.POOL2.TOKEN_BALANCE) + (+BALANCE) : DX_MGN_POOL.POOL2.TOKEN_BALANCE}</p>
+                    <p><span className="data-title">[<strong>{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL}</strong>] WALLET BALANCE:</span> {DX_MGN_POOL.POOL1.SECONDARY_SYMBOL === 'WETH' ? ((+DX_MGN_POOL.POOL2.TOKEN_BALANCE) + (+BALANCE)).toFixed(FIXED_DECIMAL_AMOUNT) : DX_MGN_POOL.POOL2.TOKEN_BALANCE}</p>
 
                     <hr />
                     {DX_MGN_POOL.POOL2.CURRENT_STATE === POOL_STATES.POOLING 
                         && <DepositToken
-                            asyncAction={() => setDepositAmount(2)}
+                        asyncAction={params => setDepositAmount({ poolNumber: 2, ...params })}
                             forceDisable={DX_MGN_POOL.POOL2.CURRENT_STATE !== POOL_STATES.POOLING}
-                            inputChangeDispatch={setInputAmount}
-                            globalInput={INPUT_AMOUNT}
+                            // inputChangeDispatch={setInputAmount}
+                            // globalInput={INPUT_AMOUNT}
                             info={
                                 DX_MGN_POOL.POOL1.SECONDARY_SYMBOL === 'WETH' ? 
                                 '[WETH] You may need to sign up to 3 TXs [Wrap, Approve, Deposit]' : 
@@ -85,25 +113,30 @@ const PoolData = ({
                             {...DX_MGN_POOL}
                         />}
                     <Countdown POOLING_PERIOD_END={DX_MGN_POOL.POOL2.POOLING_PERIOD_END} />
+                    {
+                        // Non zero, claimable values?
+                        hasClaimables2
+                            &&
+                        // Contract states must be final
+                        (DX_MGN_POOL.POOL2.CURRENT_STATE === POOL_STATES.MGN_UNLOCKED) 
+                            && 
+                        <DataDisplayVisualContainer
+                            colour="greenGradient"
+                            title={null}
+                        >
+                            {() =>
+                                <WithdrawMGNandDepositsFromBothPools 
+                                    asyncAction={() => withdrawDepositAndMGN('POOL2')}
+                                    title="Withdraw"
+                                    buttonText="Withdraw"
+                                    buttonOnly
+                                    info="Withdraw any of your MGN + Deposits"
+                                />
+                            }
+                        </DataDisplayVisualContainer>
+                    }
                 </pre>
             </div>
-            {DX_MGN_POOL.POOL1.CURRENT_STATE === POOL_STATES.MGN_UNLOCKED 
-                && DX_MGN_POOL.POOL2.CURRENT_STATE === POOL_STATES.MGN_UNLOCKED 
-                && 
-                <DataDisplayVisualContainer
-                    colour="greenGradient"
-                    title={null}
-                >
-                    {() =>
-                        <WithdrawMGNandDepositsFromBothPools 
-                            asyncAction={withdrawMGNandDepositsFromAllPools}
-                            title="Withdraw MGn + deposits [both pooLs]"
-                            buttonText="Withdraw"
-                            info="Withdraw any of your MGN + Deposits from both pools"
-                        />
-                    }
-                </DataDisplayVisualContainer>
-        }
         </div>
     </>
 
@@ -117,12 +150,22 @@ const mapProps = ({
     },
     setDepositAmount,
     setInputAmount,
+    withdrawDepositAndMGN,
 }) => ({
     BALANCE,
     DX_MGN_POOL,
     INPUT_AMOUNT,
+    hasClaimables1: checkLoadingOrNonZero(
+        DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_DEPOSIT, 
+        DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_MGN,
+    ),
+    hasClaimables2: checkLoadingOrNonZero(
+        DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_DEPOSIT, 
+        DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_MGN,
+    ),
     setDepositAmount,
     setInputAmount,
+    withdrawDepositAndMGN,
 })
 
 export default connect(mapProps)(PoolData)
