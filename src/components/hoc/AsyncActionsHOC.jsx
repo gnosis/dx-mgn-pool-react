@@ -1,4 +1,4 @@
-import React, { /* useEffect, */ useState } from 'react'
+import React, { useState } from 'react'
 
 import DataDisplayVisualContainer from '../display/DataDisplay'
 
@@ -11,21 +11,19 @@ const AsyncActionsHOC = Component => ({
     forceDisable,
     info,
     title,
-    ...rest
+    ...rest,
 }) => {
     // State - button blocked disables use of butotn
     // e.g on blockchain action - released on receipt
     const [buttonBlocked, setButtonBlocked] = useState(false)
-    const [inputAmount, setInputAmount] = useState(null)
+    const [inputAmount, setInputAmount] = useState(undefined)
     const [viewInfoStatus, setViewInfoStatus] = useState(false)
-    const [error, setError] = useState(null)
-
-    // useEffect()
+    const [error, setError] = useState(undefined)
 
     const handleInfoButtonClick = () => setViewInfoStatus(!viewInfoStatus)
 
     const handleChange = ({ target }) => {
-        setError(null)
+        setError(undefined)
         let { value } = target
         
         // replace commas w/periods
@@ -33,7 +31,7 @@ const AsyncActionsHOC = Component => ({
         
         const validValue = !!(+value)
         if (!validValue && value) {
-            return setError('Please enter a valid amount')
+            setError('Please enter a valid amount')
         }
         
         return setInputAmount(value)
@@ -57,7 +55,7 @@ const AsyncActionsHOC = Component => ({
 
             await delay(4000)
         } finally {
-            setError(null)
+            setError(undefined)
             setInputAmount('0')
             // reEnable button
             setButtonBlocked(false)
@@ -79,16 +77,19 @@ const AsyncActionsHOC = Component => ({
                     disabled={forceDisable || buttonBlocked}
                     onChange={handleChange}
                     value={inputAmount}
-                    {...rest} 
                 />}
-            <button
-                className="ctaButton"
-                disabled={forceDisable || error || buttonBlocked}
-                onClick={handleClick}
-            >
-                {buttonText}
-            </button>
-            {error && <pre className="data-pre-error">{error}</pre>}
+            {error 
+                ? 
+                <pre className="data-pre-error">{error}</pre> 
+                :
+                <button
+                    className="ctaButton"
+                    disabled={forceDisable || error || buttonBlocked}
+                    onClick={handleClick}
+                >
+                    {buttonText}
+                </button>
+            }
         </div>
     )
 }
