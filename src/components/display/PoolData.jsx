@@ -6,7 +6,6 @@ import DataDisplayVisualContainer from './DataDisplay'
 import Countdown from './Countdown'
 import { TextInput } from '../controls/ControlledInput'
 
-// import { withdrawMGNandDepositsFromAllPoolsManually } from '../../api'
 import { checkLoadingOrNonZero } from '../../api/utils'
 
 import { POOL_STATES, DATA_LOAD_STRING, FIXED_DECIMAL_AMOUNT } from '../../globals'
@@ -14,10 +13,13 @@ import { POOL_STATES, DATA_LOAD_STRING, FIXED_DECIMAL_AMOUNT } from '../../globa
 const DepositToken = AsyncActionsHOC(TextInput)
 const WithdrawMGNandDepositsFromBothPools = AsyncActionsHOC()
 
+const showDataForState = (data, currState, stateExpected) => (data === DATA_LOAD_STRING || currState === stateExpected || !!Number(data))
+
 const PoolData = ({
     // state,
     BALANCE,
     DX_MGN_POOL,
+    POOL_STATES: { POOL1STATE, POOL2STATE },
     // dispatch
     setDepositAmount,
     withdrawDepositAndMGN,
@@ -32,29 +34,30 @@ const PoolData = ({
                 {/* POOL 1 */}
                 <pre className="poolDataContainer data-pre-blue">
                     <h3>{DX_MGN_POOL.POOL1.DEPOSIT_TOKEN.toLowerCase()} [{DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL.toLowerCase()}]</h3>
-                    <p><span className="data-title">STATUS:</span> <strong>{DX_MGN_POOL.POOL1.CURRENT_STATE.toUpperCase()}</strong></p>
+                    <p><span className="data-title">STATUS:</span> <strong>{POOL1STATE.toUpperCase()}</strong></p>
                     {DX_MGN_POOL.POOL1.POOLING_PERIOD_END !== DATA_LOAD_STRING && 
                         <p><span className="data-title">POOLING END TIME:</span> <span className="data-date">{new Date(DX_MGN_POOL.POOL1.POOLING_PERIOD_END * 1000).toLocaleString()}</span></p>}
                     <hr />
                     <p><span className="data-title">TOTAL POOL SHARE:</span> {DX_MGN_POOL.POOL1.TOTAL_SHARE}</p>
                     <p><span className="data-title">YOUR CONTRIBUTION:</span> {DX_MGN_POOL.POOL1.YOUR_SHARE}</p>
-                    <hr />
-                    <p><span className="data-title">TOTAL CLAIMABLE MGN:</span> {DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_MGN}</p>
-                    <p><span className="data-title">TOTAL CLAIMABLE DEPOSIT:</span> {DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_DEPOSIT}</p>
+                    {/* <hr /> */}
+                    {/* Only show if POOLING or in another state but with non-zero claimables */}
+                    {showDataForState(DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_MGN, POOL1STATE, POOL_STATES.POOLING) 
+                        && <p><span className="data-title">TOTAL CLAIMABLE MGN:</span> {DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_MGN}</p>}
+                    {showDataForState(DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_DEPOSIT, POOL1STATE, POOL_STATES.POOLING) 
+                        && <p><span className="data-title">TOTAL CLAIMABLE DEPOSIT:</span> {DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_DEPOSIT}</p>}
                     <hr />
                     <p><span className="data-title">[<strong>{DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL}</strong>] WALLET BALANCE:</span> {DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL === 'WETH' ? ((+DX_MGN_POOL.POOL1.TOKEN_BALANCE) + (+BALANCE)).toFixed(FIXED_DECIMAL_AMOUNT) : DX_MGN_POOL.POOL1.TOKEN_BALANCE}</p>
                     <hr />
-                    {DX_MGN_POOL.POOL1.CURRENT_STATE === POOL_STATES.POOLING 
+                    {POOL1STATE === POOL_STATES.POOLING 
                         && <DepositToken
                             asyncAction={params => setDepositAmount({ poolNumber: 1, ...params })}
-                            forceDisable={DX_MGN_POOL.POOL1.CURRENT_STATE !== POOL_STATES.POOLING}
-                            // inputChangeDispatch={setInputAmount}
-                            // globalInput={INPUT_AMOUNT}
-                            info={
-                                DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL === 'WETH' ? 
-                                '[WETH] You may need to sign up to 3 TXs [Wrap, Approve, Deposit]' : 
-                                `[${DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL}] You may need to sign up to 2 TXs [Approve, Deposit]`
-                            }
+                            forceDisable={POOL1STATE !== POOL_STATES.POOLING}
+                            info={DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL === 'WETH' 
+                                ? 
+                                '[WETH] You may need to sign up to 3 TXs [Wrap, Approve, Deposit]' 
+                                : 
+                                `[${DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL}] You may need to sign up to 2 TXs [Approve, Deposit]`}
                             title={`deposit [${DX_MGN_POOL.POOL1.DEPOSIT_TOKEN.toLowerCase()}]`}
                             {...DX_MGN_POOL}
                         />}
@@ -64,7 +67,7 @@ const PoolData = ({
                         hasClaimables1
                             &&
                         // Contract states must be final
-                        (DX_MGN_POOL.POOL1.CURRENT_STATE === POOL_STATES.MGN_UNLOCKED) 
+                        POOL1STATE === POOL_STATES.MGN_UNLOCKED
                             && 
                         <DataDisplayVisualContainer
                             colour="greenGradient"
@@ -85,25 +88,26 @@ const PoolData = ({
                 {/* POOL 2 */}
                 <pre className="poolDataContainer data-pre-purple">
                     <h3>{DX_MGN_POOL.POOL1.SECONDARY_TOKEN.toLowerCase()} [{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL.toLowerCase()}]</h3>
-                    <p><span className="data-title">STATUS:</span> <strong>{DX_MGN_POOL.POOL2.CURRENT_STATE.toUpperCase()}</strong></p>
+                    <p><span className="data-title">STATUS:</span> <strong>{POOL2STATE.toUpperCase()}</strong></p>
                     {DX_MGN_POOL.POOL2.POOLING_PERIOD_END !== DATA_LOAD_STRING && 
                         <p><span className="data-title">POOLING END TIME:</span> <span className="data-date">{new Date(DX_MGN_POOL.POOL2.POOLING_PERIOD_END * 1000).toLocaleString()}</span></p>}
                     <hr />
                     <p><span className="data-title">TOTAL POOL SHARE:</span> {DX_MGN_POOL.POOL2.TOTAL_SHARE}</p>
                     <p><span className="data-title">YOUR CONTRIBUTION:</span> {DX_MGN_POOL.POOL2.YOUR_SHARE}</p>
-                    <hr />
-                    <p><span className="data-title">TOTAL CLAIMABLE MGN:</span> {DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_MGN}</p>
-                    <p><span className="data-title">TOTAL CLAIMABLE DEPOSIT:</span> {DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_DEPOSIT}</p>
+                    {/* <hr /> */}
+                    {/* Only show if POOLING or in another state but with non-zero claimables */}
+                    {showDataForState(DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_MGN, POOL2STATE, POOL_STATES.POOLING) 
+                        && <p><span className="data-title">TOTAL CLAIMABLE MGN:</span> {DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_MGN}</p>}
+                    {showDataForState(DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_DEPOSIT, POOL2STATE, POOL_STATES.POOLING) 
+                        && <p><span className="data-title">TOTAL CLAIMABLE DEPOSIT:</span> {DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_DEPOSIT}</p>}
                     <hr />
                     <p><span className="data-title">[<strong>{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL}</strong>] WALLET BALANCE:</span> {DX_MGN_POOL.POOL1.SECONDARY_SYMBOL === 'WETH' ? ((+DX_MGN_POOL.POOL2.TOKEN_BALANCE) + (+BALANCE)).toFixed(FIXED_DECIMAL_AMOUNT) : DX_MGN_POOL.POOL2.TOKEN_BALANCE}</p>
 
                     <hr />
-                    {DX_MGN_POOL.POOL2.CURRENT_STATE === POOL_STATES.POOLING 
+                    {POOL2STATE === POOL_STATES.POOLING 
                         && <DepositToken
-                        asyncAction={params => setDepositAmount({ poolNumber: 2, ...params })}
-                            forceDisable={DX_MGN_POOL.POOL2.CURRENT_STATE !== POOL_STATES.POOLING}
-                            // inputChangeDispatch={setInputAmount}
-                            // globalInput={INPUT_AMOUNT}
+                            asyncAction={params => setDepositAmount({ poolNumber: 2, ...params })}
+                            forceDisable={POOL2STATE !== POOL_STATES.POOLING}
                             info={
                                 DX_MGN_POOL.POOL1.SECONDARY_SYMBOL === 'WETH' ? 
                                 '[WETH] You may need to sign up to 3 TXs [Wrap, Approve, Deposit]' : 
@@ -118,7 +122,7 @@ const PoolData = ({
                         hasClaimables2
                             &&
                         // Contract states must be final
-                        (DX_MGN_POOL.POOL2.CURRENT_STATE === POOL_STATES.MGN_UNLOCKED) 
+                        POOL2STATE === POOL_STATES.MGN_UNLOCKED 
                             && 
                         <DataDisplayVisualContainer
                             colour="greenGradient"
@@ -155,6 +159,10 @@ const mapProps = ({
     BALANCE,
     DX_MGN_POOL,
     INPUT_AMOUNT,
+    POOL_STATES: {
+        POOL1STATE: DX_MGN_POOL.POOL1.CURRENT_STATE,
+        POOL2STATE: DX_MGN_POOL.POOL2.CURRENT_STATE,
+    },
     hasClaimables1: checkLoadingOrNonZero(
         DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_DEPOSIT, 
         DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_MGN,
