@@ -5,6 +5,7 @@ import DataDisplayVisualContainer from '../display/DataDisplay'
 const AsyncActionsHOC = Component => ({
     asyncAction,
     buttonText = 'subMit',
+    buttonOnly,
     forceDisable,
     inputChangeDispatch,
     globalInput,
@@ -37,21 +38,26 @@ const AsyncActionsHOC = Component => ({
         
         return inputChangeDispatch ? inputChangeDispatch(value) : setInputAmount(value)
     }
-    
+    const delay = async (time = 1000) => new Promise(acc => setTimeout(() => acc('Delay done'), time))
+
     const handleClick = async () => {
         try {
-            if (!globalInput && !inputAmount) throw new Error('Please enter a valid amount')
+            if (!buttonOnly && (!globalInput && !inputAmount)) throw new Error('Please enter a valid amount')
             // disable button
             setButtonBlocked(true)
 
             // fire action
-            await asyncAction()
+            const asyncRec = await asyncAction()
+            console.debug('Async Action successful: ', asyncRec)
         } catch (err) {
 			console.error('AsyncActionsHOC ERROR: ', err)
             setError(err.message || err)
-        } finally {
-            inputChangeDispatch && inputChangeDispatch(null)
-            setInputAmount(null)  
+            
+            await delay(4000)
+            
+            setError(null)
+            // eslint-disable-next-line no-unused-expressions
+            inputChangeDispatch ? inputChangeDispatch(null) && setInputAmount(null)  : setInputAmount(null)
             // reEnable button
             setButtonBlocked(false)
         }
