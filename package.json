@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "build": "rm -rf dist && cross-env ETH_NETWORK=*net webpack --mode production",
-    "build:dev": "rm -rf dist && cross-env SHOW_APP_DATA=true ETH_NETWORK=*net webpack --mode development",
+    "build:dev": "rm -rf dist && cross-env SHOW_APP_DATA=true FE_CONDITIONAL_ENV='development' ETH_NETWORK=*net webpack --mode development",
     "build:dev:local": "rm -rf dist && SHOW_APP_DATA=true webpack --mode development",
     "build:local": "rm -rf dist && webpack --mode production",
     "dev": "webpack-dev-server --mode development --hot --content-base ./dist",
