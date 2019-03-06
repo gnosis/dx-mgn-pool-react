@@ -163,7 +163,10 @@ const poolStateIdToName = (id) => {
   }
 }
 
+const delay = async (time = 1000) => new Promise(acc => setTimeout(() => acc('Delay done'), time))
+
 export {
+  delay,
   toBN,
   isBN,
   toWei,
