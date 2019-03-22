@@ -278,49 +278,23 @@ export default async function startSubscriptions() {
         subscription.unsubscribe()
     })
 
-  const unsub = watchMMaskAccount(() => AccountSub.update())
+  const unsubAcc = watchMMaskFor(Web3.web3.currentProvider, 'accountsChanged', () => AccountSub.update())
+  const unsubNetwork = watchMMaskFor(Web3.web3.currentProvider, 'networkChanged', () => NetworkSub.update())
 
   return () => {
     subscription && subscription.unsubscribe()
-    unsub()
+    unsubAcc()
+    unsubNetwork()
   }
 }
 
-async function watchMMaskAccount(cb) {
-  const isMMaskMessage = (message) => {
-    try {
-      const { data } = message
-      if (
-        data.data && 
-        data.data.data && 
-        'selectedAddress' in data.data.data &&
-        'networkVersion' in data.data.data &&
-        data.data.name === 'publicConfig' &&
-        data.target === 'inpage'
-      ) return true
-    } catch (error) {
-      return false
-    }
-    return false
-  }
-
-  let account = null
-  window.addEventListener('message', (message) => {
-    if (isMMaskMessage(message)) {
-      const mmaskAcc = message.data.data.data.selectedAddress
-      if (account === null) {
-        account = mmaskAcc
-        return
-      }
-      if (account !== mmaskAcc) {
-        console.log(`MMask Account changed from ${account} to ${mmaskAcc}`)
-        account = mmaskAcc
-        cb(account)
-      }
-    }
-  })
-
-  return () => window.removeEventListener('message', cb)
+function watchMMaskFor(provider, event, cb) {
+ if (typeof provider.on === 'function') {
+  provider.on(event, cb)
+  return () => provider.off(event, console.info)
+ }
+// noop
+ return () => {}
 }
 
 if (process.env.NODE_ENV === 'development') {
