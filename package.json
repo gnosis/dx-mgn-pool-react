@@ -20,7 +20,8 @@
     "rpc": "npx ganache-cli -d -e 10000000000",
     "deploy": "npm run setup-rpc",
     "setup-rpc": "npx truffle migrate",
-    "fast-forward": "npx truffle exec trufflescripts/increase_time.js"
+    "fast-forward": "npx truffle exec trufflescripts/increase_time.js",
+    "auction": "npx truffle exec trufflescripts/auction.js"
   },
   "author": "W3stside <doohhello@gmail.com>(https://github.com/w3stside)",
   "license": "MIT",
