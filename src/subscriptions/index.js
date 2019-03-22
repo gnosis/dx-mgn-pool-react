@@ -298,6 +298,8 @@ if (process.env.NODE_ENV === 'development') {
       MGNPoolDataSub,
       NetworkSub,
     }
+
+    window.subs = subs
   
 
     const globalTools = window.__REDUX_DEVTOOLS_EXTENSION__.connect({ name: 'Global' })
