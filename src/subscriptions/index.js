@@ -303,23 +303,25 @@ if (process.env.NODE_ENV === 'development') {
   
 
     const globalTools = window.__REDUX_DEVTOOLS_EXTENSION__.connect({ name: 'Global' })
-    const globalInitState = {}
+    const globalState = {}
     
     for (const name of Object.keys(subs)) {
       const sub = subs[name]
       const devTools = window.__REDUX_DEVTOOLS_EXTENSION__.connect({ name })
 
       const state = sub.getState()
-      globalInitState[name] = state
+      globalState[name] = state
       
       devTools.init(state)
       
       sub.subscribe((newState) => {
         devTools.send('UPDATE', newState)
-        globalTools.send(name, { [name]: newState })
+
+        globalState[name] = newState
+        globalTools.send(name, globalState)
       })
     }
 
-    globalTools.init(globalInitState)
+    globalTools.init(globalState)
   }
 }
