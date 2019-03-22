@@ -307,7 +307,6 @@ async function watchMMaskAccount(cb) {
   let account = null
   window.addEventListener('message', (message) => {
     if (isMMaskMessage(message)) {
-      console.log('MMask message')
       const mmaskAcc = message.data.data.data.selectedAddress
       if (account === null) {
         account = mmaskAcc
