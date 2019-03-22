@@ -305,7 +305,7 @@ if (process.env.NODE_ENV === 'development') {
     
     for (const name of Object.keys(subs)) {
       const sub = subs[name]
-      const devTools = window.__REDUX_DEVTOOLS_EXTENSION__({ name })
+      const devTools = window.__REDUX_DEVTOOLS_EXTENSION__.connect({ name })
 
       const state = sub.getState()
       globalInitState[name] = state
