@@ -79,7 +79,7 @@ const PoolData = ({
                                     title="Withdraw"
                                     buttonText="Withdraw"
                                     buttonOnly
-                                    info="Withdraw any of your MGN + Deposits"
+                                    info="Withdraw any available MGN + Deposits from Pool #1"
                                 />
                             }
                         </DataDisplayVisualContainer>
@@ -134,7 +134,7 @@ const PoolData = ({
                                     title="Withdraw"
                                     buttonText="Withdraw"
                                     buttonOnly
-                                    info="Withdraw any of your MGN + Deposits"
+                                    info="Withdraw any available MGN + Deposits from Pool #2"
                                 />
                             }
                         </DataDisplayVisualContainer>
