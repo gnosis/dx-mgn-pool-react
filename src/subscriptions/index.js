@@ -251,11 +251,11 @@ export const MGNPoolDataSubscription = createSubscription({
 })
 
 export default async function startSubscriptions() {
-    const { Web3 } = await getAPI()
+  const { Web3 } = await getAPI()
 
-    // get initial state populated
-    AccountSub.update()
-    BlockSub.update()
+  // get initial state populated
+  AccountSub.update()
+  BlockSub.update()
   NetworkSub.update()
 
     // create filter listening for latest new blocks
@@ -278,12 +278,50 @@ export default async function startSubscriptions() {
         subscription.unsubscribe()
     })
 
-  const interval = setInterval(() => AccountSub.update(), 2000)
+  const unsub = watchMMaskAccount(() => AccountSub.update())
 
   return () => {
-      subscription && subscription.unsubscribe()
-      clearInterval(interval)
+    subscription && subscription.unsubscribe()
+    unsub()
+  }
+}
+
+async function watchMMaskAccount(cb) {
+  const isMMaskMessage = (message) => {
+    try {
+      const { data } = message
+      if (
+        data.data && 
+        data.data.data && 
+        'selectedAddress' in data.data.data &&
+        'networkVersion' in data.data.data &&
+        data.data.name === 'publicConfig' &&
+        data.target === 'inpage'
+      ) return true
+    } catch (error) {
+      return false
     }
+    return false
+  }
+
+  let account = null
+  window.addEventListener('message', (message) => {
+    if (isMMaskMessage(message)) {
+      console.log('MMask message')
+      const mmaskAcc = message.data.data.data.selectedAddress
+      if (account === null) {
+        account = mmaskAcc
+        return
+      }
+      if (account !== mmaskAcc) {
+        console.log(`MMask Account changed from ${account} to ${mmaskAcc}`)
+        account = mmaskAcc
+        cb(account)
+      }
+    }
+  })
+
+  return () => window.removeEventListener('message', cb)
 }
 
 if (process.env.NODE_ENV === 'development') {
