@@ -256,20 +256,34 @@ export default async function startSubscriptions() {
     // get initial state populated
     AccountSub.update()
     BlockSub.update()
+  NetworkSub.update()
 
     // create filter listening for latest new blocks
-    const subscription = Web3.web3WS.eth.subscribe('newBlockHeaders')
+  const subscription = Web3.web3WS.eth.subscribe("newBlockHeaders")
 
-    subscription.on('data', (blockHeader) => {
-        console.debug('New block header - updating AccountSub, BlockSub + subscribers', blockHeader.timestamp)
-        AccountSub.update()
+  subscription.on("data", (blockHeader) => {
+    console.debug(
+      "New block header - updating AccountSub, BlockSub + subscribers",
+      blockHeader.timestamp,
+    )
+    // AccountSub.update()
         BlockSub.update()
     })
 
-    subscription.on('error', (err) => {
-        console.error('An error in newBlockHeaders WS subscription occurred - unsubscribing.', err.message || err)
+  subscription.on("error", (err) => {
+    console.error(
+      "An error in newBlockHeaders WS subscription occurred - unsubscribing.",
+      err.message || err,
+    )
         subscription.unsubscribe()
     })
 
-    return () => subscription && subscription.unsubscribe()
+  const interval = setInterval(() => AccountSub.update(), 2000)
+
+  return () => {
+      subscription && subscription.unsubscribe()
+      clearInterval(interval)
+    }
+}
+
 }
