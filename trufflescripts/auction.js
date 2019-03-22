@@ -4,6 +4,7 @@
  * @flags:
  * -f, --fund <number>       fund each account with so much GNO and WETH (default 10000)
  * -d, --deposit <number>    deposit so much WETH and GNO from each account to ETH and GNO pools respectively (default 100)
+ * --revert                  revert after script run including on errors (useful for testing) (default false)
  * steps - numbers of steps to go through (default [0, 1, 2, 3, 4, 3, 4, 5, 6, 7, 8, 9])
  * Steps:
  * 0 - fund accounts
