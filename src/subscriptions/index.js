@@ -286,4 +286,38 @@ export default async function startSubscriptions() {
     }
 }
 
+if (process.env.NODE_ENV === 'development') {
+  const withDevTools = typeof window !== "undefined" && window.__REDUX_DEVTOOLS_EXTENSION__
+
+  if (withDevTools) {
+    const subs = {
+      AccountSub,
+      BlockSub,
+      ETHbalanceSub,
+      MGNBalancesSub,
+      MGNPoolDataSub,
+      NetworkSub,
+    }
+  
+
+    const globalTools = window.__REDUX_DEVTOOLS_EXTENSION__.connect({ name: 'Global' })
+    const globalInitState = {}
+    
+    for (const name of Object.keys(subs)) {
+      const sub = subs[name]
+      const devTools = window.__REDUX_DEVTOOLS_EXTENSION__({ name })
+
+      const state = sub.getState()
+      globalInitState[name] = state
+      
+      devTools.init(state)
+      
+      sub.subscribe((newState) => {
+        devTools.send('UPDATE', newState)
+        globalTools.send(name, { [name]: newState })
+      })
+    }
+
+    globalTools.init(globalInitState)
+  }
 }
