@@ -33,15 +33,15 @@ const StatefulSubBase = {
     const nextState = await this._getNewState(...args)
 
     // ensures that
-    // if we have update1 started and then update2 started
+    // if we have update1 started(idx 1) and then update2(idx 2) started
 
-    // if update1 finishes first we update state
-    // and then update when update2 finishes;
+    // if update1 finishes first we update state (latest idx = 1)
+    // and then update when update2 finishes; (idx 2 > latest idx)
 
-    // if update2 finishes first we update state
+    // if update2 finishes first we update state (latest idx = 1)
     // and when the late update1 finishes
-    // we don't update with stale data
-    if (currentUpdateIdx > this._latestFinishedIdx) return
+    // we don't update with stale data (idx 1 < latest idx)
+    if (currentUpdateIdx <= this._latestFinishedIdx) return
     this._latestFinishedIdx = currentUpdateIdx
 
     if (this._shouldUpdate(this._state, nextState)) {
