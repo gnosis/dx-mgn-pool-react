@@ -165,7 +165,7 @@ async function runStep(step, accounts, contracts, master) {
 }
 
 async function fundAccounts(accounts, { ethToken, ethPool, dx, gnoPool, gnoToken }, master) {
-  console.log(`Funding accounts and approving token transfer to contracts`)
+  console.log('\nFunding accounts and approving token transfer to contracts')
 
   const amount = fundAmount
   // console.log('amount: ', amount)
@@ -196,7 +196,7 @@ async function fundAccounts(accounts, { ethToken, ethPool, dx, gnoPool, gnoToken
 }
 
 async function createAuction({ dx, ethToken, gnoToken }) {
-  console.log("Creating Auction")
+  console.log('\nCreating Auction')
 
   await dx.deposit(ethToken.address, toWei(1000))
   await dx.deposit(gnoToken.address, toWei(1000))
@@ -226,7 +226,7 @@ async function createAuction({ dx, ethToken, gnoToken }) {
 
 async function depositToPools({ ethPool, gnoPool, ethToken, gnoToken }, accounts) {
   const amount = depositAmount
-  console.log(`Depositing ${amount} WETH and GNO to EthPool and GnoPoll respectively from each account`)
+  console.log(`\nDepositing ${amount} WETH and GNO to EthPool and GnoPoll respectively from each account`)
 
   // console.log((await ethToken.balanceOf(accounts[0])).toString())
   // console.log((await ethToken.allowance(accounts[0], ethPool.address)).toString())
@@ -249,7 +249,7 @@ async function depositToPools({ ethPool, gnoPool, ethToken, gnoToken }, accounts
 
 async function participateInAuction({ dx, ethPool, ethToken, gnoToken, coordinator }) {
   const auctionIndex = await dx.getAuctionIndex.call(ethToken.address, gnoToken.address)
-  console.log(`Participating in WETH-GNO-${auctionIndex} auction`)
+  console.log(`\nParticipating in WETH-GNO-${auctionIndex} auction`)
   
   await printPoolState(ethPool)
 
@@ -264,7 +264,7 @@ async function participateInAuction({ dx, ethPool, ethToken, gnoToken, coordinat
 
 async function fillAndClearAuctions({ dx, ethPool, gnoPool, ethToken, gnoToken }, percentOfPreviousPrice, buyer) {
   const auctionIndex = await dx.getAuctionIndex(ethToken.address, gnoToken.address)
-  console.log(`Filling and clearing WETH-GNO-${auctionIndex} auction`)
+  console.log(`\nFilling and clearing WETH-GNO-${auctionIndex} auction`)
 
   await printPoolState(ethPool)
 
@@ -281,25 +281,25 @@ async function fillAndClearAuctions({ dx, ethPool, gnoPool, ethToken, gnoToken }
   await printAuctionPrice(dx, ethToken, gnoToken)
 
   await dx.postBuyOrder(ethToken.address, gnoToken.address, auctionIndex, toWei(10000))
-  console.log('BOUGHT 1')
+  console.log('BOUGHT WETH-GNO')
   await printAuctionPrice(dx, ethToken, gnoToken)
   await dx.postBuyOrder(gnoToken.address, ethToken.address, auctionIndex, toWei(10000))
-  console.log('BOUGHT 2')
+  console.log('BOUGHT GNO-WETH')
   await printAuctionPrice(dx, ethToken, gnoToken)
   await dx.claimBuyerFunds(ethToken.address, gnoToken.address, buyer, auctionIndex)
-  console.log('CLAIMED 1')
+  console.log('CLAIMED Buyer Funds in WETH-GNO')
   
   await printAuctionPrice(dx, ethToken, gnoToken)
   await dx.claimBuyerFunds(gnoToken.address, ethToken.address, buyer, auctionIndex)
-  console.log('CLAIMED 2')
+  console.log('CLAIMED Buyer Funds in GNO-WETH')
   
   await printAuctionPrice(dx, ethToken, gnoToken)
   await dx.claimSellerFunds(gnoToken.address, ethToken.address, buyer, auctionIndex)
-  console.log('CLAIMED 3')
+  console.log('CLAIMED SELLER Funds in WETH-GNO')
   
   await printAuctionPrice(dx, ethToken, gnoToken)
   await dx.claimSellerFunds(ethToken.address, gnoToken.address, buyer, auctionIndex)
-  console.log('CLAIMED 4')
+  console.log('CLAIMED Seller Funds in GNO-WETH')
   
 
   const newAuctionIndex = await dx.getAuctionIndex(ethToken.address, gnoToken.address)
@@ -346,7 +346,7 @@ function sumBnArray(bns) {
 }
 
 async function waitTillPoolingEnded({ ethPool }) {
-  console.log('Waiting until Pooling state ends')
+  console.log('\nWaiting until Pooling state ends')
 
   await printPoolState(ethPool)
 
@@ -361,7 +361,7 @@ async function waitTillPoolingEnded({ ethPool }) {
 
 
 async function triggerMGNunlockAndClaimTokens({ ethPool, gnoPool }) {
-  console.log('Triggering MGN unlock and claiming tokens')
+  console.log('\nTriggering MGN unlock and claiming tokens')
 
   await printPoolState(ethPool)
 
@@ -388,6 +388,7 @@ async function checkPoolingEnded(pool) {
 }
 
 async function printPoolBalances({ ethToken, gnoToken, mgnToken, ethPool, gnoPool }) {
+  console.group('\nPool Balances')
   const printBalances = async (pool) => {
     const ethBalance = await ethToken.balanceOf(pool.address)
     console.log('ETH: ', fromWei(ethBalance).toString())
@@ -408,9 +409,12 @@ async function printPoolBalances({ ethToken, gnoToken, mgnToken, ethPool, gnoPoo
   console.group('GnoPool:')
   await printBalances(gnoPool)
   console.groupEnd()
+
+  console.groupEnd()
 }
 
 async function printAccountBalances({ ethToken, gnoToken, mgnToken }, accounts) {
+  console.group('\nAccount Balances:')
   const balances = await Promise.all(accounts.map(acc => Promise.all([
       ethToken.balanceOf(acc),
       gnoToken.balanceOf(acc),
@@ -429,17 +433,19 @@ async function printAccountBalances({ ethToken, gnoToken, mgnToken }, accounts) 
     console.log('Will be unlocked MGN: ', fromWei(uMGN.amountUnlocked).toString())
     console.groupEnd()
   })
+
+  console.groupEnd()
 }
 
 async function waitTillwithdrawMGN({ ethPool }) {
-  console.log('Skipping 24h of lock period')
+  console.log('\nSkipping 24h of lock period')
   await increaseTimeBy(60 * 60 * 25)
 
   await printPoolState(ethPool)
 }
 
 async function withdrawUnlockedMagnolia({ ethPool, gnoPool }) {
-  console.log('Widthrawing Unlocked MGN')
+  console.log('\nWidthrawing Unlocked MGN')
 
   await printPoolState(ethPool)
   
@@ -529,23 +535,23 @@ async function printPoolState(pool) {
 async function printAuctionPrice(dx, ST, BT) {
   const ind = await dx.getAuctionIndex(ST.address, BT.address)
   const { num, den } = await dx.getCurrentAuctionPrice(ST.address, BT.address, ind)
-  const sellVol = await dx.sellVolumesCurrent(ST.address, BT.address)
-  const buyVol = await dx.buyVolumes(ST.address, BT.address)
+  // const sellVol = await dx.sellVolumesCurrent(ST.address, BT.address)
+  // const buyVol = await dx.buyVolumes(ST.address, BT.address)
   
   console.log('Auction index', ind.toNumber(), 'price:', [num, den].map(n => n.toString()))
-  console.log('sellVol: ', sellVol.toString())
-  console.log('buyVol: ', buyVol.toString())
+  // console.log('sellVol: ', sellVol.toString())
+  // console.log('buyVol: ', buyVol.toString())
 }
 
 async function waitUntilPriceIsXPercentOfPreviousPrice(dx, ST, BT, p) {
   const getAuctionStart = await dx.getAuctionStart.call(ST.address, BT.address)
   const startingTimeOfAuction = getAuctionStart.toNumber()
-  console.log('startingTimeOfAuction: ', startingTimeOfAuction)
+  // console.log('startingTimeOfAuction: ', startingTimeOfAuction)
   const timeToWaitFor = Math.ceil((86400 - p * 43200) / (1 + p)) + startingTimeOfAuction
   // wait until the price is good
   const incBy = timeToWaitFor - await getTime()
-  console.log('await getTime(): ', await getTime())
-  console.log('incBy: ', incBy)
+  // console.log('await getTime(): ', await getTime())
+  // console.log('incBy: ', incBy)
   if (incBy < 0) {
     return
   }
