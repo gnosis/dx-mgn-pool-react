@@ -33,7 +33,7 @@ const PoolData = ({
             <div className="poolInnerContainer">
                 {/* POOL 1 */}
                 <pre className="poolDataContainer data-pre-blue">
-                    <h3>{DX_MGN_POOL.POOL1.DEPOSIT_TOKEN.toLowerCase()} [{DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL.toLowerCase()}]</h3>
+                    <h3 style={{ backgroundColor: '#bae8f9' }}>{DX_MGN_POOL.POOL1.DEPOSIT_TOKEN.toLowerCase()} [{DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL.toLowerCase()}]</h3>
                     <p><span className="data-title">STATUS:</span> <strong>{POOL1STATE.toUpperCase()}</strong></p>
                     {DX_MGN_POOL.POOL1.POOLING_PERIOD_END !== DATA_LOAD_STRING && 
                         <p><span className="data-title">POOLING END TIME:</span> <span className="data-date">{new Date(DX_MGN_POOL.POOL1.POOLING_PERIOD_END * 1000).toLocaleString()}</span></p>}
@@ -87,7 +87,7 @@ const PoolData = ({
                 </pre>
                 {/* POOL 2 */}
                 <pre className="poolDataContainer data-pre-purple">
-                    <h3>{DX_MGN_POOL.POOL1.SECONDARY_TOKEN.toLowerCase()} [{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL.toLowerCase()}]</h3>
+                    <h3 style={{ backgroundColor: '#d1c6fb' }}>{DX_MGN_POOL.POOL1.SECONDARY_TOKEN.toLowerCase()} [{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL.toLowerCase()}]</h3>
                     <p><span className="data-title">STATUS:</span> <strong>{POOL2STATE.toUpperCase()}</strong></p>
                     {DX_MGN_POOL.POOL2.POOLING_PERIOD_END !== DATA_LOAD_STRING && 
                         <p><span className="data-title">POOLING END TIME:</span> <span className="data-date">{new Date(DX_MGN_POOL.POOL2.POOLING_PERIOD_END * 1000).toLocaleString()}</span></p>}

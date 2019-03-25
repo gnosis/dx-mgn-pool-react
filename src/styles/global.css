@@ -87,6 +87,9 @@ pre > h1, pre > h2, pre > h3, pre > h4, pre > h5, pre > h6 {
     font-family: 'Major Mono Display';
     font-weight: 900;
     font-style: italic;
+
+    padding: 7px 0;
+    text-align: center;
 }
 
 hr {
@@ -380,6 +383,7 @@ input[type="text"] {
 }
 
 .footerH {
+    background-color: #f4e2f1;
     font-size: 0.8em;
     margin: 1em 0;
 }
