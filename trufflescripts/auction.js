@@ -135,7 +135,7 @@ async function runStep(step, accounts, contracts, master) {
       await participateInAuction(contracts)
       break
     case 4:
-      await fillAndClearAuctions(contracts, (Math.random() / 10 + 0.02).toFixed(3), master)
+      await fillAndClearAuctions(contracts, 0.02, master)
       await printMGNAccumulated(contracts, accounts)
       break
     case 5:
