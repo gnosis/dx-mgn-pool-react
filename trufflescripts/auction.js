@@ -473,6 +473,8 @@ async function withdrawFunds({ ethPool, gnoPool, coordinator }, accounts) {
   await Promise.all(accounts.map(acc => Promise.all([
       ethPool.withdrawDeposit({ from: acc }),
       gnoPool.withdrawDeposit({ from: acc }),
+    ])))
+  await Promise.all(accounts.map(acc => Promise.all([
       ethPool.withdrawMagnolia({ from: acc }),
       gnoPool.withdrawMagnolia({ from: acc }),
     ])))
