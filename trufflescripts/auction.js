@@ -154,8 +154,10 @@ async function runStep(step, accounts, contracts, master) {
       await printPoolBalances(contracts)
       break
     case 9:
+      await printPoolBalances(contracts)
       await withdrawFunds(contracts, accounts)
       await printAccountBalances(contracts, accounts)
+      await printPoolBalances(contracts)
       break
 
     default:
