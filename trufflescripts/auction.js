@@ -21,10 +21,10 @@
 
 /**
  * examples:
- * $ npx truffle exectruffle exec trufflescripts/auction.js
+ * $ npx truffle exec trufflescripts/auction.js
  * will go through the complete Pooling lifecycle
  * 
- * $ npx truffle exectruffle exec trufflescripts/auction.js 0 1 2
+ * $ npx truffle exec trufflescripts/auction.js 0 1 2
  * accounts are funded, auction started, deposits to pools made, State == Pooling
  *
  */
