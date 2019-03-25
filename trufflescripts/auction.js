@@ -460,9 +460,16 @@ async function withdrawUnlockedMagnolia({ ethPool, gnoPool }) {
   await printPoolState(ethPool)
 }
 
-async function withdrawFunds({ ethPool, gnoPool }, accounts) {
-  console.log('Withrawing ETH, GNO and MGN from the pools')
+async function withdrawFunds({ ethPool, gnoPool, coordinator }, accounts) {
+  console.log('\nWithrawing ETH, GNO and MGN from the pools')
 
+  if (argv.coord || argv.c) {
+    console.log('Calling Coordinator.withdrawMGNandDepositsFromBothPools()')
+    await Promise.all(accounts.map(acc => coordinator.withdrawMGNandDepositsFromBothPools({ from: acc })))
+    return
+  }
+
+  console.log('Calling Pool.withdrawDeposit() and Pool.withdrawMagnolia() on each pool')
   await Promise.all(accounts.map(acc => Promise.all([
       ethPool.withdrawDeposit({ from: acc }),
       gnoPool.withdrawDeposit({ from: acc }),
