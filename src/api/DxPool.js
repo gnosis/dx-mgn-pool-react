@@ -254,6 +254,8 @@ async function init() {
     withdrawDepositPool2,
     withdrawMagnoliaPool1,
     withdrawMagnoliaPool2,
+    withdrawDepositAndMagnoliaPool1,
+    withdrawDepositAndMagnoliaPool2,
     // event,
     // allEvents,
   }
