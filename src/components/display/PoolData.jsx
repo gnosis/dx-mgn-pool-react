@@ -6,7 +6,7 @@ import DataDisplayVisualContainer from './DataDisplay'
 import Countdown from './Countdown'
 import { TextInput } from '../controls/ControlledInput'
 
-import { checkLoadingOrNonZero } from '../../api/utils'
+import { checkLoadingOrNonZero, poolTimeFormat } from '../../api/utils'
 
 import { POOL_STATES, POOL_STATES_READABLE, DATA_LOAD_STRING, FIXED_DECIMAL_AMOUNT } from '../../globals'
 
@@ -36,7 +36,7 @@ const PoolData = ({
                     <h3 style={{ backgroundColor: '#bae8f9' }}>{DX_MGN_POOL.POOL1.DEPOSIT_TOKEN.toLowerCase()} [{DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL.toLowerCase()}]</h3>
                     <p><span className="data-title">STATUS:</span> <strong>{POOL_STATES_READABLE[POOL1STATE].toUpperCase()}</strong></p>
                     {DX_MGN_POOL.POOL1.POOLING_PERIOD_END !== DATA_LOAD_STRING && 
-                        <p><span className="data-title">POOLING END TIME:</span> <span className="data-date">{new Date(DX_MGN_POOL.POOL1.POOLING_PERIOD_END * 1000).toLocaleString()}</span></p>}
+                        <p><span className="data-title">POOLING END TIME:</span> <span className="data-date">{poolTimeFormat(DX_MGN_POOL.POOL1.POOLING_PERIOD_END * 1000)}</span></p>}
                     <hr />
                     <p><span className="data-title">TOTAL POOL SHARE:</span> {DX_MGN_POOL.POOL1.TOTAL_SHARE}</p>
                     <p><span className="data-title">YOUR CONTRIBUTION:</span> {DX_MGN_POOL.POOL1.YOUR_SHARE}</p>
@@ -95,7 +95,7 @@ const PoolData = ({
                     <h3 style={{ backgroundColor: '#d1c6fb' }}>{DX_MGN_POOL.POOL1.SECONDARY_TOKEN.toLowerCase()} [{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL.toLowerCase()}]</h3>
                     <p><span className="data-title">STATUS:</span> <strong>{POOL_STATES_READABLE[POOL2STATE].toUpperCase()}</strong></p>
                     {DX_MGN_POOL.POOL2.POOLING_PERIOD_END !== DATA_LOAD_STRING && 
-                        <p><span className="data-title">POOLING END TIME:</span> <span className="data-date">{new Date(DX_MGN_POOL.POOL2.POOLING_PERIOD_END * 1000).toLocaleString()}</span></p>}
+                        <p><span className="data-title">POOLING END TIME:</span> <span className="data-date">{poolTimeFormat(DX_MGN_POOL.POOL2.POOLING_PERIOD_END * 1000)}</span></p>}
                     <hr />
                     <p><span className="data-title">TOTAL POOL SHARE:</span> {DX_MGN_POOL.POOL2.TOTAL_SHARE}</p>
                     <p><span className="data-title">YOUR CONTRIBUTION:</span> {DX_MGN_POOL.POOL2.YOUR_SHARE}</p>
