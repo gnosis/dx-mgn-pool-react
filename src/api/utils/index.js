@@ -231,31 +231,12 @@ export {
   checkLoadingOrNonZero,
 }
 
-/**
-   * displayTimeDiff(sec, now)
-   * @param {number} endSec --> time (in seconds) when lock ENDS
-   * @param {number} now    --> time NOW (in seconds)
-   */
-/*  const displayTimeDiff = (endSec, now) => {
-  const diff = endSec - Math.floor(now)
+export const poolTimeFormat = (time) => {
+	const now = new Date(time).toGMTString()
+	const nowSplit = now.split(' ')	
 
-  // if lockTime has passed display nothing
-  if (diff < 0) return undefined
+	const dateNow = nowSplit.slice(0, 4).join(' ')
+	const fixedTime = nowSplit[4].split(':').splice(0, 2).join(':')
 
-  let hours = diff % DAY
-  const days = (diff - hours) / DAY
-
-  let minutes = hours % HOUR
-  hours = (hours - minutes) / HOUR
-
-  const seconds = minutes % MINUTE
-  minutes = (minutes - seconds) / MINUTE
-
-  let res = '[ '
-  if (days) res += `${days}D `
-  if (hours) res += `${hours}H `
-  if (minutes) res += `${minutes}M `
-  if (seconds) res += `${seconds}S `
-
-  return `${res}]`
-} */
+	return `${dateNow} ${fixedTime} GMT`
+}
