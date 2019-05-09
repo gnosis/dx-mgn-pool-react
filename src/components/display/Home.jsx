@@ -14,10 +14,8 @@ const Home = () => (
     {/* DxMgnPool Data */}
     <section className="PoolData">
       <PoolData />
-      {/* Footer */}
       <Footer />
     </section>
-
   </section>
 )
 
