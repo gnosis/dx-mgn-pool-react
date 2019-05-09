@@ -6,7 +6,7 @@ import { delay } from '../../api/utils'
 
 import mgnSVG from '../../assets/MGN_token_white_on_blue.svg'
 
-const AsyncActionsHOC = Component => ({
+const withAsyncActions = Component => ({
     asyncAction,
     buttonText = 'subMit',
     buttonOnly,
@@ -51,7 +51,7 @@ const AsyncActionsHOC = Component => ({
             // For blockchain MM delay
             await delay(10000)
         } catch (err) {
-			console.error('AsyncActionsHOC ERROR: ', err)
+			console.error('withAsyncActions ERROR: ', err)
             setError(err.message || err)
 
             await delay(4000)
@@ -103,4 +103,4 @@ const AsyncActionsHOC = Component => ({
     )
 }
 
-export default AsyncActionsHOC
+export default withAsyncActions
