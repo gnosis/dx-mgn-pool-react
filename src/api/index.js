@@ -8,14 +8,16 @@ import { fromWei, toBN } from '../api/utils'
 
 import { BN_4_PERCENT } from '../globals'
 
+export * from './Contracts'
+
 // API singleton
 let appAPI
 
 // API initialiser
-export const getAPI = async () => {
-  if (appAPI) return appAPI
+export const getAPI = async (force) => {
+  if (appAPI && !force) return appAPI
 
-  appAPI = await init()
+  appAPI = await init(force)
   return appAPI
 }
 
@@ -529,11 +531,11 @@ async function depositIfETH(tokenAddress, weiAmount, userAccount) {
   return false
 }
 
-async function init() {
+async function init(force) {
   const [Web3, Tokens, DxPool] = await Promise.all([
-    getWeb3API(),
-    getTokensAPI(),
-    getDxPoolAPI(),
+    getWeb3API(force),
+    getTokensAPI(force),
+    getDxPoolAPI(force),
   ])
 
   const Contracts = await getAppContracts()

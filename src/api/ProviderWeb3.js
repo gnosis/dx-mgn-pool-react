@@ -11,8 +11,8 @@ import { netIdToName, netIdToWebsocket, windowLoaded } from './utils'
 
 let appWeb3
 
-export const getWeb3API = async () => {
-  if (appWeb3) return appWeb3
+export const getWeb3API = async (force) => {
+  if (appWeb3 && !force) return appWeb3
 
   appWeb3 = await init()
   return appWeb3
