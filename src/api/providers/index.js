@@ -1,6 +1,7 @@
 /* eslint-disable no-return-assign */
 import Web3 from 'web3'
 import { networkById } from '../../globals'
+import { delay } from '../../api/utils'
 
 export const getAccount = async (provider) => {
   const [account] = await provider.web3.eth.getAccounts()
@@ -63,7 +64,7 @@ const Providers = {
     },
 
     initialize() {
-      if (!this.checkAvailability()) return
+      if (!this.checkAvailability()) return console.debug('Provider not available, returning empty.')
       this.web3 = new Web3(window.web3.currentProvider)
       this.state = {}
 
@@ -93,3 +94,12 @@ export const checkProviderOnWindow = async () => {
     }
   }
 }
+
+export const checkAndSetProviderStatus = async () =>
+  Promise.race([
+    delay(500),
+    safeInjected,
+  ]).then(async () => {
+      const provider = await checkProviderOnWindow()
+      return !!provider
+  })
