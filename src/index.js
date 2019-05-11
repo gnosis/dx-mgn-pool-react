@@ -74,7 +74,7 @@ const conditionalRender = async () => {
                 // const netBlockedPromise = isNetBlocked(['1'])
                 // geoblock gets precedence, checked last
                 blocked = await isGeoBlocked()
-				console.debug("TCL: conditionalRender -> blocked", blocked)
+            
                 if (blocked) {
                     disabledReason = 'geoblock'
                 } /* else {

@@ -8,10 +8,6 @@ import { connect } from '../StateProvider'
 import { getAPI } from '../../api'
 import { getAppContracts } from '../../api/Contracts'
 
-import withConfigDisplay from '../hoc/withConfigDisplay'
-import withModal from '../hoc/withModal'
-import withPoolSwitching from '../hoc/withPoolSwitching'
-
 import startSubscriptions from '../../subscriptions'
 
 function WalletConnect({
@@ -42,13 +38,8 @@ function WalletConnect({
   }, [])
 
   useEffect(() => {
-    console.debug('Change detected in selectedPool: ', selectedPool)
-
     if (ACTIVE_PROVIDER) {
-      console.debug('Firing wallet integration setup with new address')
       onChange(ACTIVE_PROVIDER)
-    } else {
-      console.debug('No ACTIVE_PROVIDER, skipping onChange call')
     }
   }, [selectedPool])
 
@@ -62,7 +53,7 @@ function WalletConnect({
     let unsub
     try {
       // Set Modal
-      showModal('Loading user data . . .')
+      showModal('loading user data')
 
       // Gnosis Safe Fix
       Promise.race([
@@ -78,7 +69,6 @@ function WalletConnect({
       _setInitialising(true)
 
       const chosenProvider = Providers[providerInfo]
-			console.debug("TCL: onChange -> chosenProvider", chosenProvider)
       // initialize providers and return specific Web3 instances
       await chosenProvider.initialize()
 
@@ -90,14 +80,11 @@ function WalletConnect({
 
       // interface with contracts & connect entire DX API
       await getAppContracts(selectedPool, 'FORCE')
-      console.debug('Got app contracts')
       // INIT main API
       await getAPI()
-      console.debug('Got app API')
 
       // Start socket state subscriptions
       unsub = await startSubscriptions()
-      console.debug('restarted subs')
 
       // Lazy load pool token info
       setPoolTokenInfo()
