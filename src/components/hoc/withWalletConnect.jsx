@@ -1,44 +1,30 @@
-import React, { useEffect, useState } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 
+// import { connect } from '../StateProvider'
 import Providers, { checkAndSetProviderStatus } from '../../api/providers'
 
-import { connect } from '../StateProvider'
-
-import withConfigDisplay from '../hoc/withConfigDisplay'
-import withModal from '../hoc/withModal'
-import withPoolSwitching from '../hoc/withPoolSwitching'
-
-/* 
-    1. JUST wallet/provider setup
-*/
-
-const withWalletConnect = WrappedComponent =>
-    function walletConnect(props) {
+export const withWalletConnect = WrappedComponent =>
+    function WalletConnectHOC(props) {
         const {
-            pools,
-            changePool,
-            selectedPool, 
             dispatchers: { 
                 registerProviders, 
                 setActiveProvider,
                 showModal,
-                setPoolTokenInfo,
             }, 
             state: { ACTIVE_PROVIDER }, 
-            children,
         } = props
 
         const [providersDetected, setProvidersDetected] = useState(false)
-        const [error, _setError] = useState(undefined)
-        const [initialising, _setInitialising] = useState(false)
-        const [activeProviderSet, _setActiveProviderState] = useState(undefined)
+        const [error, setError] = useState(undefined)
+        const [bootingUp, setBootingUp] = useState(true)
+        // const [activeProviderSet, setActiveProviderSet] = useState(undefined)
         // const [disclaimerAccepted, setDisclaimerAccepted] = useState(false)
 
         /* 
         * MOUNT LOGIC
         * REGISTER PROVIDERS INTO GLOBAL STATE
         */
-        useEffect(() => {
+        useLayoutEffect(() => {
             // returns [ Provider{}, ... ]
             const providersArray = Object.values(Providers)
             // register each providerObject into state
@@ -46,24 +32,25 @@ const withWalletConnect = WrappedComponent =>
         }, [])
 
         /**
-         * onChange Event Handler
+         * onWalletSelect Event Handler
          * @param { providerInfo } @type { ProviderObject }
          * @memberof withWalletConnect
          */
-        async function onChange(providerInfo) {
+        async function onWalletSelect(providerInfo) {
             // App state subscriptions
             let unsub
-            try {
-                // Set Modal
-                showModal('Loading user data . . .')
 
-                // Gnosis Safe Fix
+            // State setters
+            setBootingUp(true)
+            setError(undefined)
+            
+            // Set Modal
+            showModal('connecting wallet')
+
+            try {                
+                // Gnosis Safe Fix + Provider Enable
                 const providerStatus = await checkAndSetProviderStatus()
                 setProvidersDetected(providerStatus)
-
-                // State setters
-                _setError(undefined)
-                _setInitialising(true)
 
                 const chosenProvider = Providers[providerInfo]
                 // initialize providers and return specific Web3 instances
@@ -73,24 +60,26 @@ const withWalletConnect = WrappedComponent =>
                 setActiveProvider(providerInfo)
                 
                 // Save web3 provider + notify state locally
-                return _setActiveProviderState(true)
+                // return setActiveProviderSet(true)
             } catch (err) {
                 console.error(err)
-                _setError(err)
-
+                setError(err)
                 // Unsubscribe
                 return unsub && unsub()
             } finally {
-                _setInitialising(false)
                 // Hide Modal
                 showModal(undefined)
+                // Stop boot up
+                // called here so showModal close doesnt interrupt possible child
+                // modals
+                setBootingUp(false)
             }
         }
 
         const walletSelector = () => (
             <section className="walletChooser">
             <h2>Please select a wallet</h2>
-            <div className={initialising || providersDetected ? '' : 'lightBlue'}>
+            <div className={bootingUp || providersDetected ? '' : 'lightBlue'}>
                 {Object.keys(Providers).map((provider, i) => {
                 const providerObj = Providers[provider]
                 return (
@@ -98,7 +87,7 @@ const withWalletConnect = WrappedComponent =>
                     className="poolContainer providerChoiceContainer"
                     role="container"
                     key={i}
-                    onClick={() => onChange(provider)}
+                    onClick={() => onWalletSelect(provider)}
                     >
                     <h4 className="providerChoice">{`${providerObj.providerName || ''}`}</h4>
                     </div>
@@ -107,55 +96,10 @@ const withWalletConnect = WrappedComponent =>
             </div>
             </section>
         )
-
         if (error) return <h1>An error occurred: {error}</h1>
+        if (!ACTIVE_PROVIDER) return walletSelector()
         
-        // if ((ACTIVE_PROVIDER && activeProviderSet) && !initialising) 
-            // return <><div>{pools.map(pool => <p onClick={() => changePool(pool.coordinator)} style={{ cursor: 'pointer' }}>{pool.coordinator}</p>)}</div>{children}</>
-        
-        if (initialising) return walletSelector()
-
-        return <WrappedComponent {...props} />
+        return !bootingUp && <WrappedComponent {...props} />
     }
-
-/* const mapProps = ({
-  // state properties
-  state: {
-    PROVIDER: { ACTIVE_PROVIDER },
-    TOKEN_MGN: {
-      ADDRESS,
-    },
-    LOADING,
-    SHOW_MODAL,
-    INPUT_AMOUNT,
-  },
-  // dispatchers
-  appLoading,
-  registerProviders,
-  setActiveProvider,
-  getDXTokenBalance,
-  saveContract,
-  showModal,
-  setPoolTokenInfo,
-}) => ({
-  // state properties
-  state: {
-    "[MGN] Address": ADDRESS,
-    ACTIVE_PROVIDER,
-    LOADING,
-    SHOW_MODAL,
-    INPUT_AMOUNT,
-  },
-  // dispatchers
-  dispatchers: {
-    appLoading,
-    registerProviders,
-    setActiveProvider,
-    getDXTokenBalance,
-    saveContract,
-    showModal,
-    setPoolTokenInfo,
-  },
-}) */
 
 export default withWalletConnect
