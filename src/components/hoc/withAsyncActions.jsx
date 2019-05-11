@@ -6,7 +6,7 @@ import { delay } from '../../api/utils'
 
 import mgnSVG from '../../assets/MGN_token_white_on_blue.svg'
 
-const withAsyncActions = Component => ({
+export const withAsyncActions = Component => ({
     asyncAction,
     buttonText = 'subMit',
     buttonOnly,
