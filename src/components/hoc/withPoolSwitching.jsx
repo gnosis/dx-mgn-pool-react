@@ -43,13 +43,14 @@ const PoolPicker = ({
     pools,
     startOpen,
 }) => ( 
-    <section className="Home" style={{ height: '68%' }}>
+    <section className="PoolSwitcher" style={{ height: '68%' }}>
         <DataDisplayVisualContainer
             title="available pools"
             colour="green"
             customStyle={{
                 display: 'flex',
                 flexFlow: 'column nowrap',
+                flex: 1,
                 width: "100%",
             }}
             preformatted={false}

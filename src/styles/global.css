@@ -49,8 +49,17 @@ section {
     width: 100%;
 }
 
-section.Home, section.walletChooser {
+section.Home, section.walletChooser, section.PoolSwitcher {
     max-width: 93%;
+}
+
+section.PoolSwitcher {
+    display: flex;
+    flex-flow: column;
+    flex: 1;
+    justify-content: flex-start;
+    margin: 30px auto;
+    width: 93%;
 }
 
 section.home {
@@ -265,9 +274,10 @@ section.PoolData, section.UserState {
 .poolSwitcherContainer {
     display: flex;
     flex-flow: row wrap;
+    flex: 1;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    /* height: 100%; */
     width: 100%;
 }
 
@@ -456,6 +466,7 @@ input[type="text"] {
 
 .hideContent {
     height: 0 !important;
+    flex: 0 0% !important;
 }
 
 .footerH {
