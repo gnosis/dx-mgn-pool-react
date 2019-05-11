@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from '../StateProvider'
 
 import DataDisplayVisualContainer from './DataDisplay'
-import withAsyncActions from '../hoc/withAsyncActions'
+import { withAsyncActions } from '../hoc'
 
 import {
   lockAllMgn,

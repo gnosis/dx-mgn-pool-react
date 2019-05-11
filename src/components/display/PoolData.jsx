@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from '../StateProvider'
 
-import withAsyncActions from '../hoc/withAsyncActions'
+import { withAsyncActions } from '../hoc'
 import DataDisplayVisualContainer from './DataDisplay'
 import Countdown from './Countdown'
 import { TextInput } from '../controls/ControlledInput'
