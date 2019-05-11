@@ -6,7 +6,7 @@ import DataDisplayContainer from '../display/DataDisplay'
  * Configuration Displayer HOC
  * @param {*} Component Component to wrap
  */
-const withConfigDisplay = Component =>
+export const withConfigDisplay = Component =>
   class extends React.Component {
     state = {
       ENV: process.env.NODE_ENV,
