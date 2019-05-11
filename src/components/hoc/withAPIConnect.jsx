@@ -1,50 +1,58 @@
-import React, { useEffect } from 'react'
+import React, { useLayoutEffect } from 'react'
 
-const withAPIConnect = WrappedComponent =>
-    function APIConnect(props) {
+import { getAPI, getAppContracts } from '../../api'
+import startSubscriptions from '../../subscriptions'
+
+export const withAPIConnect = WrappedComponent =>
+    function APIConnectHOC(props) {
+        const {
+            state: {
+                ACTIVE_PROVIDER,
+            },
+            dispatchers: {
+                setPoolTokenInfo,
+                showModal,
+            },
+            selectedPool,
+        } = props
+
         /* 
-        * MOUNT LOGIC
-        * 
+        * POOL SWITCHING DETECTION - MOUNT LOGIC
         */
-        useEffect(() => {
+       useLayoutEffect(() => {
+            let unsubscribe
 
-        }, [])
-
-        /* 
-        * POOL SWITCHING DETECTION 
-        */
-        /* useEffect(() => {
-            console.debug('Change detected in selectedPool: ', selectedPool)
-
+            // Make sure app has an ACTIVE_PROVIDER set before running, else do nothing
             if (ACTIVE_PROVIDER) {
-            console.debug('Firing wallet integration setup with new address')
-            onChange(ACTIVE_PROVIDER)
-            } else {
-            console.debug('No ACTIVE_PROVIDER, skipping onChange call')
+                showModal('loading user data')
+                // returns unsubscribe method
+                APIInitialisation()
+                // eslint-disable-next-line no-return-assign
+                .then(res => unsubscribe = res)
+                // Hide modal
+                .then(() => showModal(null))
             }
-        }, [selectedPool]) */
+
+            return () => unsubscribe && unsubscribe()
+        }, [selectedPool])
 
         async function APIInitialisation() {
             let unsubscribe
             try {
-            // interface with contracts & connect entire DX API
-            await getAppContracts(selectedPool, 'FORCE')
-            console.debug('Got app contracts')
-            // INIT main API
-            await getAPI()
-            console.debug('Got app API')
+                // interface with contracts & connect entire DX API
+                await getAppContracts(selectedPool, 'FORCE')
+                // INIT main API
+                await getAPI('FORCE')
 
-            // Start socket state subscriptions
-            unsubscribe = await startSubscriptions()
-            console.debug('restarted subs')
+                unsubscribe = await startSubscriptions()
 
-            // Lazy load pool token info
-            setPoolTokenInfo()
+                // Lazy load pool token info
+                await setPoolTokenInfo()
             } catch (initError) {
                 console.error(initError)
-
-                return unsubscribe && unsubscribe()
             }
+
+            return unsubscribe
         }
 
         return <WrappedComponent {...props} />
