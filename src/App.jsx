@@ -1,7 +1,7 @@
 import React from 'react'
 import { hot } from 'react-hot-loader'
 
-import { DutchXVerificationHOC as withDXVerification } from '@gnosis.pm/dutchx-verification-react'
+import { withDutchXVerification } from '@gnosis.pm/dutchx-verification-react'
 
 import AppOnlineStatusBar from './components/display/AppOnlineStatus'
 import Blocked from './components/display/Modals/Blocked'
@@ -26,7 +26,7 @@ const SubscribedApp = () =>
     }
   </GlobalSubscription>
 
-const ModalWrappedApp = withDXVerification(SubscribedApp)(LOCALFORAGE_KEYS.VERIFICATION_SETTINGS, LOCALFORAGE_KEYS.COOKIE_SETTINGS)
+const ModalWrappedApp = withDutchXVerification(SubscribedApp)(LOCALFORAGE_KEYS.VERIFICATION_SETTINGS, LOCALFORAGE_KEYS.COOKIE_SETTINGS)
 
 const App = ({
   disabledReason,
