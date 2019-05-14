@@ -5,10 +5,10 @@
  * NETWORK BLOCKING
  */
 
-import blockCodes from './blocked_codes.json'
+import { BLOCKED_COUNTRIES } from './blockedCountries'
 import { web3CompatibleNetwork } from '../api/utils'
 
-export const geoBlockedCountryCodes = new Set(blockCodes)
+export const geoBlockedCountryCodes = new Set(Object.keys(BLOCKED_COUNTRIES))
 
 const unblockDateCheck = async () => {
   const lockPeriod = {
