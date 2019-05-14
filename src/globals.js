@@ -16,7 +16,7 @@ export const APP_URLS = {
 }
 
 export const CONTENT_URLS = {
-  HOW_IT_WORKS: 'https://medium.com',
+  HOW_IT_WORKS: 'https://blog.gnosis.pm/walkthrough-how-to-use-the-dutchx-mgn-pool-interface-8989d26c4799',
 }
 
 export const ETHEREUM_NETWORKS = {
