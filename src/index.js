@@ -31,7 +31,7 @@ const asyncRender = async () => {
 const conditionalRender = async () => {
     /* User's environment does not have access to window API (e.g user on mobile?) */
     if (typeof window === 'undefined') return false
-    let blocked = true, disabledReason/* , ALLOWED_NETWORK */
+    let blocked = true, disabledReason, ALLOWED_NETWORK
 
     const { hostname } = window.location
     const { FE_CONDITIONAL_ENV } = process.env
@@ -63,24 +63,23 @@ const conditionalRender = async () => {
             } else if (APP_URLS.PRODUCTION.RINKEBY.includes(hostname)) {
                 // Main release Scenarios:
                 /* Scenario 2: User is using the dx on dutchx-rinkeby (RINKEBY): BLOCK: networks */
-                // ALLOWED_NETWORK = 'Rinkeby Test Network'
+                ALLOWED_NETWORK = 'Rinkeby Test Network'
                 blocked = await isNetBlocked(['4'])
                 if (blocked) disabledReason = 'networkblock'
                 // init GA
                 // ReactGA.initialize(GA_CODES.RINKEBY)
             } else if (APP_URLS.PRODUCTION.MAIN.includes(hostname)) {
                 /* Scenario 3: User is using the dx on dutchx.app (MAIN): BLOCK: all networks + geoblock */
-                // ALLOWED_NETWORK = 'Ethereum Mainnet'
-                // const netBlockedPromise = isNetBlocked(['1'])
+                ALLOWED_NETWORK = 'Ethereum Mainnet'
+                const netBlockedPromise = isNetBlocked(['1'])
                 // geoblock gets precedence, checked last
                 blocked = await isGeoBlocked()
-				console.debug("TCL: conditionalRender -> blocked", blocked)
                 if (blocked) {
                     disabledReason = 'geoblock'
-                } /* else {
+                } else {
                     blocked = await netBlockedPromise
                     if (blocked) disabledReason = 'networkblock'
-                } */
+                }
                 // init GA
                 // ReactGA.initialize(GA_CODES.MAIN)
             } else {
@@ -89,12 +88,13 @@ const conditionalRender = async () => {
                 disabledReason = 'geoblock'
             }
         }
+
         // Blocked for one reason or another
         if (blocked) {
             window.history.replaceState(null, '', '/')
             // eslint-disable-next-line no-return-assign
             // return rootElement.innerHTML = ReactDOM.renderToStaticMarkup(<App disabledReason={disabledReason} /* networkAllowed={ALLOWED_NETWORK} */ />)
-            return ReactDOM.hydrate(<App disabledReason={disabledReason} />, rootElement)
+            return ReactDOM.hydrate(<App disabledReason={disabledReason} networkAllowed={ALLOWED_NETWORK} />, rootElement)
         }
 
         // all good? render app

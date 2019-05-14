@@ -33,11 +33,12 @@ const ModalWrappedApp = DutchXVerificationHOC(ConnectedApp)(LOCALFORAGE_KEYS.VER
 
 const App = ({
   disabledReason,
+  networkAllowed,
 }) => (
   disabledReason 
     ?
   // App is blocked 
-  <Blocked /> 
+  <Blocked disabledReason={disabledReason} networkAllowed={networkAllowed} /> 
     :
   <ModalWrappedApp />
 )
