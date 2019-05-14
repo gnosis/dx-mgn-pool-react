@@ -391,10 +391,7 @@ function AppProvider(props) {
       poolNumber,
       amount = state.INPUT_AMOUNT,
       userAccount = state.USER.ACCOUNT,
-    }) => {
-      const receipt = await approveAndDepositIntoDxMgnPool(poolNumber, toWei(amount), userAccount)
-			console.debug('APPROVE and DEPOSIT into DX-MGN-POOL TX RECEIPT: ', receipt)
-    },
+    }) => approveAndDepositIntoDxMgnPool(poolNumber, toWei(amount), userAccount),
 
     setDxMgnPoolState: async () => {
       const {
@@ -487,7 +484,6 @@ function AppProvider(props) {
         },
       } = state
 
-			console.debug('TCL: AppProvider -> tcd, tcm', tcd, tcm)
       // PoolData.jsx checks that values are nonZero AND not 'LOADING...'
       // before showing button - so no need to check here as well
       if (!checkLoadingOrNonZero(tcd, tcm)) throw new Error('Nothing claimable!')

@@ -8,12 +8,12 @@ import { connect } from '../StateProvider'
 import { getAPI } from '../../api'
 import { getAppContracts } from '../../api/Contracts'
 
-import ConfigDisplayerHOC from '../hoc/ConfigDisplayHOC'
-import ModalHOC from '../hoc/ModalHOC'
-
 import startSubscriptions from '../../subscriptions'
 
-function WalletIntegration({ 
+function WalletConnect({
+  pools,
+  changePool,
+  selectedPool, 
   dispatchers: { 
     registerProviders, 
     setActiveProvider,
@@ -29,7 +29,6 @@ function WalletIntegration({
   const [activeProviderSet, _setActiveProviderState] = useState(undefined)
   // const [disclaimerAccepted, setDisclaimerAccepted] = useState(false)
 
-
   // Fire once on load
   useEffect(() => {
     // returns [ Provider{}, ... ]
@@ -38,17 +37,23 @@ function WalletIntegration({
     providersArray.forEach(() => { registerProviders(providersArray) })
   }, [])
 
+  useEffect(() => {
+    if (ACTIVE_PROVIDER) {
+      onChange(ACTIVE_PROVIDER)
+    }
+  }, [selectedPool])
+
   /**
    * onChange Event Handler
    * @param { providerInfo } @type { ProviderObject }
-   * @memberof WalletIntegration
+   * @memberof WalletConnect
    */
-  const onChange = async (providerInfo) => {
+  async function onChange(providerInfo) {
     // App state subscriptions
     let unsub
     try {
       // Set Modal
-      showModal('Loading user data . . .')
+      showModal('loading user data')
 
       // Gnosis Safe Fix
       Promise.race([
@@ -74,8 +79,7 @@ function WalletIntegration({
       _setActiveProviderState(true)
 
       // interface with contracts & connect entire DX API
-      await getAppContracts()
-
+      await getAppContracts(selectedPool, 'FORCE')
       // INIT main API
       await getAPI()
 
@@ -94,10 +98,10 @@ function WalletIntegration({
 
       showModal(undefined)      
       _setInitialising(false)
-      _setError(error)
+      _setError(err)
 
       // Unsubscribe
-      return unsub()
+      return unsub && unsub()
     }
   }
 
@@ -119,29 +123,12 @@ function WalletIntegration({
           )
         })}
       </div>
-      {error && <h3>{error.message}</h3>}
     </section>
   )
-  
-  /* // TODO: remove
-  if (!disclaimerAccepted) {
-    return (
-      <DutchXVerfication
-        fontFamily="monospace"
-        relativeFontSize={13}
-
-        acceptDisclaimer={setDisclaimerAccepted}
-        saveLocalForageVerificationSettings={asyncSaveSettings}
-
-        localForageVerificationKey={LOCALFORAGE_KEYS.VERIFICATION_SETTINGS}
-        localForageCookiesKey={LOCALFORAGE_KEYS.COOKIE_SETTINGS}
-      />
-    )
-  } */
 
   if (error) return <h1>An error occurred: {error}</h1>
   
-  if ((ACTIVE_PROVIDER && activeProviderSet) && !initialising) return children
+  if ((ACTIVE_PROVIDER && activeProviderSet) && !initialising) return <><div>{pools.map(pool => <p onClick={() => changePool(pool.coordinator)} style={{ cursor: 'pointer' }}>{pool.coordinator}</p>)}</div>{children}</>
   
   return walletSelector()
 }
@@ -187,5 +174,5 @@ const mapProps = ({
 })
 
 export default connect(mapProps)(process.env.SHOW_APP_DATA === 'true'
-  ? ModalHOC(ConfigDisplayerHOC(WalletIntegration))
-  : ModalHOC(WalletIntegration))
+  ? withPoolSwitching(withConfigDisplay(WalletConnect))
+  : withModal(withPoolSwitching(WalletConnect)))

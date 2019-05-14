@@ -3,8 +3,8 @@ import { GAS_LIMIT, GAS_PRICE } from '../globals'
 
 let dxPoolAPI
 
-export const getDxPoolAPI = async () => {
-  if (dxPoolAPI) return dxPoolAPI
+export const getDxPoolAPI = async (force) => {
+  if (dxPoolAPI && !force) return dxPoolAPI
 
   dxPoolAPI = await init()
   return dxPoolAPI

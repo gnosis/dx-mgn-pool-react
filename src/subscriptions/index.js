@@ -251,7 +251,7 @@ export const MGNPoolDataSubscription = createSubscription({
 })
 
 export default async function startSubscriptions() {
-  const { Web3 } = await getAPI()
+  const { Web3 } = await getAPI('FORCE')
 
   // get initial state populated
   AccountSub.update()
@@ -260,7 +260,8 @@ export default async function startSubscriptions() {
 
     // create filter listening for latest new blocks
   const subscription = Web3.web3WS.eth.subscribe("newBlockHeaders")
-
+  subscription.unsubscribe()
+  
   subscription.on("data", (blockHeader) => {
     console.debug(
       "New block header - updating AccountSub, BlockSub + subscribers",
@@ -282,6 +283,7 @@ export default async function startSubscriptions() {
   const unsubNetwork = watchMMaskFor(Web3.web3.currentProvider, 'networkChanged', () => NetworkSub.update())
 
   return () => {
+    // eslint-disable-next-line no-unused-expressions
     subscription && subscription.unsubscribe()
     unsubAcc()
     unsubNetwork()

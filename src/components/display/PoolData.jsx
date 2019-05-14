@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from '../StateProvider'
 
-import AsyncActionsHOC from '../hoc/AsyncActionsHOC'
+import { withAsyncActions } from '../hoc'
 import DataDisplayVisualContainer from './DataDisplay'
 import Countdown from './Countdown'
 import { TextInput } from '../controls/ControlledInput'
@@ -10,8 +10,8 @@ import { checkLoadingOrNonZero, poolTimeFormat } from '../../api/utils'
 
 import { POOL_STATES, POOL_STATES_READABLE, DATA_LOAD_STRING, FIXED_DECIMAL_AMOUNT } from '../../globals'
 
-const DepositToken = AsyncActionsHOC(TextInput)
-const WithdrawMGNandDepositsFromBothPools = AsyncActionsHOC()
+const DepositToken = withAsyncActions(TextInput)
+const WithdrawMGNandDepositsFromBothPools = withAsyncActions()
 
 const showDataForState = (data, currState, stateExpected) => (data === DATA_LOAD_STRING || currState === stateExpected || !!Number(data))
 

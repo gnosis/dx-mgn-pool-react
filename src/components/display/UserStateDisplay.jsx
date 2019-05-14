@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from '../StateProvider'
 
 import DataDisplayVisualContainer from './DataDisplay'
-import AsyncActionsHOC from '../hoc/AsyncActionsHOC'
+import { withAsyncActions } from '../hoc'
 
 import {
   lockAllMgn,
@@ -16,7 +16,7 @@ const userStateDisplayHeader = {
   backgroundColor: '#fbcaca',
 }
 
-const LockMGN = AsyncActionsHOC()
+const LockMGN = withAsyncActions()
 
 const UserStateDisplay = ({ NETWORK, USER, MGN_BALANCES }) =>
   <DataDisplayVisualContainer

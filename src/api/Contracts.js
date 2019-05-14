@@ -10,9 +10,9 @@ let appContracts
 // contract array, strings
 // ADD HERE contracts you want to deploy - names should be exactly as read in build/contracts (without .json)
 const contracts = [
-  'Coordinator',
   'EtherToken',
   'TokenGNO',
+  // 'Coordinator'
   // 'TokenFRT',
   // 'TokenOWL',
   // 'TokenOWLProxy',
@@ -86,7 +86,7 @@ const contractArtifacts = contracts.map((c) => {
 // e.g Development SuperCoolContract may be different from Production SuperCoolContract
 // inject network addresses
 const
-  networksMgnPool = require('@gnosis.pm/dx-mgn-pool/networks.json'),
+  // networksMgnPool = require('@gnosis.pm/dx-mgn-pool/networks.json'),
   networksUtils   = require('@gnosis.pm/util-contracts/networks.json'),
   networksGNO     = require('@gnosis.pm/gno-token/networks.json')
 
@@ -99,7 +99,7 @@ for (const contrArt of contractArtifacts) {
     contrArt.networks,
     networksUtils[contractName],
     networksGNO[contractName],
-    networksMgnPool[contractName],
+    // networksMgnPool[contractName],
   )
 }
 
@@ -143,10 +143,11 @@ if (process.env.SHORT_TEST) {
 const TruffleWrappedContractArtifacts = contractArtifacts.map(contractArtifact => TruffleContract(contractArtifact))
 
 // Wrap and deploy HumanFriendlyToken/DxMgnPool/TokenFRT to interface with any contract addresses called
-export const HumanFriendlyToken = TruffleContract(require('@gnosis.pm/util-contracts/build/contracts/HumanFriendlyToken.json'))
+export const Coordinator = TruffleContract(require('@gnosis.pm/dx-mgn-pool/build/contracts/Coordinator.json'))
 export const DxMgnPool = TruffleContract(require('@gnosis.pm/dx-mgn-pool/build/contracts/DxMgnPool.json'))
 export const TokenMGN = TruffleContract(require('@gnosis.pm/dx-contracts/build/contracts/TokenFRT.json'))
 export const EtherToken = TruffleContract(require('@gnosis.pm/util-contracts/build/contracts/EtherToken.json'))
+export const HumanFriendlyToken = TruffleContract(require('@gnosis.pm/util-contracts/build/contracts/HumanFriendlyToken.json'))
 
 /**
  * setContractProvider
@@ -157,10 +158,11 @@ const setContractProvider =
   provider =>
     TruffleWrappedContractArtifacts
       .concat([
+        Coordinator,
         DxMgnPool, 
         EtherToken,
-        HumanFriendlyToken, 
         TokenMGN, 
+        HumanFriendlyToken, 
       ])
       .forEach((c) => { c.setProvider(provider) })
 
@@ -181,22 +183,24 @@ const getPromisedInstances = () => Promise.all(TruffleWrappedContractArtifacts.m
    * e.g [deployedContractCodeETH, deployedContractCodeGNO, ... ] = { 'eth': deployedContractCodeETH }
    */
 const contractArrayToMap = (contractArr, shortContractNamesMap = shortContractNames) => contractArr.reduce((acc, contract, index) => {
-  acc[shortContractNamesMap[contracts[index]]] = contract
+  acc[shortContractNamesMap[contracts.concat('Coordinator')[index]]] = contract
   return acc
 }, {})
 
 /**
  * getAppContracts = async () => {
  * getContracts
+ * @param { string } coordinatorAddress - contract address (Coordinator)
+ * @param { boolean } force - force remount of contracts
  * @returns {{ coord: DContr, eth: DContr, gno: DContr, dxMP: TContr, hft: TContr }}
  */
-export const getAppContracts = async (force) => {
+export const getAppContracts = async (coordinatorAddress, force) => {
   // Singleton logic - if contractsAPI already initialised, don't re-init
   // However, accepts a force param - to re-init anyways
   // useful for walletProvider changes etc
   if (appContracts && !force) return appContracts
-
-  appContracts = await init()
+  
+  appContracts = await init(coordinatorAddress)
   return appContracts
 }
 
@@ -205,7 +209,7 @@ export const getAppContracts = async (force) => {
  * Initiates all contracts and return API
  * @returns { Object { dx: depCon, eth: depCon, frt: depCon, hft: depCon, owl: depCon, }
  */
-async function init() {
+async function init(coordinatorAddress) {
   // get initialised Web3API to set inside contracts
   const { currentProvider } = await getWeb3API()
 
@@ -222,7 +226,10 @@ async function init() {
   let deployedContractsArray
   try {
     // Resolves earlier started contracts promise
-    deployedContractsArray = await getPromisedInstances()
+    const deployedContracts = await getPromisedInstances()
+    const coordinator = await Coordinator.at(coordinatorAddress)
+
+    deployedContractsArray = deployedContracts.concat(coordinator)
   } catch (error) {
     // in browser display an error
     // in prebuild react render don't do anything

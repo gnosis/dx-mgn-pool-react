@@ -1,8 +1,6 @@
-/* eslint-disable no-unused-expressions */
-/* eslint-disable camelcase */
+/* eslint-disable no-unused-expressions, no-return-assign */
 import React from 'react'
 import ReactDOM from 'react-dom'
-// import ReactDOMServer from 'react-dom/server'
 
 import App from './App'
 
@@ -56,7 +54,7 @@ const conditionalRender = async () => {
                 blocked = await isGeoBlocked()
                 blocked && (disabledReason = 'geoblock')
 
-                !APP_URLS.STAGING.includes(hostname)/*  && ReactGA.initialize(GA_CODES.IPFS) */
+                // !APP_URLS.STAGING.includes(hostname)/*  && ReactGA.initialize(GA_CODES.IPFS) */
             } else if (APP_URLS.PR_REVIEW_TEST(hostname)) {
                 /* Scenario 1b: User is a developer on a PR-review URL */
                 blocked = false
@@ -74,6 +72,7 @@ const conditionalRender = async () => {
                 const netBlockedPromise = isNetBlocked(['1'])
                 // geoblock gets precedence, checked last
                 blocked = await isGeoBlocked()
+              
                 if (blocked) {
                     disabledReason = 'geoblock'
                 } else {
