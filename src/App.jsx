@@ -30,11 +30,12 @@ const ModalWrappedApp = withDutchXVerification(SubscribedApp)(LOCALFORAGE_KEYS.V
 
 const App = ({
   disabledReason,
+  networkAllowed,
 }) => (
   disabledReason 
     ?
   // App is blocked 
-  <Blocked /> 
+  <Blocked disabledReason={disabledReason} networkAllowed={networkAllowed} /> 
     :
   <ModalWrappedApp />
 )
