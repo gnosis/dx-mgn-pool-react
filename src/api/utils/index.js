@@ -209,6 +209,36 @@ const poolStateIdToName = (id) => {
 
 const delay = async (time = 1000) => new Promise(acc => setTimeout(() => acc('Delay done'), time))
 
+const makeCancelable = (promise) => {
+  let hasCanceled_ = false
+
+  const wrappedPromise = new Promise((resolve, reject) => {
+    promise.then(
+      // eslint-disable-next-line prefer-promise-reject-errors
+      val => (hasCanceled_ ? reject({ isCanceled: true }) : resolve(val)),
+      // eslint-disable-next-line prefer-promise-reject-errors
+      error => (hasCanceled_ ? reject({ isCanceled: true }) : reject(error)),
+    )
+  })
+
+  return {
+    promise: wrappedPromise,
+    cancel() {
+      hasCanceled_ = true
+    },
+  }
+}
+
+const poolTimeFormat = (time) => {
+	const now = new Date(time).toGMTString()
+	const nowSplit = now.split(' ')	
+
+	const dateNow = nowSplit.slice(0, 4).join(' ')
+	const fixedTime = nowSplit[4].split(':').splice(0, 2).join(':')
+
+	return `${dateNow} ${fixedTime} GMT`
+}
+
 export {
   delay,
   toBN,
@@ -229,14 +259,6 @@ export {
   poolStateIdToName,
   splitAddress,
   checkLoadingOrNonZero,
-}
-
-export const poolTimeFormat = (time) => {
-	const now = new Date(time).toGMTString()
-	const nowSplit = now.split(' ')	
-
-	const dateNow = nowSplit.slice(0, 4).join(' ')
-	const fixedTime = nowSplit[4].split(':').splice(0, 2).join(':')
-
-	return `${dateNow} ${fixedTime} GMT`
+  makeCancelable,
+  poolTimeFormat,
 }
