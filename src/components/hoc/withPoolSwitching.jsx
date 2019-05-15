@@ -98,6 +98,9 @@ export const withPoolSwitching = WrappedComponent =>
         
         // Mount
         useLayoutEffect(() => {
+            // reset error
+            setError(undefined)
+
             // grab data async?
             const grabPools = async () => {
                 try {

@@ -23,6 +23,9 @@ export const withAPIConnect = WrappedComponent =>
         * POOL SWITCHING DETECTION - MOUNT LOGIC
         */
        useLayoutEffect(() => {
+            // reset error
+            setError(null)
+
             let unsubscribe
 
             // Make sure app has an ACTIVE_PROVIDER set before running, else do nothing
@@ -41,6 +44,7 @@ export const withAPIConnect = WrappedComponent =>
 
         async function APIInitialisation() {
             let unsubscribe
+
             try {
                 // interface with contracts & connect entire DX API
                 await getAppContracts(selectedPool, 'FORCE')
@@ -48,7 +52,7 @@ export const withAPIConnect = WrappedComponent =>
                 await getAPI('FORCE')
 
                 unsubscribe = await startSubscriptions()
-
+                
                 // Lazy load pool token info
                 await setPoolTokenInfo()
             } catch (initError) {
