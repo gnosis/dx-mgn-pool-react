@@ -1,5 +1,7 @@
 import React from 'react'
-import { useAppOnlineStatus } from '../../api/hooks'
+import { connect } from '../StateProvider'
+
+import { useAppOnlineStatusListener } from '../../api/hooks'
 
 import { CONTENT_URLS } from '../../globals'
 
@@ -9,8 +11,10 @@ const statusBar = {
   fontFamily: 'Permanent Marker',
 }
 
-const AppOnlineStatusBar = () => {
-  const isOnline = useAppOnlineStatus()
+const AppOnlineStatusBar = ({
+  NETWORK = 'UNKNOWN',
+}) => {
+  const isOnline = useAppOnlineStatusListener()
   return (
     <div style={{ ...statusBar }}>
       <pre 
@@ -26,7 +30,7 @@ const AppOnlineStatusBar = () => {
           textAlign: 'center', 
         }}
       >
-        see how the dutchx mgn pooling app works <a href={CONTENT_URLS.HOW_IT_WORKS}>here</a>
+        see how the dutchx mgn pooling app works <a href={CONTENT_URLS.HOW_IT_WORKS} target="_blank" rel="noopener noreferrer">here</a>
       </pre>
       <pre 
         style={{ 
@@ -35,14 +39,22 @@ const AppOnlineStatusBar = () => {
           display: 'inline-flex',
           fontFamily: 'inherit', 
           fontSize: '0.5em', 
-          lineHeight: 0.4, 
+          lineHeight: 1, 
           margin: '0px 0px 0px auto', 
         }}
       >
         APP STATUS: {isOnline ? 'ONLINE' : 'OFFLINE'}
+        <br />
+        NETWORK: {NETWORK}
       </pre>
     </div>
   )
 }
 
-export default AppOnlineStatusBar
+const mapUserData = ({
+  state: { PROVIDER: { NETWORK } },
+}) => ({
+  NETWORK,
+})
+
+export default connect(mapUserData)(AppOnlineStatusBar)
