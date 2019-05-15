@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useState } from 'react'
 
-// import { connect } from '../StateProvider'
+import ErrorHandler from '../display/ErrorHandler'
+
 import Providers, { checkAndSetProviderStatus } from '../../api/providers'
 
 export const withWalletConnect = WrappedComponent =>
@@ -14,11 +15,10 @@ export const withWalletConnect = WrappedComponent =>
             state: { ACTIVE_PROVIDER }, 
         } = props
 
-        const [providersDetected, setProvidersDetected] = useState(false)
-        const [error, setError] = useState(undefined)
-        const [bootingUp, setBootingUp] = useState(true)
-        // const [activeProviderSet, setActiveProviderSet] = useState(undefined)
-        // const [disclaimerAccepted, setDisclaimerAccepted] = useState(false)
+        const [error, setError]                             = useState(null)
+        const [web3API, setWeb3API]                         = useState(null)
+        const [bootingUp, setBootingUp]                     = useState(true)
+        const [providersDetected, setProvidersDetected]     = useState(false)
 
         /* 
         * MOUNT LOGIC
@@ -37,9 +37,6 @@ export const withWalletConnect = WrappedComponent =>
          * @memberof withWalletConnect
          */
         async function onWalletSelect(providerInfo) {
-            // App state subscriptions
-            let unsub
-
             // State setters
             setBootingUp(true)
             setError(undefined)
@@ -47,25 +44,23 @@ export const withWalletConnect = WrappedComponent =>
             // Set Modal
             showModal('connecting wallet')
 
-            try {                
+            try {  
                 // Gnosis Safe Fix + Provider Enable
                 const providerStatus = await checkAndSetProviderStatus()
                 setProvidersDetected(providerStatus)
 
                 const chosenProvider = Providers[providerInfo]
                 // initialize providers and return specific Web3 instances
-                await chosenProvider.initialize()
+                const providerWeb3 = await chosenProvider.initialize()
 
                 // Save ACTIVE_PROVIDER to State
                 setActiveProvider(providerInfo)
-                
-                // Save web3 provider + notify state locally
-                // return setActiveProviderSet(true)
+                // Save web3API activated to State
+                setWeb3API(providerWeb3)
             } catch (err) {
                 console.error(err)
                 setError(err)
                 // Unsubscribe
-                return unsub && unsub()
             } finally {
                 // Hide Modal
                 showModal(undefined)
@@ -96,10 +91,10 @@ export const withWalletConnect = WrappedComponent =>
             </div>
             </section>
         )
-        if (error) return <h1>An error occurred: {error}</h1>
+        if (error) return <ErrorHandler />
         if (!ACTIVE_PROVIDER) return walletSelector()
         
-        return !bootingUp && <WrappedComponent {...props} />
+        return !bootingUp && <WrappedComponent {...props} web3API={web3API} />
     }
 
 export default withWalletConnect

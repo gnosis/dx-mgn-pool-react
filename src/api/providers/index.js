@@ -1,5 +1,6 @@
 /* eslint-disable no-return-assign */
-import Web3 from 'web3'
+// import Web3 from 'web3'
+import { getWeb3API } from '../ProviderWeb3'
 import { networkById } from '../../globals'
 import { delay } from '../../api/utils'
 
@@ -63,9 +64,9 @@ const Providers = {
       return this.walletAvailable = !!(typeof window.web3 !== 'undefined' && window.web3.constructor)
     },
 
-    initialize() {
+    async initialize() {
       if (!this.checkAvailability()) return console.debug('Provider not available, returning empty.')
-      this.web3 = new Web3(window.web3.currentProvider)
+      this.web3 = await getWeb3API()// new Web3(window.web3.currentProvider)
       this.state = {}
 
       return this.web3
