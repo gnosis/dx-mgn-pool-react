@@ -91,10 +91,11 @@ export const withPoolSwitching = WrappedComponent =>
     function PoolSwitchHOC(props) {
         const { dispatchers: { showModal }, web3API: { getNetworkId } } = props
         
-        const [pools, setPools]                 = useState([])
-        const [error, setError]                 = useState(undefined)
-        const [networkID, setNetworkID]         = useState(undefined)
-        const [poolSelected, setPoolSelected]   = useState(undefined)
+        const [pools, setPools]                         = useState([])
+        const [error, setError]                         = useState(undefined)
+        const [networkID, setNetworkID]                 = useState(undefined)
+        const [poolSelected, setPoolSelected]           = useState(undefined)
+        const [noAvailablePools, setNoAvailablePools]   = useState(false)
         
         // Mount
         useLayoutEffect(() => {
@@ -109,6 +110,8 @@ export const withPoolSwitching = WrappedComponent =>
                         getNetworkId(),
                     ])
                     
+                    if (poolAddresses && !poolAddresses[0][id]) return setNoAvailablePools(true)
+
                     if (poolAddresses.length === 1) setPoolSelected(poolAddresses[0])
                     else {
                         batchUpdate(() => {
@@ -130,6 +133,18 @@ export const withPoolSwitching = WrappedComponent =>
         
         if (error) return <ErrorHandler />
         
+        if (noAvailablePools) {
+            return (
+                <ErrorHandler 
+                    render={() => 
+                        <>
+                            <h1>:( no available pools</h1>
+                            <h5>please try switching networks.</h5>
+                        </>}
+                />
+            )
+        }
+
         if (!poolSelected) return <PoolPicker netID={networkID} pools={pools} handlePoolSelect={setPoolSelected} />
         
         return (

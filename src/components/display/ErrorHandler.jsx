@@ -2,11 +2,23 @@ import React from 'react'
 
 const ErrorHandler = ({
     email = 'mgn-pool@slow.trade',
+    title = ':( an error occurred!',
+    body = 'please try refreshing the page and trying again. if the problem persists, please contact us.',
+    render,
 }) =>
     <section>
         <pre>
-            <h1>:( an error occurred!</h1>
-            <h5>please try refreshing the page and trying again. if the problem persists, please contract us: <a href={`mailto:${email}`}>mgn-pool@slow.trade</a></h5>
+            {
+                render
+                    ?
+                render()
+                    :
+                <>
+                    <h1>{title}</h1>
+                    <h5>{body}</h5>
+                    <h6><a href={`mailto:${email}`}>{email}</a></h6>
+                </>
+            }
         </pre>
     </section>
 
