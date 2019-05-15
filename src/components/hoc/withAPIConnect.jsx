@@ -1,7 +1,8 @@
-import React, { useLayoutEffect } from 'react'
+import React, { useState, useLayoutEffect } from 'react'
 
 import { getAPI, getAppContracts } from '../../api'
 import startSubscriptions from '../../subscriptions'
+import ErrorHandler from '../display/ErrorHandler'
 
 export const withAPIConnect = WrappedComponent =>
     function APIConnectHOC(props) {
@@ -15,6 +16,8 @@ export const withAPIConnect = WrappedComponent =>
             },
             selectedPool,
         } = props
+
+        const [error, setError] = useState(null)
 
         /* 
         * POOL SWITCHING DETECTION - MOUNT LOGIC
@@ -50,11 +53,14 @@ export const withAPIConnect = WrappedComponent =>
                 await setPoolTokenInfo()
             } catch (initError) {
                 console.error(initError)
+                setError(initError)
             }
 
             return unsubscribe
         }
 
+        if (error) return <ErrorHandler />
+        
         return <WrappedComponent {...props} />
     }
 

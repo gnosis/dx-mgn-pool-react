@@ -1,7 +1,9 @@
 /* eslint-disable no-debugger */
 import React, { useLayoutEffect, useState } from 'react'
+import { unstable_batchedUpdates as batchUpdate } from 'react-dom'
 
 import DataDisplayVisualContainer from '../display/DataDisplay'    
+import ErrorHandler from '../display/ErrorHandler'
 
 const MockCoordData = [
     {
@@ -40,6 +42,7 @@ const fakePromise = async time => new Promise(accept => setTimeout(() => accept(
 const PoolPicker = ({
     currentPool,
     handlePoolSelect,
+    netID,
     pools,
     startOpen,
 }) => ( 
@@ -62,7 +65,7 @@ const PoolPicker = ({
                 <>
                     {currentPool && <h6 style={{ background: '#d0ffeb', textAlign: 'center', padding: 10, margin: 0 }}>current pool: {currentPool.toLowerCase()}</h6>}
                     <div className="poolSwitcherContainer">
-                        {pools.map(({ 1: { address: coordinator }, tokenA, tokenB }) => {
+                        {pools.map(({ [netID]: { address: coordinator }, tokenA, tokenB }) => {
                             // don't show current selected pool
                             if (coordinator === currentPool) return null
 
@@ -86,22 +89,30 @@ const PoolPicker = ({
 
 export const withPoolSwitching = WrappedComponent =>
     function PoolSwitchHOC(props) {
-        const { dispatchers: { showModal } } = props
+        const { dispatchers: { showModal }, web3API: { getNetworkId } } = props
         
-        const [error, setError] =               useState(undefined)
-        const [pools, setPools] =               useState([])
-        const [poolSelected, setPoolSelected] = useState(undefined)
+        const [pools, setPools]                 = useState([])
+        const [error, setError]                 = useState(undefined)
+        const [networkID, setNetworkID]         = useState(undefined)
+        const [poolSelected, setPoolSelected]   = useState(undefined)
         
         // Mount
         useLayoutEffect(() => {
             // grab data async?
             const grabPools = async () => {
                 try {
-                    const poolAddresses = await fakePromise(300)
-                    // eslint-disable-next-line no-unused-expressions
-                    poolAddresses.length === 1 && setPoolSelected(true) && setPoolSelected(poolAddresses[0])
-
-                    setPools(poolAddresses)
+                    const [poolAddresses, id] = await Promise.all([
+                        fakePromise(300),
+                        getNetworkId(),
+                    ])
+                    
+                    if (poolAddresses.length === 1) setPoolSelected(poolAddresses[0])
+                    else {
+                        batchUpdate(() => {
+                            setNetworkID(id)
+                            setPools(poolAddresses)
+                        })
+                    }                    
                 } catch (err) {
                     console.error(err)
                     setError(err)
@@ -114,13 +125,13 @@ export const withPoolSwitching = WrappedComponent =>
             .then(() => showModal(null))
         }, [])
         
-        if (error) return <h1>App Error!</h1>
+        if (error) return <ErrorHandler />
         
-        if (!poolSelected) return <PoolPicker pools={pools} handlePoolSelect={setPoolSelected} />
+        if (!poolSelected) return <PoolPicker netID={networkID} pools={pools} handlePoolSelect={setPoolSelected} />
         
         return (
             <>
-                <PoolPicker currentPool={poolSelected} pools={pools} handlePoolSelect={setPoolSelected} />
+                <PoolPicker netID={networkID} currentPool={poolSelected} pools={pools} handlePoolSelect={setPoolSelected} />
                 <WrappedComponent {...props} pools={pools} changePool={setPoolSelected} selectedPool={poolSelected} />
             </>
         )
