@@ -13,9 +13,6 @@ const contracts = [
   'EtherToken',
   'TokenGNO',
   // 'Coordinator'
-  // 'TokenFRT',
-  // 'TokenOWL',
-  // 'TokenOWLProxy',
 ]
 
 // to make access easier later...
@@ -23,9 +20,6 @@ const shortContractNames = {
   Coordinator: 'coord',
   EtherToken: 'eth',
   TokenGNO: 'gno',
-  // TokenFRT: 'frt',
-  // TokenOWL: 'owl',
-  // TokenOWLProxy: 'owlProxy',
 }
 
 let req
@@ -182,10 +176,11 @@ const getPromisedInstances = () => Promise.all(TruffleWrappedContractArtifacts.m
    * Map/reduce deployedContractsArray items to short name contract OBJECT
    * e.g [deployedContractCodeETH, deployedContractCodeGNO, ... ] = { 'eth': deployedContractCodeETH }
    */
-const contractArrayToMap = (contractArr, shortContractNamesMap = shortContractNames) => contractArr.reduce((acc, contract, index) => {
-  acc[shortContractNamesMap[contracts.concat('Coordinator')[index]]] = contract
-  return acc
-}, {})
+const contractArrayToMap = (contractArr, shortContractNamesMap = shortContractNames) => 
+  contractArr.reduce((acc, contract, index) => {
+    acc[shortContractNamesMap[contracts.concat('Coordinator')[index]]] = contract
+    return acc
+  }, {})
 
 /**
  * getAppContracts = async () => {
