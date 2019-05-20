@@ -5,7 +5,8 @@ import { unstable_batchedUpdates as batchUpdate } from 'react-dom'
 import DataDisplayVisualContainer from '../display/DataDisplay'    
 import ErrorHandler from '../display/ErrorHandler'
 
-const MockCoordData = [
+/* TESTING
+ * const MockCoordData = [
     {
         tokenA: 'WETH',
         tokenB: 'GNO',
@@ -36,8 +37,8 @@ const MockCoordData = [
             address: '0x9878669e883DDfC52620a6493b361213444cB974',
         },
     },
-]
-const fakePromise = async time => new Promise(accept => setTimeout(() => accept(MockCoordData), time))
+] */
+// const fakePromise = async time => new Promise(accept => setTimeout(() => accept(MockCoordData), time))
 
 const PoolPicker = ({
     currentPool,
@@ -96,6 +97,7 @@ export const withPoolSwitching = WrappedComponent =>
         const [networkID, setNetworkID]                 = useState(undefined)
         const [poolSelected, setPoolSelected]           = useState(undefined)
         const [noAvailablePools, setNoAvailablePools]   = useState(false)
+        const [renderPoolPicker, setRenderPoolPicker]   = useState(false)
         
         // Mount
         useLayoutEffect(() => {
@@ -106,17 +108,23 @@ export const withPoolSwitching = WrappedComponent =>
             const grabPools = async () => {
                 try {
                     const [poolAddresses, id] = await Promise.all([
-                        fakePromise(300),
+                        require('@gnosis.pm/dx-mgn-pool/networks.json'),
                         getNetworkId(),
                     ])
+                    console.debug("TCL: grabPools -> poolAddresses", poolAddresses)
                     
-                    if (poolAddresses && !poolAddresses[0][id]) return setNoAvailablePools(true)
-
-                    if (poolAddresses.length === 1) setPoolSelected(poolAddresses[0])
+                    // will only run if expects an array
+                    if (Array.isArray(poolAddresses) && !poolAddresses[0][id]) return setNoAvailablePools(true)
+                    // Use array format but only 1 pool exists
+                    if (Array.isArray(poolAddresses) && poolAddresses.length === 1) setPoolSelected(poolAddresses[0])
+                    // if networks.json from @gnosis.pm/dx-mgn-pool is not an array
+                    else if (poolAddresses.Coordinator[id]) setPoolSelected(poolAddresses.Coordinator[id].address)
+                    // else as normal, array format, multiple pools
                     else {
                         batchUpdate(() => {
                             setNetworkID(id)
                             setPools(poolAddresses)
+                            setRenderPoolPicker(true)
                         })
                     }                    
                 } catch (err) {
@@ -149,7 +157,7 @@ export const withPoolSwitching = WrappedComponent =>
         
         return (
             <>
-                <PoolPicker netID={networkID} currentPool={poolSelected} pools={pools} handlePoolSelect={setPoolSelected} />
+                {renderPoolPicker && <PoolPicker netID={networkID} currentPool={poolSelected} pools={pools} handlePoolSelect={setPoolSelected} />}
                 <WrappedComponent {...props} pools={pools} changePool={setPoolSelected} selectedPool={poolSelected} />
             </>
         )
