@@ -22,7 +22,7 @@ const UserStateDisplay = ({ NETWORK, USER, MGN_BALANCES }) =>
   <DataDisplayVisualContainer
     title="Connected Wallet"
     colour="salmon"
-    height="28em"
+    height="26em"
     startOpen
     transition
   >
@@ -41,8 +41,8 @@ const UserStateDisplay = ({ NETWORK, USER, MGN_BALANCES }) =>
           asyncAction={lockAllMgn}
           buttonText="lock"
           buttonOnly
-          forceDisable={MGN_BALANCES.BALANCE === DATA_LOAD_STRING || MGN_BALANCES.BALANCE <= 0}
-          info="Lock your MGN balance (shown above)"
+          forceDisable={MGN_BALANCES['TOTAL LOCKABLE BALANCE'] === DATA_LOAD_STRING || MGN_BALANCES['TOTAL LOCKABLE BALANCE'] <= 0}
+          info="Lock your total lockable balance"
           title="lock mgn balance"
         />
       </>
@@ -57,7 +57,7 @@ const mapState = ({
     TOKEN_MGN: {
       MGN_BALANCE,
       LOCKED_MGN_BALANCE,
-      UNLOCKED_MGN_BALANCE,
+      // UNLOCKED_MGN_BALANCE,
     },
   }, 
 }) => ({
@@ -65,9 +65,9 @@ const mapState = ({
   NETWORK,
   USER,
   MGN_BALANCES: {
-    BALANCE: MGN_BALANCE,
-    LOCKED_BALANCE: LOCKED_MGN_BALANCE,
-    UNLOCKED_BALANCE: UNLOCKED_MGN_BALANCE,
+    'TOTAL LOCKABLE BALANCE': MGN_BALANCE,
+    'TOTAL LOCKED BALANCE': LOCKED_MGN_BALANCE,
+    // UNLOCKED_BALANCE: UNLOCKED_MGN_BALANCE,
   },
 })
 
