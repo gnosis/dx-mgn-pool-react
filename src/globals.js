@@ -76,6 +76,14 @@ export const POOL_STATES_READABLE = {
   'loading...': 'loading...',
 }
 
+export const POOL_STATES_READABLE_LONG = {
+  POOLING: 'Pool is open for participation',
+  POOLINGENDED: 'Pooling has finished. Come back in 24/48 hours to withdraw your tokens and lock MGN',
+  DEPOSITWITHDRAWFROMDX: 'Pooling has finished.  MGN unlock has been requested; this process takes 24 hours. You will be able to withdraw your share after that',
+  MGNUNLOCKED: 'Pooling has finished. Please withdraw your MGN and any available tokens. Once withdrawn, you can lock your MGN in order to receive Reputation for the dxDAO',
+  'loading...': 'loading...',
+}
+
 export const LOCALFORAGE_KEYS = {
   VERIFICATION_SETTINGS: 'dxMgnPool-VerificationSettings',
   COOKIE_SETTINGS: 'dxMgnPool-CookieSettings',
