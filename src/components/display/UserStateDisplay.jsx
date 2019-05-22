@@ -22,7 +22,7 @@ const UserStateDisplay = ({ NETWORK, USER, MGN_BALANCES }) =>
   <DataDisplayVisualContainer
     title="Connected Wallet"
     colour="salmon"
-    height={!(+MGN_BALANCES.BALANCE) ? '21.8em' : '27.8em'}
+    height="27.8em"
     startOpen
     transition
   >
@@ -36,18 +36,15 @@ const UserStateDisplay = ({ NETWORK, USER, MGN_BALANCES }) =>
 
         <h5 style={userStateDisplayHeader}>mgn bAlances</h5>
         {Object.keys(MGN_BALANCES).map(key => <p key={key + Math.random()}><span className="data-title">{key.toUpperCase().split('_').join(' ')}:</span> {(MGN_BALANCES[key] && MGN_BALANCES[key] !== DATA_LOAD_STRING) && Number(MGN_BALANCES[key]).toFixed(FIXED_DECIMAL_AMOUNT)}</p>)}
-        {!!(+MGN_BALANCES.BALANCE) && 
-        <>
-          <hr />
-          <LockMGN 
-            asyncAction={lockAllMgn}
-            buttonText="lock"
-            buttonOnly
-            forceDisable={MGN_BALANCES.BALANCE === DATA_LOAD_STRING || MGN_BALANCES.BALANCE <= 0}
-            info="Lock your MGN"
-            title={`lock ${Number(MGN_BALANCES.BALANCE).toFixed(FIXED_DECIMAL_AMOUNT)} mgn`}
-          />
-        </>}
+        <hr />
+        <LockMGN 
+          asyncAction={lockAllMgn}
+          buttonText="lock"
+          buttonOnly
+          forceDisable={MGN_BALANCES.BALANCE === DATA_LOAD_STRING || MGN_BALANCES.BALANCE <= 0}
+          info="Lock your MGN balance (shown above)"
+          title="lock mgn balance"
+        />
       </>
     }
   </DataDisplayVisualContainer>

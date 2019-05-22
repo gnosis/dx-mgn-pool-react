@@ -5,8 +5,8 @@ import { unstable_batchedUpdates as batchUpdate } from 'react-dom'
 import DataDisplayVisualContainer from '../display/DataDisplay'    
 import ErrorHandler from '../display/ErrorHandler'
 
-/* TESTING
- * const MockCoordData = [
+// TESTING
+/* const MockCoordData = [
     {
         tokenA: 'WETH',
         tokenB: 'GNO',
@@ -24,7 +24,7 @@ import ErrorHandler from '../display/ErrorHandler'
             address: '0xE1d2ce6F25Cd8Ef4d02de2d268A9e52b62659E59',
         },
         4: {
-            address: '0x9878669e883DDfC52620a6493b361213444cB974',
+            address: '0x2878669e883DDfC52620a6493b361213444cB974',
         },
     },
     {
@@ -34,11 +34,11 @@ import ErrorHandler from '../display/ErrorHandler'
             address: '0xf83fF988570d9fb37389DC84a65d09BCF05A4569',
         },
         4: {
-            address: '0x9878669e883DDfC52620a6493b361213444cB974',
+            address: '0x3878669e883DDfC52620a6493b361213444cB974',
         },
     },
-] */
-// const fakePromise = async time => new Promise(accept => setTimeout(() => accept(MockCoordData), time))
+]
+const fakePromise = async (promResolve, time) => new Promise(accept => setTimeout(() => accept(promResolve), time)) */
 
 const PoolPicker = ({
     currentPool,
@@ -108,19 +108,19 @@ export const withPoolSwitching = WrappedComponent =>
             const grabPools = async () => {
                 try {
                     const [poolAddresses, id] = await Promise.all([
-                        require('@gnosis.pm/dx-mgn-pool/networks.json'),
+                        require('@gnosis.pm/dx-mgn-pool/networks.json'), // fakePromise(mockData)
                         getNetworkId(),
                     ])
-                    console.debug("TCL: grabPools -> poolAddresses", poolAddresses)
                     
                     // will only run if expects an array
                     if (Array.isArray(poolAddresses) && !poolAddresses[0][id]) return setNoAvailablePools(true)
                     // Use array format but only 1 pool exists
                     if (Array.isArray(poolAddresses) && poolAddresses.length === 1) setPoolSelected(poolAddresses[0])
                     // if networks.json from @gnosis.pm/dx-mgn-pool is not an array
-                    else if (poolAddresses.Coordinator[id]) setPoolSelected(poolAddresses.Coordinator[id].address)
+                    else if (!Array.isArray(poolAddresses) && poolAddresses.Coordinator[id]) setPoolSelected(poolAddresses.Coordinator[id].address)
                     // else as normal, array format, multiple pools
                     else {
+                        console.debug('here', poolAddresses)
                         batchUpdate(() => {
                             setNetworkID(id)
                             setPools(poolAddresses)
