@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 export const useAppOnlineStatusInterval = () => {
   const [online, setOnline] = useState(window.navigator.onLine)
@@ -26,4 +26,15 @@ export const useAppOnlineStatusListener = () => {
   }, [online])
 
   return online
+}
+
+export const useComponentSizeFinder = (ref) => {
+    const [elemHeightInPx, setElemHeightInPx] = useState('auto')
+    
+    const memoizedSetElemHeight = useMemo(() => setElemHeightInPx)
+    useEffect(() => {
+        memoizedSetElemHeight(ref.current.clientHeight)
+    }, [ref.current && ref.current.clientHeight])
+
+    return elemHeightInPx
 }
