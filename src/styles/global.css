@@ -513,8 +513,8 @@ input[type="text"] {
 }
 
 .poolStatus, .poolStatusDetails {
-    text-align: left;
-    white-space: pre;
+    text-align: right;
+    white-space: pre-line;
 }
 
 .poolStatus {
