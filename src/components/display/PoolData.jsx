@@ -38,7 +38,7 @@ const PoolData = ({
                     {/* STATUS */}
                     <InfoShower 
                         info={POOL_STATES_READABLE_LONG[POOL1STATE]}
-                        render={props => <p><span className="data-title">STATUS:</span> <h5 className="poolStatus"><span className="info" style={{ marginRight: 8 }} title="Click for more info" onClick={props.handleClick}>info</span>{POOL_STATES_READABLE[POOL1STATE].toUpperCase()}</h5></p>}
+                        render={props => <p><span className="data-title">STATUS:</span> <strong className="poolStatus"><span className="info" style={{ marginRight: 8 }} title="Click for more info" onClick={props.handleClick}>info</span>{POOL_STATES_READABLE[POOL1STATE].toUpperCase()}</strong></p>}
                     />
                     {DX_MGN_POOL.POOL1.POOLING_PERIOD_END !== DATA_LOAD_STRING && 
                         <p><span className="data-title">POOLING END TIME:</span> <span className="data-date">{poolTimeFormat(DX_MGN_POOL.POOL1.POOLING_PERIOD_END * 1000)}</span></p>}
@@ -104,7 +104,7 @@ const PoolData = ({
                     {/* STATUS */}
                     <InfoShower 
                         info={POOL_STATES_READABLE_LONG[POOL2STATE]}
-                        render={() => <p><span className="data-title">STATUS:</span> <h5 className="poolStatus">{POOL_STATES_READABLE[POOL2STATE].toUpperCase()}</h5></p>}
+                        render={() => <p><span className="data-title">STATUS:</span> <strong className="poolStatus">{POOL_STATES_READABLE[POOL2STATE].toUpperCase()}</strong></p>}
                     />
                     {/* END TIME */}
                     {DX_MGN_POOL.POOL2.POOLING_PERIOD_END !== DATA_LOAD_STRING && 
