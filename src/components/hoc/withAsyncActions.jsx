@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import DataDisplayVisualContainer from '../display/DataDisplay'
+import InfoShower from '../display/InfoShower'
 
 import { delay } from '../../api/utils'
 
@@ -18,10 +18,8 @@ export const withAsyncActions = Component => ({
     // e.g on blockchain action - released on receipt
     const [buttonBlocked, setButtonBlocked] = useState(false)
     const [inputAmount, setInputAmount] = useState(undefined)
-    const [viewInfoStatus, setViewInfoStatus] = useState(false)
     const [error, setError] = useState(undefined)
 
-    const handleInfoButtonClick = () => setViewInfoStatus(!viewInfoStatus)
 
     const handleChange = ({ target }) => {
         setError(undefined)
@@ -65,14 +63,10 @@ export const withAsyncActions = Component => ({
 
     return (
         <div className="asyncActionContainer">  
-            <h5>{title} {info && <span className="info" title="Click for more info" onClick={handleInfoButtonClick}>info</span>} </h5>
-            {info && viewInfoStatus && 
-                <DataDisplayVisualContainer
-                    colour="info"
-                >
-                    {() => <span>{info}</span>}
-                </DataDisplayVisualContainer>
-            }
+            <InfoShower 
+                info={info}
+                render={props => <h5>{title} {info && <span className="info" title="Click for more info" onClick={props.handleClick}>info</span>}</h5>}
+            />
             {Component && 
                 <Component
                     disabled={forceDisable || buttonBlocked}
