@@ -132,7 +132,7 @@ export const getMGNTokenLockedBalance = async (userAddress) => {
 export const getAllMGNTokenBalances = async (userAddress) => {
   userAddress = await fillDefaultAccount(userAddress)
   
-  const { DxPool: { getMGNAddress, getMGNLockedBalance, getMGNUnlockedBalance, getMGNBalance, getPoolAddresses } } = await getAPI()
+  const { DxPool: { dxMP1Address, dxMP2Address, getMGNAddress, getMGNLockedBalance, getMGNUnlockedBalance, getMGNBalance, getPoolAddresses } } = await getAPI()
   const [pool1Address] = await getPoolAddresses()
   const mgnAddress = await getMGNAddress(pool1Address)
 
@@ -140,6 +140,8 @@ export const getAllMGNTokenBalances = async (userAddress) => {
     getMGNLockedBalance(mgnAddress, userAddress),
     getMGNUnlockedBalance(mgnAddress, userAddress),
     getMGNBalance(mgnAddress, userAddress),
+    getMGNUnlockedBalance(mgnAddress, dxMP1Address),
+    getMGNUnlockedBalance(mgnAddress, dxMP2Address),
   ])
 }
 
@@ -278,6 +280,20 @@ export const getCurrentPoolingEndTimes = async () => {
 }
 
 /**
+ * getUnlockTimes
+ * @returns { Promise<"BN"[]> } - Promise<BN[]>
+ */
+export const getUnlockTimes = async () => {
+  const { DxPool: { dxMP1Address, dxMP2Address, getMGNAddress, getUnlockTime } } = await getAPI()
+  const mgnAddress = await getMGNAddress(dxMP1Address)
+  const [unlockTime1, unlockTime2] = await Promise.all([
+    getUnlockTime(mgnAddress, dxMP1Address),
+    getUnlockTime(mgnAddress, dxMP2Address),
+  ])
+  return [unlockTime1, unlockTime2]
+}
+
+/**
  * calculateDxMgnPoolState
  * @description Grabs all relevant DxMgnPool state as a batch
  * @param { string } userAccount - Address
@@ -287,12 +303,13 @@ export const calculateDxMgnPoolState = async (userAccount) => {
 
   const [
     mgnAddress, 
-    [mgnLockedBalance, mgnUnlockedBalance, mgnBalance], 
+    [mgnLockedBalance, mgnUnlockedBalance, mgnBalance, pool1MgnUnlockedBalance, pool2MgnUnlockedBalance], 
     [totalShare1, totalShare2], 
     [totalContribution1, totalContribution2],
     [depositTokenObj, secondaryTokenObj],
     [pool1State, pool2State],
     [currentPoolingEndTime1, currentPoolingEndTime2],
+    [unlockTime1, unlockTime2],
   ] = await Promise.all([
     getMGNTokenAddress(),
     getAllMGNTokenBalances(userAccount),
@@ -301,6 +318,7 @@ export const calculateDxMgnPoolState = async (userAccount) => {
     getPoolTokensInfo(),
     getPoolInternalState(),
     getCurrentPoolingEndTimes(),
+    getUnlockTimes(),
   ])
 
   return {
@@ -308,6 +326,8 @@ export const calculateDxMgnPoolState = async (userAccount) => {
     mgnLockedBalance,
     mgnUnlockedBalance, 
     mgnBalance,
+    pool1MgnUnlockedBalance,
+    pool2MgnUnlockedBalance,
     totalShare1,
     totalShare2,
     totalContribution1,
@@ -318,6 +338,8 @@ export const calculateDxMgnPoolState = async (userAccount) => {
     pool2State,
     currentPoolingEndTime1,
     currentPoolingEndTime2,
+    unlockTime1,
+    unlockTime2,
   }
 }
 

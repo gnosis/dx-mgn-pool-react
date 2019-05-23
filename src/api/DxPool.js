@@ -142,6 +142,14 @@ async function init() {
   const getCurrentPoolingEndTime2 = async () => dxMP2.poolingPeriodEndTime.call()
 
   /**
+   * getUnlockTime
+   * @param { string } mgnAddress
+   * @param { string } userAddress
+   * @returns { BN } getUnlockTime1 as <BN>
+   */
+  const getUnlockTime = async (mgnAddress, poolAddress) => (await (await getTokenMGN(mgnAddress)).unlockedTokens.call(poolAddress)).withdrawalTime
+
+  /**
    * Get back user's participation status
    * @param {string} userAccount 
    */
@@ -236,6 +244,7 @@ async function init() {
     getPoolAddresses,
     getTokenMGN,
     getMGNAddress,
+    getUnlockTime,
     getMGNLockedBalance,
     getMGNUnlockedBalance,
     getMGNBalance,

@@ -77,6 +77,10 @@ const fetchMgnPoolData = async () => {
                 secondaryTokenObj: { balance: balance2, decimals: decimals2 },
                 currentPoolingEndTime1,
                 currentPoolingEndTime2,
+                unlockTime1,
+                unlockTime2,
+                pool1MgnUnlockedBalance,
+                pool2MgnUnlockedBalance,
             },
             {
                 totalClaimableMgn,
@@ -96,6 +100,8 @@ const fetchMgnPoolData = async () => {
             tc2,
             tcMgnEth,
             tcMgnEth2,
+            p1MgnUnlocked,
+            p2MgnUnlocked,
         ] = [
             totalShare1,
             totalShare2,
@@ -103,14 +109,18 @@ const fetchMgnPoolData = async () => {
             totalContribution2,
             totalClaimableMgn,
             totalClaimableMgn2,
+            pool1MgnUnlockedBalance,
+            pool2MgnUnlockedBalance,
         ].map(i => cleanDataFromWei(i))
         
         return {
             POOL1: {
                 CURRENT_STATE: poolStateIdToName(pool1State.toString()),
                 POOLING_PERIOD_END: currentPoolingEndTime1.toString(),
+                UNLOCK_PERIOD: unlockTime1.toString(),
                 TOTAL_SHARE: ts1,
                 YOUR_SHARE: tc1,
+                TOTAL_GENERATED_MGN: p1MgnUnlocked,
                 TOTAL_CLAIMABLE_MGN: tcMgnEth,
                 TOTAL_CLAIMABLE_DEPOSIT: cleanDataNative(totalClaimableDeposit, decimals), // (totalClaimableDeposit.toString() / (10 ** decimals)),
                 TOKEN_BALANCE: cleanDataNative(balance, decimals), // (balance.toString() / (10 ** decimals)),
@@ -118,8 +128,10 @@ const fetchMgnPoolData = async () => {
             POOL2: {
                 CURRENT_STATE: poolStateIdToName(pool2State.toString()),
                 POOLING_PERIOD_END: currentPoolingEndTime2.toString(),
+                UNLOCK_PERIOD: unlockTime2.toString(),
                 TOTAL_SHARE: ts2,
                 YOUR_SHARE: tc2,
+                TOTAL_GENERATED_MGN: p2MgnUnlocked,
                 TOTAL_CLAIMABLE_MGN: tcMgnEth2,
                 TOTAL_CLAIMABLE_DEPOSIT: cleanDataNative(totalClaimableDeposit2, decimals2), // (totalClaimableDeposit2.toString() / (10 ** decimals2)),
                 TOKEN_BALANCE: cleanDataNative(balance2, decimals2), // (balance2.toString() / (10 ** decimals2)),
@@ -147,6 +159,7 @@ export const MGNPoolDataSub = createStatefulSub(fetchMgnPoolData, {
     POOL1: {
         CURRENT_STATE: DATA_LOAD_STRING,
         POOLING_PERIOD_END: null,
+        TOTAL_GENERATED_MGN: DATA_LOAD_STRING,
         TOTAL_SHARE: DATA_LOAD_STRING,
         YOUR_SHARE: DATA_LOAD_STRING,
         TOTAL_CLAIMABLE_MGN: DATA_LOAD_STRING,
@@ -156,6 +169,7 @@ export const MGNPoolDataSub = createStatefulSub(fetchMgnPoolData, {
     POOL2: {
         CURRENT_STATE: DATA_LOAD_STRING,
         POOLING_PERIOD_END: null,
+        TOTAL_GENERATED_MGN: DATA_LOAD_STRING,
         TOTAL_SHARE: DATA_LOAD_STRING,
         YOUR_SHARE: DATA_LOAD_STRING,
         TOTAL_CLAIMABLE_MGN: DATA_LOAD_STRING,
