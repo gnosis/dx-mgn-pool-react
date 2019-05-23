@@ -24,9 +24,8 @@ const DataDisplayVisualContainer = (props) => {
       transition,
       ...rest 
     } = props
-
     const [open, setOpen] = useState(startOpen)
-
+    
     return (
       <>
         {title && <h2 className="clickableHeader" onClick={() => setOpen(!open)}>{title} <small>(show/hide)</small></h2>}
@@ -37,7 +36,7 @@ const DataDisplayVisualContainer = (props) => {
             {<DataDisplay {...rest} />}
           </pre>
           :
-          <div 
+          <div
             className={`word-wrap${!open ? ' hideContent' : ''}${transition ? ' transition' : ''}`} 
             style={{ height, ...customStyle }}
           >

@@ -20,14 +20,18 @@ body::-webkit-scrollbar {
     border-radius: 10px;
     width: 0.5em;
 }
+
+div::-webkit-scrollbar {
+    width: 0.2em;
+}
  
-body::-webkit-scrollbar-track {
+body::-webkit-scrollbar-track, div::-webkit-scrollbar-track {
     box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
     border-radius: 10px;
 }
  
-body::-webkit-scrollbar-thumb {
+body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: rgba(0, 0, 0, 0.507);
     outline: 1px solid slategrey;
@@ -97,6 +101,9 @@ pre > p > span.data-title {
 
 pre > p > span.data-date {
     font-size: 0.72em;
+    text-align: right;
+    max-width: 75%;
+    white-space: pre-line;
 }
 
 pre.poolDataContainer > p {
@@ -333,6 +340,18 @@ section.PoolData, section.UserState {
     width: auto;
 }
 
+.data-pre-help {
+    background: lightyellow;
+    border-radius: 0;
+    font-size: 0.5em;
+    font-weight: 600;
+    text-align: center;
+    white-space: pre-wrap;
+
+    margin: 0;
+    padding: 5px 10px;
+}
+
 form {
     display: flex;
     flex-flow: column;
@@ -348,7 +367,7 @@ input[type="text"] {
 }
 
 .transition {
-    height: 540px;
+    /* height: 540px; */
 
     transition: height 0.7s ease-in-out;
 }
@@ -493,6 +512,24 @@ input[type="text"] {
     animation: initLogo1 2.4s linear .2s 1 normal forwards running, initLogo1 2.4s linear 1.5s infinite normal forwards running;
 }
 
+.poolStatus, .poolStatusDetails {
+    text-align: left;
+    white-space: pre-line;
+}
+
+.poolStatus {
+    max-width: 70%;
+    margin: 0;
+}
+
+.poolStatusDetails {
+    font-size: 70%;
+}
+
+.helpShower {
+    height: auto;
+}
+
 /* ANIMATION */
 
 @keyframes initLogo1 {
@@ -574,7 +611,14 @@ input[type="text"] {
         padding: 50px 5px;
     } */
 
+    .clickableHeader {
+        font-size: 1.2em;
+    }
+
     section.UserState {
         min-width: auto;
+    }
+    .poolStatus {
+        text-align: right;
     }
 }
