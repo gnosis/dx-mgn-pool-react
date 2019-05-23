@@ -35,7 +35,7 @@ function Countdown({
         if (BLOCK_TIMESTAMP && POOLING_PERIOD_END) {
             const newDiff = POOLING_PERIOD_END - BLOCK_TIMESTAMP
             // Set hours until PoolingEnds + 24 hours + 8 hours (for even auctions)
-            setTimeDifference((newDiff / 3600 + 32).toFixed(2))
+            setTimeDifference((newDiff / 3600).toFixed(2))
         }
     }, [BLOCK_TIMESTAMP, POOLING_PERIOD_END])
 
@@ -44,7 +44,7 @@ function Countdown({
 
     return (
         <div>
-            {(timeDifference && timeDifference > 0) && <h6>CLAIM & WITHDRAW IN APPROX. {formatTime(timeDifference)}</h6>}
+            {(timeDifference && timeDifference > 0) && <h6>WITHDRAW IN APPROX. {formatTime(timeDifference)}</h6>}
         </div>
     )
 }
