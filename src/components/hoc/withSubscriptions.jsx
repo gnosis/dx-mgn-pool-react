@@ -21,7 +21,6 @@ const withSubscriptions = WrappedComponent =>
             let unsubscribe
             startSubscriptions()
             .then((unsubFunction) => {
-				console.debug("TCL: SubscriptionsHOCLogic -> unsubFunction", unsubFunction)
                 unsubscribe = unsubFunction
                 setSubscriptions(true)
             })
