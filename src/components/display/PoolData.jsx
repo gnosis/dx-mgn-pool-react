@@ -16,9 +16,17 @@ const WithdrawMGNandDepositsFromBothPools = withAsyncActions()
 
 const showDataForState = (data, currState, stateExpected) => (data === DATA_LOAD_STRING || (currState === stateExpected && !!Number(data)))
 
+const checkPoolStateForEdgeCase = (poolState, blockTimestamp, poolingEndTime) => {
+    // Show POOLING ENDED if we are STILL in POOLING but the poolingPeriodEndTime < now time
+    if (poolState === POOL_STATES.POOLING && blockTimestamp > poolingEndTime) return POOL_STATES.POOLING_ENDED
+    
+    return poolState
+}
+
 const PoolData = ({
     // state,
     BALANCE,
+    BLOCK_TIMESTAMP,
     DX_MGN_POOL,
     POOL_STATES: { POOL1STATE, POOL2STATE },
     // dispatch
@@ -39,7 +47,21 @@ const PoolData = ({
                     {/* STATUS */}
                     <InfoShower 
                         info={POOL_STATES_READABLE_LONG[POOL1STATE]}
-                        render={props => <p><span className="data-title">STATUS:</span> <strong className="poolStatus"><span className="info" style={{ marginRight: 8 }} title="Click for more info" onClick={props.handleClick}>info</span>{POOL_STATES_READABLE[POOL1STATE].toUpperCase()}</strong></p>}
+                        render={props => 
+                            <p>
+                                <span className="data-title">STATUS:</span> 
+                                <strong className="poolStatus">
+                                    <span 
+                                        className="info" 
+                                        style={{ marginRight: 8 }} 
+                                        title="Click for more info" 
+                                        onClick={props.handleClick}
+                                    >
+                                        info
+                                    </span>
+                                    {POOL_STATES_READABLE[checkPoolStateForEdgeCase(POOL1STATE, BLOCK_TIMESTAMP, DX_MGN_POOL.POOL1.POOLING_PERIOD_END)].toUpperCase()}
+                                </strong>
+                            </p>}
                     />
                     {/* END TIME */}
                     {DX_MGN_POOL.POOL1.POOLING_PERIOD_END !== DATA_LOAD_STRING && 
@@ -113,7 +135,7 @@ const PoolData = ({
                     {/* STATUS */}
                     <InfoShower 
                         info={POOL_STATES_READABLE_LONG[POOL2STATE]}
-                        render={() => <p><span className="data-title">STATUS:</span> <strong className="poolStatus">{POOL_STATES_READABLE[POOL2STATE].toUpperCase()}</strong></p>}
+                        render={() => <p><span className="data-title">STATUS:</span> <strong className="poolStatus">{POOL_STATES_READABLE[checkPoolStateForEdgeCase(POOL2STATE, BLOCK_TIMESTAMP, DX_MGN_POOL.POOL2.POOLING_PERIOD_END)].toUpperCase()}</strong></p>}
                     />
                     {/* END TIME */}
                     {DX_MGN_POOL.POOL2.POOLING_PERIOD_END !== DATA_LOAD_STRING && 
@@ -189,12 +211,16 @@ const mapProps = ({
         USER: {
             BALANCE,
         },
+        PROVIDER: {
+            BLOCK_TIMESTAMP,
+        },
     },
     setDepositAmount,
     setInputAmount,
     withdrawDepositAndMGN,
 }) => ({
     BALANCE,
+    BLOCK_TIMESTAMP,
     DX_MGN_POOL,
     INPUT_AMOUNT,
     POOL_STATES: {
