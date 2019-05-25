@@ -7,39 +7,39 @@ import DataDisplayVisualContainer from '../display/DataDisplay'
 import ErrorHandler from '../display/ErrorHandler'
 
 // TESTING
-// const MockCoordData = [
-//     {
-//         tokenA: 'WETH',
-//         tokenB: 'GNO',
-//         1: {
-//             address: '0xD4D3e3Ea73a7370e8e0A0cb5FD24DC13DC1668f4',
-//         },
-//         4: {
-//             address: '0x9878669e883DDfC52620a6493b361213444cB974',
-//         },
-//     },
-//     {
-//         tokenA: 'WETH [old]',
-//         tokenB: 'GNO [old]',
-//         1: {
-//             address: '0xE1d2ce6F25Cd8Ef4d02de2d268A9e52b62659E59',
-//         },
-//         4: {
-//             address: '0x2878669e883DDfC52620a6493b361213444cB974',
-//         },
-//     },
-//     {
-//         tokenA: 'WETH',
-//         tokenB: 'RDN',
-//         1: {
-//             address: '0xf83fF988570d9fb37389DC84a65d09BCF05A4569',
-//         },
-//         4: {
-//             address: '0x3878669e883DDfC52620a6493b361213444cB974',
-//         },
-//     },
-// ]
-// const fakePromise = async (promResolve, time = 2000) => new Promise(accept => setTimeout(() => accept(promResolve), time))
+const HardCodedPools = [
+    {
+        tokenA: "Wrapped Ether [WETH]",
+        tokenB: "Gnosis [GNO]",
+        Coordinator: {
+          1: {
+            events: {},
+            links: {},
+            address: "0xD4D3e3Ea73a7370e8e0A0cb5FD24DC13DC1668f4",
+            transactionHash: "0xd9d3792eecf23501549b867a6e9d04a116e985efe15d130d60f1dd3a728061fd",
+          },
+          4: {
+            events: {},
+            links: {},
+            address: "0xC1BE999de97dE9EB87Ef119bAB9dc396e4Eaf70C",
+            transactionHash: "0x975468d49db21f7ea8056c30f014b1f634a1436874179553ebec771a3fff32ff",
+          },
+        },
+      },
+      {
+        tokenA: "Wrapped Ether [WETH]",
+        tokenB: "Raiden [RDN]",
+        Coordinator: {
+          4: {
+            events: {},
+            links: {},
+            address: "0x3E46d875f7E88974117ABFA560c3A7250a39E1bd",
+            transactionHash: "0x975468d49db21f7ea8056c30f014b1f634a1436874179553ebec771a3fff32ff",
+          },
+        },
+      },
+]
+const fakePromise = async (promResolve, time = 2000) => new Promise(accept => setTimeout(() => accept(promResolve), time))
 
 const PoolPicker = ({
     currentPool,
@@ -67,7 +67,7 @@ const PoolPicker = ({
                 <>
                     {currentPool && <h6 style={{ background: '#d0ffeb', textAlign: 'center', padding: 10, margin: 0 }}>current pool: {currentPool.toLowerCase()}</h6>}
                     <div className="poolSwitcherContainer">
-                        {pools && pools.map(({ [netID]: { address: coordinator }, tokenA, tokenB }) => {
+                        {pools && pools.map(({ Coordinator: { [netID]: { address: coordinator } }, tokenA, tokenB }) => {
                             // don't show current selected pool
                             if (coordinator === currentPool) return null
 
@@ -109,7 +109,7 @@ export const withPoolSwitching = WrappedComponent =>
             const grabPools = async () => {
                 try {
                     const [poolAddresses, id] = await Promise.all([
-                        require('@gnosis.pm/dx-mgn-pool/networks.json'), // fakePromise(MockCoordData), 
+                        fakePromise(HardCodedPools), // require('@gnosis.pm/dx-mgn-pool/networks.json'), // fakePromise(HardCodedPools), 
                         getNetworkId(),
                     ])
                     
@@ -121,7 +121,7 @@ export const withPoolSwitching = WrappedComponent =>
 
                     // will only run if expects an array
                     if (Array.isArray(poolAddresses)) {
-                        if (!poolAddresses[0][id]) return setNoAvailablePools(true)
+                        if (!poolAddresses[0].Coordinator[id]) return setNoAvailablePools(true)
                         if (poolAddresses.length === 1) return setPoolSelected(poolAddresses[0])
                         
                         // else as normal, array format, multiple pools               
