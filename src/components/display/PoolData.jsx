@@ -86,7 +86,7 @@ const PoolData = ({
                     {/* TOKEN WALLET BALANCE */}
                     <p><span className="data-title">[<strong>{DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL}</strong>] WALLET BALANCE:</span> {DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL === 'WETH' || DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL === 'ETH' ? ((+DX_MGN_POOL.POOL1.TOKEN_BALANCE) + (+BALANCE)).toFixed(FIXED_DECIMAL_AMOUNT) : DX_MGN_POOL.POOL1.TOKEN_BALANCE}</p>
                     
-                    {POOL1STATE === POOL_STATES.POOLING 
+                    {checkPoolStateForEdgeCase(POOL1STATE, BLOCK_TIMESTAMP, DX_MGN_POOL.POOL1.POOLING_PERIOD_END) === POOL_STATES.POOLING 
                         && 
                         <>
                             <hr />
@@ -160,7 +160,7 @@ const PoolData = ({
                     {/* TOKEN BALANCE */}
                     <p><span className="data-title">[<strong>{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL}</strong>] WALLET BALANCE:</span> {DX_MGN_POOL.POOL1.SECONDARY_SYMBOL === 'WETH' ? ((+DX_MGN_POOL.POOL2.TOKEN_BALANCE) + (+BALANCE)).toFixed(FIXED_DECIMAL_AMOUNT) : DX_MGN_POOL.POOL2.TOKEN_BALANCE}</p>
 
-                    {POOL2STATE === POOL_STATES.POOLING 
+                    {checkPoolStateForEdgeCase(POOL1STATE, BLOCK_TIMESTAMP, DX_MGN_POOL.POOL1.POOLING_PERIOD_END) === POOL_STATES.POOLING 
                         && 
                         <>
                             <hr />
