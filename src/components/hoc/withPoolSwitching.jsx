@@ -67,10 +67,12 @@ const PoolPicker = ({
                 <>
                     {currentPool && <h6 style={{ background: '#d0ffeb', textAlign: 'center', padding: 10, margin: 0 }}>current pool: {currentPool.toLowerCase()}</h6>}
                     <div className="poolSwitcherContainer">
-                        {pools && pools.map(({ Coordinator: { [netID]: { address: coordinator } }, tokenA, tokenB }) => {
+                        {pools && pools.map(({ Coordinator, tokenA, tokenB }) => {
                             // don't show current selected pool
-                            if (coordinator === currentPool) return null
-
+                            if (!Coordinator[netID] || Coordinator[netID].address === currentPool) return null
+                            
+                            const { [netID]: { address: coordinator } } = Coordinator
+                            
                             return (
                                 <div 
                                     className="poolSwitcherPool"
