@@ -1,7 +1,22 @@
 import { toBN } from './api/utils'
 
+export const APP_URLS = {
+  LOCAL: [
+    'localhost', 
+    '0.0.0.0', 
+    '127.0.0.1',
+  ],
+  DEV: ['dx-mgn-pool.dev.gnosisdev.com'],
+  STAGING: ['dx-mgn-pool.staging.gnosisdev.com'],
+  PRODUCTION: {
+    MAIN: ['mgn-pool.slow.trade'],
+    RINKEBY: ['rinkeby.mgn-pool.slow.trade'],
+  },
+  PR_REVIEW_TEST: hostname => /^\w+--dxmgnpoolreact.review.gnosisdev.com$/.test(hostname),
+}
+
 export const CONTENT_URLS = {
-  HOW_IT_WORKS: 'https://medium.com',
+  HOW_IT_WORKS: 'https://medium.com/@slow_trade/how-to-use-the-dutchx-mgn-pool-interface-e151efe7094b',
 }
 
 export const ETHEREUM_NETWORKS = {
@@ -61,7 +76,24 @@ export const POOL_STATES_READABLE = {
   'loading...': 'loading...',
 }
 
+export const POOL_STATES_READABLE_LONG = {
+  POOLING: 'Pool is open for participation',
+  POOLINGENDED: 'Pooling has finished. Come back in 24/48 hours to withdraw your tokens and lock MGN',
+  DEPOSITWITHDRAWFROMDX: 'Pooling has finished.  MGN unlock has been requested; this process takes 24 hours. You will be able to withdraw your share after that',
+  MGNUNLOCKED: 'Pooling has finished. Please withdraw your MGN and any available tokens. Once withdrawn, you can lock your MGN in order to receive Reputation for the dxDAO',
+  'loading...': 'loading...',
+}
+
 export const LOCALFORAGE_KEYS = {
   VERIFICATION_SETTINGS: 'dxMgnPool-VerificationSettings',
   COOKIE_SETTINGS: 'dxMgnPool-CookieSettings',
 }
+
+export const COLOUR_ARRAY = [
+  'violet',
+  'green',
+  'yellow',
+  'purple',
+  'salmon',
+  'blue', 
+]

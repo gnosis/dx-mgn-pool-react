@@ -116,10 +116,10 @@ module.exports = (_, { mode }) => {
             'val-loader',
           ],
         },
-        // {
-        //   test: /\/build\/contracts\/\w+\.json$/,
-        //   use: ['json-loader', 'json-x-loader?exclude=unlinked_binary+networks.*.events+networks.*.links+bytecode+deployedBytecode+sourceMap+deployedSourceMap+source+sourcePath+ast+legacyAST']
-        // },
+        {
+          test: /\/build\/contracts\/\w+\.json$/,
+          use: ['json-x-loader', 'json-x-loader?exclude=unlinked_binary+networks.*.events+networks.*.links+bytecode+deployedBytecode+sourceMap+deployedSourceMap+source+sourcePath+ast+legacyAST'],
+        },
       ],
     },
     resolve: {

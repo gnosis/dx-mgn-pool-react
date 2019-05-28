@@ -77,6 +77,14 @@ const fetchMgnPoolData = async () => {
                 secondaryTokenObj: { balance: balance2, decimals: decimals2 },
                 currentPoolingEndTime1,
                 currentPoolingEndTime2,
+                unlockTime1,
+                unlockTime2,
+                pool1MgnUnlockedBalance,
+                pool2MgnUnlockedBalance,
+                pool1MgnLockedBalance,
+                pool2MgnLockedBalance,
+                userGeneratedMGNPool1,
+                userGeneratedMGNPool2,
             },
             {
                 totalClaimableMgn,
@@ -96,6 +104,12 @@ const fetchMgnPoolData = async () => {
             tc2,
             tcMgnEth,
             tcMgnEth2,
+            p1MgnUnlocked,
+            p2MgnUnlocked,
+            p1MgnLocked,
+            p2MgnLocked,
+            p1UserMgn,
+            p2UserMgn,
         ] = [
             totalShare1,
             totalShare2,
@@ -103,14 +117,24 @@ const fetchMgnPoolData = async () => {
             totalContribution2,
             totalClaimableMgn,
             totalClaimableMgn2,
+            pool1MgnUnlockedBalance,
+            pool2MgnUnlockedBalance,
+            pool1MgnLockedBalance,
+            pool2MgnLockedBalance,
+            userGeneratedMGNPool1,
+            userGeneratedMGNPool2,
         ].map(i => cleanDataFromWei(i))
-        
+
         return {
             POOL1: {
                 CURRENT_STATE: poolStateIdToName(pool1State.toString()),
                 POOLING_PERIOD_END: currentPoolingEndTime1.toString(),
+                UNLOCK_PERIOD: unlockTime1.toString(),
                 TOTAL_SHARE: ts1,
                 YOUR_SHARE: tc1,
+                CURRENT_GENERATED_MGN: p1MgnLocked,
+                TOTAL_GENERATED_MGN: p1MgnUnlocked,
+                USER_GENERATED_MGN: p1UserMgn,
                 TOTAL_CLAIMABLE_MGN: tcMgnEth,
                 TOTAL_CLAIMABLE_DEPOSIT: cleanDataNative(totalClaimableDeposit, decimals), // (totalClaimableDeposit.toString() / (10 ** decimals)),
                 TOKEN_BALANCE: cleanDataNative(balance, decimals), // (balance.toString() / (10 ** decimals)),
@@ -118,8 +142,12 @@ const fetchMgnPoolData = async () => {
             POOL2: {
                 CURRENT_STATE: poolStateIdToName(pool2State.toString()),
                 POOLING_PERIOD_END: currentPoolingEndTime2.toString(),
+                UNLOCK_PERIOD: unlockTime2.toString(),
                 TOTAL_SHARE: ts2,
                 YOUR_SHARE: tc2,
+                CURRENT_GENERATED_MGN: p2MgnLocked,
+                TOTAL_GENERATED_MGN: p2MgnUnlocked,
+                USER_GENERATED_MGN: p2UserMgn,
                 TOTAL_CLAIMABLE_MGN: tcMgnEth2,
                 TOTAL_CLAIMABLE_DEPOSIT: cleanDataNative(totalClaimableDeposit2, decimals2), // (totalClaimableDeposit2.toString() / (10 ** decimals2)),
                 TOKEN_BALANCE: cleanDataNative(balance2, decimals2), // (balance2.toString() / (10 ** decimals2)),
@@ -147,6 +175,7 @@ export const MGNPoolDataSub = createStatefulSub(fetchMgnPoolData, {
     POOL1: {
         CURRENT_STATE: DATA_LOAD_STRING,
         POOLING_PERIOD_END: null,
+        TOTAL_GENERATED_MGN: DATA_LOAD_STRING,
         TOTAL_SHARE: DATA_LOAD_STRING,
         YOUR_SHARE: DATA_LOAD_STRING,
         TOTAL_CLAIMABLE_MGN: DATA_LOAD_STRING,
@@ -156,6 +185,7 @@ export const MGNPoolDataSub = createStatefulSub(fetchMgnPoolData, {
     POOL2: {
         CURRENT_STATE: DATA_LOAD_STRING,
         POOLING_PERIOD_END: null,
+        TOTAL_GENERATED_MGN: DATA_LOAD_STRING,
         TOTAL_SHARE: DATA_LOAD_STRING,
         YOUR_SHARE: DATA_LOAD_STRING,
         TOTAL_CLAIMABLE_MGN: DATA_LOAD_STRING,
@@ -249,90 +279,93 @@ export const MGNPoolDataSubscription = createSubscription({
         return source.subscribe(callback)
     },
 })
-
+let subscription
 export default async function startSubscriptions() {
-  const { Web3 } = await getAPI()
+    const { Web3 } = await getAPI('FORCE')
 
-  // get initial state populated
-  AccountSub.update()
-  BlockSub.update()
-  NetworkSub.update()
+    // get initial state populated
+    AccountSub.update()
+    BlockSub.update()
+    NetworkSub.update()
 
     // create filter listening for latest new blocks
-  const subscription = Web3.web3WS.eth.subscribe("newBlockHeaders")
+    if (subscription) subscription.unsubscribe()
+    
+    subscription = Web3.web3WS.eth.subscribe("newBlockHeaders")
 
-  subscription.on("data", (blockHeader) => {
-    console.debug(
-      "New block header - updating AccountSub, BlockSub + subscribers",
-      blockHeader.timestamp,
-    )
-    // AccountSub.update()
+    subscription.on("data", (blockHeader) => {
+        console.debug(
+            "New block header - updating AccountSub, BlockSub + subscribers",
+            blockHeader.timestamp,
+        )
+        // AccountSub.update()
         BlockSub.update()
     })
 
-  subscription.on("error", (err) => {
-    console.error(
-      "An error in newBlockHeaders WS subscription occurred - unsubscribing.",
-      err.message || err,
-    )
+    subscription.on("error", (err) => {
+        console.error(
+            "An error in newBlockHeaders WS subscription occurred - unsubscribing.",
+            err.message || err,
+        )
         subscription.unsubscribe()
     })
 
-  const unsubAcc = watchMMaskFor(Web3.web3.currentProvider, 'accountsChanged', () => AccountSub.update())
-  const unsubNetwork = watchMMaskFor(Web3.web3.currentProvider, 'networkChanged', () => NetworkSub.update())
+    const unsubAcc = watchMMaskFor(Web3.web3.currentProvider, 'accountsChanged', () => AccountSub.update())
+    const unsubNetwork = watchMMaskFor(Web3.web3.currentProvider, 'networkChanged', () => NetworkSub.update())
 
-  return () => {
-    subscription && subscription.unsubscribe()
-    unsubAcc()
-    unsubNetwork()
-  }
+    return () => {
+        // eslint-disable-next-line no-unused-expressions
+        subscription && subscription.unsubscribe()
+        unsubAcc()
+        unsubNetwork()
+    }
 }
 
 function watchMMaskFor(provider, event, cb) {
- if (typeof provider.on === 'function') {
-  provider.on(event, cb)
-  return () => provider.off(event, console.info)
- }
-// noop
- return () => {}
+    if (typeof provider.on === 'function') {
+        provider.on(event, cb)
+        return () => provider.off(event, console.info)
+    }
+    // noop
+    return () => { }
 }
 
 if (process.env.NODE_ENV === 'development') {
-  const withDevTools = typeof window !== "undefined" && window.__REDUX_DEVTOOLS_EXTENSION__
+    const withDevTools = typeof window !== "undefined" && window.__REDUX_DEVTOOLS_EXTENSION__
 
-  if (withDevTools) {
-    const subs = {
-      AccountSub,
-      BlockSub,
-      ETHbalanceSub,
-      MGNBalancesSub,
-      MGNPoolDataSub,
-      NetworkSub,
+    if (withDevTools) {
+        const subs = {
+            AccountSub,
+            BlockSub,
+            ETHbalanceSub,
+            MGNBalancesSub,
+            MGNPoolDataSub,
+            NetworkSub,
+        }
+
+        window.subs = subs
+
+
+        const globalTools = window.__REDUX_DEVTOOLS_EXTENSION__.connect({ name: 'Global' })
+        const globalState = {}
+
+        for (const name of Object.keys(subs)) {
+            const sub = subs[name]
+            const devTools = window.__REDUX_DEVTOOLS_EXTENSION__.connect({ name })
+
+            const state = sub.getState()
+            globalState[name] = state
+
+            devTools.init(state)
+
+            sub.subscribe((newState) => {
+                devTools.send('UPDATE', newState)
+
+                globalState[name] = newState
+                globalTools.send(name, globalState)
+            })
+        }
+
+        globalTools.init(globalState)
     }
-
-    window.subs = subs
-  
-
-    const globalTools = window.__REDUX_DEVTOOLS_EXTENSION__.connect({ name: 'Global' })
-    const globalState = {}
-    
-    for (const name of Object.keys(subs)) {
-      const sub = subs[name]
-      const devTools = window.__REDUX_DEVTOOLS_EXTENSION__.connect({ name })
-
-      const state = sub.getState()
-      globalState[name] = state
-      
-      devTools.init(state)
-      
-      sub.subscribe((newState) => {
-        devTools.send('UPDATE', newState)
-
-        globalState[name] = newState
-        globalTools.send(name, globalState)
-      })
-    }
-
-    globalTools.init(globalState)
-  }
 }

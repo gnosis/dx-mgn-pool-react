@@ -8,8 +8,8 @@ import { getAppContracts } from './Contracts'
 // tokensAPI singleton
 let tokensAPI
 
-export const getTokensAPI = async () => {
-  if (tokensAPI) return tokensAPI
+export const getTokensAPI = async (force) => {
+  if (tokensAPI && !force) return tokensAPI
 
   tokensAPI = await init()
   return tokensAPI

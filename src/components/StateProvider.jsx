@@ -24,6 +24,9 @@ const defaultState = {
     POOL1: {
       YOUR_SHARE: 0,
       TOTAL_SHARE: 0,
+      CURRENT_GENERATED_MGN: '...',
+      TOTAL_GENERATED_MGN: '...',
+      USER_GENERATED_MGN: '...',
       TOTAL_CLAIMABLE_DEPOSIT: '...',
       TOTAL_CLAIMABLE_MGN: '...',
       TOKEN_BALANCE: '...',
@@ -37,6 +40,9 @@ const defaultState = {
     POOL2: {
       YOUR_SHARE: 0,
       TOTAL_SHARE: 0,
+      CURRENT_GENERATED_MGN: '...',
+      TOTAL_GENERATED_MGN: '...',
+      USER_GENERATED_MGN: '...',
       TOTAL_CLAIMABLE_DEPOSIT: '...',
       TOTAL_CLAIMABLE_MGN: '...',
       TOKEN_BALANCE: '...',
@@ -56,7 +62,7 @@ const defaultState = {
   },
   CONTRACTS: {},
   SHOW_MODAL: undefined,
-  LOADING: false,
+  APP_BUSY: false,
   INPUT_AMOUNT: 0,
 }
 
@@ -66,7 +72,7 @@ const setToContext = new WeakMap()
 const memoizedContextValue = ({
   state,
   // Dispatchers
-  appLoading,
+  setAppBusy,
   setDxMgnPoolState,
   setUserState,
   registerProviders,
@@ -85,7 +91,7 @@ const memoizedContextValue = ({
 
   const contextValue = { 
     state, 
-    appLoading, 
+    setAppBusy, 
     setUserState, 
     setDxMgnPoolState, 
     registerProviders, 
@@ -108,7 +114,7 @@ const memoizedContextValue = ({
 // CONSTANTS
 const SET_ACTIVE_PROVIDER = 'SET_ACTIVE_PROVIDER'
 const REGISTER_PROVIDERS = 'REGISTER_PROVIDERS'
-const SET_APP_LOADING = 'SET_APP_LOADING'
+const SET_APP_BUSY = 'SET_APP_BUSY'
 const SHOW_MODAL = 'SHOW_MODAL'
 const SET_INPUT_AMOUNT = 'SET_INPUT_AMOUNT'
 const SET_USER_STATE = 'SET_USER_STATE'
@@ -265,10 +271,10 @@ function reducer(state, action) {
      * APP SPECIFIC REDUCERS
      */
       
-    case SET_APP_LOADING:
+    case SET_APP_BUSY:
       return {
         ...state,
-        LOADING: action.payload,
+        APP_BUSY: action.payload,
       }
 
     case SHOW_MODAL:
@@ -294,17 +300,25 @@ function AppProvider(props) {
         POOL1: { 
           CURRENT_STATE,
           POOLING_PERIOD_END,
+          UNLOCK_PERIOD,
           TOTAL_SHARE, 
-          YOUR_SHARE, 
-          TOKEN_BALANCE, 
+          YOUR_SHARE,
+          CURRENT_GENERATED_MGN,
+          TOTAL_GENERATED_MGN,
+          USER_GENERATED_MGN, 
+          TOKEN_BALANCE,
           TOTAL_CLAIMABLE_MGN, 
           TOTAL_CLAIMABLE_DEPOSIT, 
         }, 
         POOL2: { 
           CURRENT_STATE: CURRENT_STATE2,
           POOLING_PERIOD_END: POOLING_PERIOD_END2,
+          UNLOCK_PERIOD: UNLOCK_PERIOD2,
           TOTAL_SHARE: TOTAL_SHARE2, 
-          YOUR_SHARE: YOUR_SHARE2, 
+          YOUR_SHARE: YOUR_SHARE2,
+          CURRENT_GENERATED_MGN: CURRENT_GENERATED_MGN2,
+          TOTAL_GENERATED_MGN: TOTAL_GENERATED_MGN2,
+          USER_GENERATED_MGN: USER_GENERATED_MGN2, 
           TOKEN_BALANCE: TOKEN_BALANCE2, 
           TOTAL_CLAIMABLE_MGN: TOTAL_CLAIMABLE_MGN2, 
           TOTAL_CLAIMABLE_DEPOSIT: TOTAL_CLAIMABLE_DEPOSIT2, 
@@ -353,14 +367,30 @@ function AppProvider(props) {
       payload: {
         CURRENT_STATE,
         POOLING_PERIOD_END,
+        UNLOCK_PERIOD,
         TOTAL_SHARE,
         YOUR_SHARE,
+        CURRENT_GENERATED_MGN,
+        TOTAL_GENERATED_MGN,
+        USER_GENERATED_MGN,
         TOTAL_CLAIMABLE_MGN,
         TOTAL_CLAIMABLE_DEPOSIT,
         TOKEN_BALANCE,
       },
     }) 
-  }, [CURRENT_STATE, POOLING_PERIOD_END, TOTAL_SHARE, YOUR_SHARE, TOKEN_BALANCE, TOTAL_CLAIMABLE_MGN, TOTAL_CLAIMABLE_DEPOSIT])
+  }, [
+    CURRENT_STATE, 
+    POOLING_PERIOD_END, 
+    UNLOCK_PERIOD, 
+    TOTAL_SHARE,
+    CURRENT_GENERATED_MGN, 
+    TOTAL_GENERATED_MGN, 
+    USER_GENERATED_MGN,
+    YOUR_SHARE, 
+    TOKEN_BALANCE, 
+    TOTAL_CLAIMABLE_MGN, 
+    TOTAL_CLAIMABLE_DEPOSIT,
+  ])
 
   // useEffect - only update State when subscriber user Account changes
   useEffect(() => {
@@ -370,14 +400,30 @@ function AppProvider(props) {
       payload: {
         CURRENT_STATE: CURRENT_STATE2,
         POOLING_PERIOD_END: POOLING_PERIOD_END2,
+        UNLOCK_PERIOD: UNLOCK_PERIOD2,
         TOTAL_SHARE: TOTAL_SHARE2,
         YOUR_SHARE: YOUR_SHARE2,
+        CURRENT_GENERATED_MGN: CURRENT_GENERATED_MGN2,
+        USER_GENERATED_MGN: USER_GENERATED_MGN2,
+        TOTAL_GENERATED_MGN: TOTAL_GENERATED_MGN2,
         TOTAL_CLAIMABLE_MGN: TOTAL_CLAIMABLE_MGN2,
         TOTAL_CLAIMABLE_DEPOSIT: TOTAL_CLAIMABLE_DEPOSIT2,
         TOKEN_BALANCE: TOKEN_BALANCE2,
       },
     }) 
-  }, [CURRENT_STATE2, POOLING_PERIOD_END2, TOTAL_SHARE2, YOUR_SHARE2, TOKEN_BALANCE2, TOTAL_CLAIMABLE_MGN2, TOTAL_CLAIMABLE_DEPOSIT2])
+  }, [
+    CURRENT_STATE2, 
+    POOLING_PERIOD_END2, 
+    UNLOCK_PERIOD2, 
+    TOTAL_SHARE2,
+    CURRENT_GENERATED_MGN2, 
+    TOTAL_GENERATED_MGN2,
+    USER_GENERATED_MGN2, 
+    YOUR_SHARE2, 
+    TOKEN_BALANCE2, 
+    TOTAL_CLAIMABLE_MGN2, 
+    TOTAL_CLAIMABLE_DEPOSIT2,
+  ])
 
   const dispatchers = {
     // DX-MGN DISPATCHERS
@@ -391,10 +437,7 @@ function AppProvider(props) {
       poolNumber,
       amount = state.INPUT_AMOUNT,
       userAccount = state.USER.ACCOUNT,
-    }) => {
-      const receipt = await approveAndDepositIntoDxMgnPool(poolNumber, toWei(amount), userAccount)
-			console.debug('APPROVE and DEPOSIT into DX-MGN-POOL TX RECEIPT: ', receipt)
-    },
+    }) => approveAndDepositIntoDxMgnPool(poolNumber, toWei(amount), userAccount),
 
     setDxMgnPoolState: async () => {
       const {
@@ -487,8 +530,7 @@ function AppProvider(props) {
         },
       } = state
 
-			console.debug('TCL: AppProvider -> tcd, tcm', tcd, tcm)
-      // PoolData.jsx checks that values are nonZero AND not 'LOADING...'
+      // PoolData.jsx checks that values are nonZero AND not 'APP_BUSY...'
       // before showing button - so no need to check here as well
       if (!checkLoadingOrNonZero(tcd, tcm)) throw new Error('Nothing claimable!')
 
@@ -514,8 +556,8 @@ function AppProvider(props) {
     },
     
     // APP SPECIFIC DISPATCHERS
-    appLoading: loadingState => dispatch({
-      type: SET_APP_LOADING,
+    setAppBusy: loadingState => dispatch({
+      type: SET_APP_BUSY,
       payload: loadingState, 
     }),
     showModal: message => dispatch({ 

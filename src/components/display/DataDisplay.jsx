@@ -16,22 +16,33 @@ const DataDisplayVisualContainer = (props) => {
     const { 
       children,
       colour = 'gray', 
+      customStyle,
       height = 'auto',
+      preformatted = true,
       startOpen = true,
       title, 
       transition,
       ...rest 
     } = props
-
     const [open, setOpen] = useState(startOpen)
     
     return (
       <>
         {title && <h2 className="clickableHeader" onClick={() => setOpen(!open)}>{title} <small>(show/hide)</small></h2>}
-        <pre className={`data-pre-${colour} word-wrap${!open ? ' hideContent' : ''}${transition ? ' transition' : ''}`} style={{ height }}>
-          {children && children()}
-          {<DataDisplay {...rest} />}
-        </pre>
+        {preformatted 
+          ? 
+          <pre className={`data-pre-${colour} word-wrap${!open ? ' hideContent' : ''}${transition ? ' transition' : ''}`} style={{ height, ...customStyle }}>
+            {children && children()}
+            {<DataDisplay {...rest} />}
+          </pre>
+          :
+          <div
+            className={`word-wrap${!open ? ' hideContent' : ''}${transition ? ' transition' : ''}`} 
+            style={{ height, ...customStyle }}
+          >
+            {children && children()}
+          </div>
+        }
       </>
     )
   }

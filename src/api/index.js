@@ -8,14 +8,16 @@ import { fromWei, toBN } from '../api/utils'
 
 import { BN_4_PERCENT } from '../globals'
 
+export * from './Contracts'
+
 // API singleton
 let appAPI
 
 // API initialiser
-export const getAPI = async () => {
-  if (appAPI) return appAPI
+export const getAPI = async (force) => {
+  if (appAPI && !force) return appAPI
 
-  appAPI = await init()
+  appAPI = await init(force)
   return appAPI
 }
 
@@ -71,9 +73,9 @@ export const fillNetworkId = netId => (!netId ? getCurrentNetworkId() : netId)
 
 export const getPoolContracts = async () => {
   const { DxPool: { getDxPool, getPoolAddresses } } = await getAPI()
-  
+
   const [pool1Address, pool2Address] = await getPoolAddresses()
-  
+
   return Promise.all([getDxPool(pool1Address), getDxPool(pool2Address)])
 }
 
@@ -114,7 +116,7 @@ export const getMGNTokenAddress = async () => {
 
 export const getMGNTokenLockedBalance = async (userAddress) => {
   userAddress = await fillDefaultAccount(userAddress)
-  
+
   const { DxPool: { getMGNAddress, getMGNLockedBalance, getPoolAddresses } } = await getAPI()
   const [pool1Address] = await getPoolAddresses()
   const mgnAddress = await getMGNAddress(pool1Address)
@@ -129,8 +131,8 @@ export const getMGNTokenLockedBalance = async (userAddress) => {
  */
 export const getAllMGNTokenBalances = async (userAddress) => {
   userAddress = await fillDefaultAccount(userAddress)
-  
-  const { DxPool: { getMGNAddress, getMGNLockedBalance, getMGNUnlockedBalance, getMGNBalance, getPoolAddresses } } = await getAPI()
+
+  const { DxPool: { dxMP1Address, dxMP2Address, getMGNAddress, getMGNLockedBalance, getMGNUnlockedBalance, getMGNBalance, getPoolAddresses } } = await getAPI()
   const [pool1Address] = await getPoolAddresses()
   const mgnAddress = await getMGNAddress(pool1Address)
 
@@ -138,6 +140,10 @@ export const getAllMGNTokenBalances = async (userAddress) => {
     getMGNLockedBalance(mgnAddress, userAddress),
     getMGNUnlockedBalance(mgnAddress, userAddress),
     getMGNBalance(mgnAddress, userAddress),
+    getMGNUnlockedBalance(mgnAddress, dxMP1Address),
+    getMGNUnlockedBalance(mgnAddress, dxMP2Address),
+    getMGNLockedBalance(mgnAddress, dxMP1Address),
+    getMGNLockedBalance(mgnAddress, dxMP2Address),
   ])
 }
 
@@ -184,11 +190,11 @@ export const calculateUserParticipation = async (address) => {
     dxPool1.poolSharesByAddress.call(address),
     dxPool2.poolSharesByAddress.call(address),
   ])
-  
+
   // Accum all indices
   const totalUserParticipation1 = participationsByAddress1.reduce((accum, item) => accum.add(item), toBN(0))
   const totalUserParticipation2 = participationsByAddress2.reduce((accum, item) => accum.add(item), toBN(0))
-  
+
   return [totalUserParticipation1, totalUserParticipation2]
 }
 
@@ -198,16 +204,16 @@ export const approveAndDepositIntoDxMgnPool = async (pool, depositAmount, userAc
     DxPool: {
       dxMP1Address,
       dxMP2Address,
-      dxMP1DepositTokenAddress, 
-      dxMP1SecondaryTokenAddress, 
-      depositIntoPool1, 
-      depositIntoPool2, 
+      dxMP1DepositTokenAddress,
+      dxMP1SecondaryTokenAddress,
+      depositIntoPool1,
+      depositIntoPool2,
     },
   } = await getAPI()
 
   const tokenAddress = (pool === 1 ? dxMP1DepositTokenAddress : dxMP1SecondaryTokenAddress)
   const poolAddress = (pool === 1 ? dxMP1Address : dxMP2Address)
-  
+
   // Check token allowance - do we need to approve?
   const tokenAllowance = await allowance(tokenAddress, userAccount, poolAddress)
   // Approve deposit amount if necessary
@@ -222,10 +228,10 @@ export const approveAndDepositIntoDxMgnPool = async (pool, depositAmount, userAc
 export const lockAllMgn = async (userAccount) => {
   const { DxPool: { dxMP1Address, lockMGN, getMGNAddress } } = await getAPI()
   userAccount = await fillDefaultAccount(userAccount)
-  
+
   const mgnAddress = await getMGNAddress(dxMP1Address)
   const mgnBalance = await getTokenBalance(mgnAddress, undefined, userAccount)
-  
+
   if (mgnBalance.lte(toBN(0))) throw new Error('You have zero lockable MGN Balance')
 
   return lockMGN(mgnBalance.add(toBN(1)), mgnAddress, userAccount)
@@ -245,11 +251,11 @@ export const calculateClaimableMgnAndDeposits = async (userAccount) => {
     calculateClaimableMgnAndDeposits1(userAccount),
     calculateClaimableMgnAndDeposits2(userAccount),
   ])
-  
+
   // Accum all indices
-  const totalClaimableMgn       = claimableMgn.reduce((accum, item) => accum.add(item), toBN(0))
-  const totalClaimableMgn2      = claimableMgn2.reduce((accum, item) => accum.add(item), toBN(0))
-  const totalClaimableDeposit  = claimableDeposits.reduce((accum, item) => accum.add(item), toBN(0))
+  const totalClaimableMgn = claimableMgn.reduce((accum, item) => accum.add(item), toBN(0))
+  const totalClaimableMgn2 = claimableMgn2.reduce((accum, item) => accum.add(item), toBN(0))
+  const totalClaimableDeposit = claimableDeposits.reduce((accum, item) => accum.add(item), toBN(0))
   const totalClaimableDeposit2 = claimableDeposits2.reduce((accum, item) => accum.add(item), toBN(0))
 
   return {
@@ -276,6 +282,20 @@ export const getCurrentPoolingEndTimes = async () => {
 }
 
 /**
+ * getUnlockTimes
+ * @returns { Promise<"BN"[]> } - Promise<BN[]>
+ */
+export const getUnlockTimes = async () => {
+  const { DxPool: { dxMP1Address, dxMP2Address, getMGNAddress, getUnlockTime } } = await getAPI()
+  const mgnAddress = await getMGNAddress(dxMP1Address)
+  const [unlockTime1, unlockTime2] = await Promise.all([
+    getUnlockTime(mgnAddress, dxMP1Address),
+    getUnlockTime(mgnAddress, dxMP2Address),
+  ])
+  return [unlockTime1, unlockTime2]
+}
+
+/**
  * calculateDxMgnPoolState
  * @description Grabs all relevant DxMgnPool state as a batch
  * @param { string } userAccount - Address
@@ -284,13 +304,22 @@ export const calculateDxMgnPoolState = async (userAccount) => {
   userAccount = await fillDefaultAccount(userAccount)
 
   const [
-    mgnAddress, 
-    [mgnLockedBalance, mgnUnlockedBalance, mgnBalance], 
-    [totalShare1, totalShare2], 
+    mgnAddress,
+    [
+      mgnLockedBalance,
+      mgnUnlockedBalance,
+      mgnBalance,
+      pool1MgnUnlockedBalance,
+      pool2MgnUnlockedBalance,
+      pool1MgnLockedBalance,
+      pool2MgnLockedBalance,
+    ],
+    [totalShare1, totalShare2],
     [totalContribution1, totalContribution2],
     [depositTokenObj, secondaryTokenObj],
     [pool1State, pool2State],
     [currentPoolingEndTime1, currentPoolingEndTime2],
+    [unlockTime1, unlockTime2],
   ] = await Promise.all([
     getMGNTokenAddress(),
     getAllMGNTokenBalances(userAccount),
@@ -299,23 +328,34 @@ export const calculateDxMgnPoolState = async (userAccount) => {
     getPoolTokensInfo(),
     getPoolInternalState(),
     getCurrentPoolingEndTimes(),
+    getUnlockTimes(),
   ])
+  const userGeneratedMGNPool1 = !totalContribution1.isZero() ? totalContribution1.mul(!pool1MgnLockedBalance.isZero() ? pool1MgnLockedBalance : pool1MgnUnlockedBalance).div(totalShare1) : toBN(0)
+  const userGeneratedMGNPool2 = !totalContribution2.isZero() ? totalContribution2.mul(!pool2MgnLockedBalance.isZero() ? pool2MgnLockedBalance : pool2MgnUnlockedBalance).div(totalShare2) : toBN(0)
 
   return {
     mgnAddress,
     mgnLockedBalance,
-    mgnUnlockedBalance, 
+    mgnUnlockedBalance,
     mgnBalance,
+    pool1MgnUnlockedBalance,
+    pool2MgnUnlockedBalance,
+    pool1MgnLockedBalance,
+    pool2MgnLockedBalance,
+    userGeneratedMGNPool1,
+    userGeneratedMGNPool2,
     totalShare1,
     totalShare2,
     totalContribution1,
     totalContribution2,
     depositTokenObj,
     secondaryTokenObj,
-    pool1State, 
+    pool1State,
     pool2State,
     currentPoolingEndTime1,
     currentPoolingEndTime2,
+    unlockTime1,
+    unlockTime2,
   }
 }
 
@@ -337,7 +377,7 @@ export const withdrawMGNandDepositsFromAllPools = async (userAccount) => {
 export const withdrawMGNandDepositsFromSinglePool = async (userAccount, pool) => {
   if (!pool) throw new Error('No pool specified!')
   userAccount = await fillDefaultAccount(userAccount)
-  
+
   const { DxPool: { withdrawDepositAndMagnoliaPool1, withdrawDepositAndMagnoliaPool2 } } = await getAPI()
 
   if (pool === 'POOL1') {
@@ -469,13 +509,13 @@ export const getState = async ({ account, timestamp: time } = {}) => {
  * HELPERS
  */
 
- /**
- * checkEthTokenBalance > returns false or EtherToken Balance
- * @param token
- * @param weiAmount
- * @param account
- * @returns boolean | BigNumber <false, amt>
- */
+/**
+* checkEthTokenBalance > returns false or EtherToken Balance
+* @param token
+* @param weiAmount
+* @param account
+* @returns boolean | BigNumber <false, amt>
+*/
 async function checkEthTokenBalance(
   tokenAddress,
   weiAmount,
@@ -507,7 +547,7 @@ async function isETH(tokenAddress, netId) {
   netId = await fillNetworkId(netId)
 
   let ETH_ADDRESS
-  
+
   if (netId == 1) {
     // Mainnet
     const { MAINNET_WETH } = require('../globals')
@@ -529,15 +569,16 @@ async function depositIfETH(tokenAddress, weiAmount, userAccount) {
   return false
 }
 
-async function init() {
+async function init(force) {
   const [Web3, Tokens, DxPool] = await Promise.all([
-    getWeb3API(),
-    getTokensAPI(),
-    getDxPoolAPI(),
+    getWeb3API(force),
+    getTokensAPI(force),
+    getDxPoolAPI(force),
   ])
 
   const Contracts = await getAppContracts()
 
-  console.debug('​API init -> ', { Web3, Tokens, DxPool, Contracts })
+  // eslint-disable-next-line no-unused-expressions
+  process.env.FE_CONDITIONAL_ENV !== 'production' && console.debug('​API init -> ', { Web3, Tokens, DxPool, Contracts })
   return { Web3, Tokens, DxPool, Contracts }
 }
