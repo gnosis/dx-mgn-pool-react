@@ -74,7 +74,7 @@ const PoolData = ({
                     {/* CONTRIBUTION */}
                     <p><span className="data-title">YOUR CONTRIBUTION:</span> {DX_MGN_POOL.POOL1.YOUR_SHARE}</p>
                     {/* CURRENT GENERATED MGN */}
-                    {DX_MGN_POOL.POOL1.CURRENT_GENERATED_MGN > 0 && <p><span className="data-title">CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL1.CURRENT_GENERATED_MGN}</p>}
+                    {DX_MGN_POOL.POOL1.CURRENT_GENERATED_MGN > 0 && <p><span className="data-title">CURRENT TOTAL GENERATED MGN:</span> {DX_MGN_POOL.POOL1.CURRENT_GENERATED_MGN}</p>}
                     {/* TOTAL GENERATED MGN */}
                     {DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN > 0 && <p><span className="data-title">TOTAL GENERATED MGN:</span> {DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN}</p>}
                     {/* CURRENT USER GENERATED MGN */}
@@ -152,7 +152,7 @@ const PoolData = ({
                     {/* CONTRIBUTION */}
                     <p><span className="data-title">YOUR CONTRIBUTION:</span> {DX_MGN_POOL.POOL2.YOUR_SHARE}</p>
                     {/* CURRENT GENERATED MGN */}
-                    {DX_MGN_POOL.POOL2.CURRENT_GENERATED_MGN > 0 && <p><span className="data-title">CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL2.CURRENT_GENERATED_MGN}</p>}
+                    {DX_MGN_POOL.POOL2.CURRENT_GENERATED_MGN > 0 && <p><span className="data-title">CURRENT TOTAL GENERATED MGN:</span> {DX_MGN_POOL.POOL2.CURRENT_GENERATED_MGN}</p>}
                     {/* TOTAL GENERATED MGN */}
                     {DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN > 0 && <p><span className="data-title">TOTAL GENERATED MGN:</span> {DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN}</p>}
                     {/* CURRENT USER GENERATED MGN */}
