@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import React, { useState } from 'react'
 
 import InfoShower from '../display/InfoShower'
@@ -13,6 +14,7 @@ export const withAsyncActions = Component => ({
     forceDisable,
     info,
     title,
+    useGlobalAppBlocker,
 }) => {
     // State - button blocked disables use of butotn
     // e.g on blockchain action - released on receipt
@@ -41,6 +43,8 @@ export const withAsyncActions = Component => ({
             if (!buttonOnly && !inputAmount) throw new Error('Please enter a valid amount')
             // disable button
             setButtonBlocked(true)
+            // set app busy state
+            useGlobalAppBlocker && useGlobalAppBlocker(true)
 
             // fire action
             const asyncRec = !buttonOnly ? await asyncAction({ amount: inputAmount }) : await asyncAction()
@@ -58,6 +62,8 @@ export const withAsyncActions = Component => ({
             setInputAmount('0')
             // reEnable button
             setButtonBlocked(false)
+            // disable app busy state
+            useGlobalAppBlocker && useGlobalAppBlocker(false)
         }
     }
 
