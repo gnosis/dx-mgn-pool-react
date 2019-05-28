@@ -21,17 +21,21 @@ body::-webkit-scrollbar {
     width: 0.5em;
 }
 
-div::-webkit-scrollbar {
+div::-webkit-scrollbar, pre::-webkit-scrollbar {
     width: 0.2em;
 }
  
-body::-webkit-scrollbar-track, div::-webkit-scrollbar-track {
+pre::-webkit-scrollbar {
+    height: 0.4em;
+}
+
+body::-webkit-scrollbar-track, div::-webkit-scrollbar-track, pre::-webkit-scrollbar-track {
     box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
     border-radius: 10px;
 }
  
-body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
+body::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb, pre::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: rgba(0, 0, 0, 0.507);
     outline: 1px solid slategrey;
@@ -324,8 +328,11 @@ section.PoolData, section.UserState {
     font-size: 12px;
     font-style: italic;
 
+    border-radius: 0;
+
     white-space: pre-wrap;
     max-width: 70%;
+    overflow-x: scroll;
 }
 
 .data-pre-info {
