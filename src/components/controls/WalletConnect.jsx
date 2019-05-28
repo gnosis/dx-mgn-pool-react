@@ -10,6 +10,10 @@ import { getAppContracts } from '../../api/Contracts'
 
 import startSubscriptions from '../../subscriptions'
 
+/*
+ * DEPRECATED - USE WITHWALLETCONNECT.JSX INSTEAD
+ */
+
 function WalletConnect({
   pools,
   changePool,
@@ -145,7 +149,6 @@ const mapProps = ({
     INPUT_AMOUNT,
   },
   // dispatchers
-  appLoading,
   registerProviders,
   setActiveProvider,
   getDXTokenBalance,
@@ -163,7 +166,6 @@ const mapProps = ({
   },
   // dispatchers
   dispatchers: {
-    appLoading,
     registerProviders,
     setActiveProvider,
     getDXTokenBalance,
@@ -173,6 +175,4 @@ const mapProps = ({
   },
 })
 
-export default connect(mapProps)(process.env.SHOW_APP_DATA === 'true'
-  ? withPoolSwitching(withConfigDisplay(WalletConnect))
-  : withModal(withPoolSwitching(WalletConnect)))
+export default connect(mapProps)(WalletConnect)
