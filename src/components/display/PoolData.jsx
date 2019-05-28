@@ -11,17 +11,10 @@ import { checkLoadingOrNonZero, poolTimeFormat } from '../../api/utils'
 
 import { POOL_STATES, POOL_STATES_READABLE, POOL_STATES_READABLE_LONG, DATA_LOAD_STRING, FIXED_DECIMAL_AMOUNT } from '../../globals'
 
+// Deposit Token BUTTON
 const DepositToken = withAsyncActions(TextInput)
+// WithdrawMGNandDepositsFromBothPools BUTTON
 const WithdrawMGNandDepositsFromBothPools = withAsyncActions()
-
-const showDataForState = (data, currState, stateExpected) => (data === DATA_LOAD_STRING || (currState === stateExpected && !!Number(data)))
-
-const checkPoolStateForEdgeCase = (poolState, blockTimestamp, poolingEndTime) => {
-    // Show POOLING ENDED if we are STILL in POOLING but the poolingPeriodEndTime < now time
-    if (poolState === POOL_STATES.POOLING && blockTimestamp > poolingEndTime) return POOL_STATES.POOLING_ENDED
-    
-    return poolState
-}
 
 const PoolData = ({
     // state,
@@ -72,13 +65,13 @@ const PoolData = ({
                     {/* POOL SHARE */}
                     <p><span className="data-title">TOTAL POOL SHARE:</span> {DX_MGN_POOL.POOL1.TOTAL_SHARE}</p>
                     {/* CONTRIBUTION */}
-                    <p><span className="data-title">YOUR CONTRIBUTION:</span> {DX_MGN_POOL.POOL1.YOUR_SHARE}</p>
+                    <p><span className="data-title">YOUR POOL SHARE:</span> {DX_MGN_POOL.POOL1.YOUR_SHARE}</p>
                     {/* CURRENT GENERATED MGN */}
-                    {DX_MGN_POOL.POOL1.CURRENT_GENERATED_MGN > 0 && <p><span className="data-title">CURRENT TOTAL GENERATED MGN:</span> {DX_MGN_POOL.POOL1.CURRENT_GENERATED_MGN}</p>}
+                    {DX_MGN_POOL.POOL1.CURRENT_GENERATED_MGN > 0 && <p><span className="data-title">TOTAL CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL1.CURRENT_GENERATED_MGN}</p>}
                     {/* TOTAL GENERATED MGN */}
                     {DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN > 0 && <p><span className="data-title">TOTAL GENERATED MGN:</span> {DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN}</p>}
-                    {/* CURRENT USER GENERATED MGN */}
-                    {(DX_MGN_POOL.POOL1.CURRENT_GENERATED_MGN > 0 || DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN > 0) && <p><span className="data-title">USER GENERATED MGN:</span> {DX_MGN_POOL.POOL1.USER_GENERATED_MGN}</p>}
+                    {/* CURRENT YOUR CURRENT GENERATED MGN */}
+                    {(DX_MGN_POOL.POOL1.CURRENT_GENERATED_MGN > 0 || DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN > 0) && <p><span className="data-title">YOUR CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL1.USER_GENERATED_MGN}</p>}
                     {/* Only show if POOLING or in another state but with non-zero claimables */}
                     {showDataForState(DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_MGN, POOL1STATE, POOL_STATES.MGN_UNLOCKED) 
                         && <p><span className="data-title">TOTAL CLAIMABLE MGN:</span> {DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_MGN}</p>}
@@ -150,13 +143,13 @@ const PoolData = ({
                     {/* POOL SHARE */}
                     <p><span className="data-title">TOTAL POOL SHARE:</span> {DX_MGN_POOL.POOL2.TOTAL_SHARE}</p>
                     {/* CONTRIBUTION */}
-                    <p><span className="data-title">YOUR CONTRIBUTION:</span> {DX_MGN_POOL.POOL2.YOUR_SHARE}</p>
+                    <p><span className="data-title">YOUR POOL SHARE:</span> {DX_MGN_POOL.POOL2.YOUR_SHARE}</p>
                     {/* CURRENT GENERATED MGN */}
-                    {DX_MGN_POOL.POOL2.CURRENT_GENERATED_MGN > 0 && <p><span className="data-title">CURRENT TOTAL GENERATED MGN:</span> {DX_MGN_POOL.POOL2.CURRENT_GENERATED_MGN}</p>}
+                    {DX_MGN_POOL.POOL2.CURRENT_GENERATED_MGN > 0 && <p><span className="data-title">TOTAL CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL2.CURRENT_GENERATED_MGN}</p>}
                     {/* TOTAL GENERATED MGN */}
                     {DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN > 0 && <p><span className="data-title">TOTAL GENERATED MGN:</span> {DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN}</p>}
                     {/* CURRENT USER GENERATED MGN */}
-                    {(DX_MGN_POOL.POOL2.CURRENT_GENERATED_MGN > 0 || DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN > 0) && <p><span className="data-title">USER GENERATED MGN:</span> {DX_MGN_POOL.POOL2.USER_GENERATED_MGN}</p>}
+                    {(DX_MGN_POOL.POOL2.CURRENT_GENERATED_MGN > 0 || DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN > 0) && <p><span className="data-title">YOUR CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL2.USER_GENERATED_MGN}</p>}
                     {/* Only show if POOLING or in another state but with non-zero claimables */}
                     {showDataForState(DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_MGN, POOL2STATE, POOL_STATES.MGN_UNLOCKED) 
                         && <p><span className="data-title">TOTAL CLAIMABLE MGN:</span> {DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_MGN}</p>}
@@ -211,6 +204,15 @@ const PoolData = ({
             </div>
         </div>
     </>
+
+function showDataForState(data, currState, stateExpected) { return data === DATA_LOAD_STRING || (currState === stateExpected && !!Number(data)) }
+
+function checkPoolStateForEdgeCase(poolState, blockTimestamp, poolingEndTime) {
+    // Show POOLING ENDED if we are STILL in POOLING but the poolingPeriodEndTime < now time
+    if (poolState === POOL_STATES.POOLING && blockTimestamp > poolingEndTime) return POOL_STATES.POOLING_ENDED
+    
+    return poolState
+}
 
 const mapProps = ({
     state: {
