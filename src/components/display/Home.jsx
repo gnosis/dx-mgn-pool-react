@@ -28,6 +28,7 @@ const mapProps = ({
   state: {
     PROVIDER: { ACTIVE_PROVIDER },
     SHOW_MODAL,
+    APP_BUSY,
   },
   // DISPATCH FUNCTIONS
 
@@ -42,14 +43,18 @@ const mapProps = ({
   // state properties
   state: {
     ACTIVE_PROVIDER,
+    APP_BUSY,
     SHOW_MODAL,
   },
   // dispatchers
   dispatchers: {
+    // Provider
     registerProviders,
     setActiveProvider,
-    showModal,
+    // DxPool
     setPoolTokenInfo,
+    // App
+    showModal,
   },
 })
 
