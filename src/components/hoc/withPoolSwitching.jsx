@@ -43,6 +43,7 @@ import ErrorHandler from '../display/ErrorHandler'
 
 const PoolPicker = ({
     currentPool,
+    disable,
     handlePoolSelect,
     netID,
     pools,
@@ -67,7 +68,7 @@ const PoolPicker = ({
                 <>
                     {currentPool && <h6 style={{ background: '#d0ffeb', textAlign: 'center', padding: 10, margin: 0 }}>current pool: {currentPool.toLowerCase()}</h6>}
                     <div className="poolSwitcherContainer">
-                        {pools && pools.map(({ Coordinator, tokenA, tokenB }) => {
+                        {!disable && pools && pools.map(({ Coordinator, tokenA, tokenB }) => {
                             // don't show current selected pool
                             if (!Coordinator[netID] || Coordinator[netID] === currentPool) return null
                             
@@ -93,7 +94,7 @@ const PoolPicker = ({
 
 export const withPoolSwitching = WrappedComponent =>
     function PoolSwitchHOC(props) {
-        const { dispatchers: { showModal }, web3API: { getNetworkId } } = props
+        const { state: { APP_BUSY }, dispatchers: { showModal }, web3API: { getNetworkId } } = props
         
         const [pools, setPools]                         = useState([])
         const [error, setError]                         = useState(undefined)
@@ -165,7 +166,7 @@ export const withPoolSwitching = WrappedComponent =>
         if (!poolSelected) return <PoolPicker netID={networkID} pools={pools} handlePoolSelect={setPoolSelected} />
         return (
             <>
-                {renderPoolPicker && <PoolPicker netID={networkID} currentPool={poolSelected} pools={pools} handlePoolSelect={setPoolSelected} />}
+                {renderPoolPicker && <PoolPicker disable={APP_BUSY} netID={networkID} currentPool={poolSelected} pools={pools} handlePoolSelect={setPoolSelected} />}
                 <WrappedComponent {...props} pools={pools} changePool={setPoolSelected} selectedPool={poolSelected} />
             </>
         )
