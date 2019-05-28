@@ -309,7 +309,8 @@ section.PoolData, section.UserState {
     align-items: center;
     align-self: stretch;
 
-    font-size: 1.2vw;
+    /* font-size: 1.2vw; */
+    border: 1px solid #0000002e;
 
     width: 100%;
     min-height: 25%;
@@ -498,6 +499,7 @@ input[type="text"] {
 .hideContent {
     height: 0 !important;
     flex: 0 0% !important;
+    overflow: hidden !important;
 }
 
 .footerH {
