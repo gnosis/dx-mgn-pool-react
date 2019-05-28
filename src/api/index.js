@@ -330,7 +330,6 @@ export const calculateDxMgnPoolState = async (userAccount) => {
     getCurrentPoolingEndTimes(),
     getUnlockTimes(),
   ])
-  console.debug(totalShare1.toString(), pool1MgnLockedBalance.toString(), totalContribution1, totalContribution1.eq(0))
   const userGeneratedMGNPool1 = !totalContribution1.isZero() ? totalContribution1.mul(!pool1MgnLockedBalance.isZero() ? pool1MgnLockedBalance : pool1MgnUnlockedBalance).div(totalShare1) : toBN(0)
   const userGeneratedMGNPool2 = !totalContribution2.isZero() ? totalContribution2.mul(!pool2MgnLockedBalance.isZero() ? pool2MgnLockedBalance : pool2MgnUnlockedBalance).div(totalShare2) : toBN(0)
 
