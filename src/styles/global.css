@@ -273,6 +273,10 @@ section.PoolData, section.UserState {
     background-color: #fdf6fc;
 }
 
+.data-pre-white {
+    background-color: #fff;
+}
+
 .data-pre-greenGradient {
     background: linear-gradient(-45deg, #a8ff78, #78ffd6);
     background-size: 600% 600%;
@@ -299,7 +303,7 @@ section.PoolData, section.UserState {
 
 .poolSwitcherContainer .poolSwitcherPool {
     display: flex;
-    flex: 1 1 50%;
+    flex: 1 1 48%;
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
@@ -309,6 +313,7 @@ section.PoolData, section.UserState {
 
     width: 100%;
     min-height: 25%;
+    margin: 2px;
 
     cursor: pointer;
     transition: all 0.4s ease-in-out;

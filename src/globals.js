@@ -88,3 +88,14 @@ export const LOCALFORAGE_KEYS = {
   VERIFICATION_SETTINGS: 'dxMgnPool-VerificationSettings',
   COOKIE_SETTINGS: 'dxMgnPool-CookieSettings',
 }
+
+export const COLOUR_ARRAY = [
+  'violet',
+  'green',
+  'lightSalmon',
+  'pink',
+  'yellow',
+  'purple',
+  'salmon',
+  'blue', 
+]

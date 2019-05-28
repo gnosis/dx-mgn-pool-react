@@ -6,6 +6,8 @@ import { unstable_batchedUpdates as batchUpdate } from 'react-dom'
 import DataDisplayVisualContainer from '../display/DataDisplay'    
 import ErrorHandler from '../display/ErrorHandler'
 
+import { COLOUR_ARRAY } from '../../globals'
+
 // TESTING
 // const HardCodedPools = [
 //     {
@@ -48,6 +50,7 @@ const PoolPicker = ({
     netID,
     pools,
     startOpen,
+    useColourArray,
 }) => ( 
     <section className="PoolSwitcher" style={{ height: '68%' }}>
         <DataDisplayVisualContainer
@@ -76,9 +79,8 @@ const PoolPicker = ({
                             
                             return (
                                 <div 
-                                    className="poolSwitcherPool"
+                                    className={`poolSwitcherPool data-pre-${useColourArray ? chooseRandomColour() : 'yellow'}`}
                                     key={`${coordinator}-${Math.random()}`}
-                                    style={{ minWidth: '50%' }}
                                     onClick={() => handlePoolSelect(coordinator)}
                                 >
                                     <p>{coordinator.toLowerCase()}</p>
@@ -163,7 +165,7 @@ export const withPoolSwitching = WrappedComponent =>
             )
         }
 
-        if (!poolSelected) return <PoolPicker netID={networkID} pools={pools} handlePoolSelect={setPoolSelected} />
+        if (!poolSelected) return <PoolPicker useColourArray netID={networkID} pools={pools} handlePoolSelect={setPoolSelected} />
         return (
             <>
                 {renderPoolPicker && <PoolPicker disable={APP_BUSY} netID={networkID} currentPool={poolSelected} pools={pools} handlePoolSelect={setPoolSelected} />}
@@ -171,5 +173,9 @@ export const withPoolSwitching = WrappedComponent =>
             </>
         )
     }
+
+function chooseRandomColour() {
+    return COLOUR_ARRAY[Math.round(Math.random() * (COLOUR_ARRAY.length - 1))]
+}
 
 export default withPoolSwitching
