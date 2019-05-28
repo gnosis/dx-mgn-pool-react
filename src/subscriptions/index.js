@@ -81,6 +81,10 @@ const fetchMgnPoolData = async () => {
                 unlockTime2,
                 pool1MgnUnlockedBalance,
                 pool2MgnUnlockedBalance,
+                pool1MgnLockedBalance,
+                pool2MgnLockedBalance,
+                userGeneratedMGNPool1,
+                userGeneratedMGNPool2,
             },
             {
                 totalClaimableMgn,
@@ -102,6 +106,10 @@ const fetchMgnPoolData = async () => {
             tcMgnEth2,
             p1MgnUnlocked,
             p2MgnUnlocked,
+            p1MgnLocked,
+            p2MgnLocked,
+            p1UserMgn,
+            p2UserMgn,
         ] = [
             totalShare1,
             totalShare2,
@@ -111,6 +119,10 @@ const fetchMgnPoolData = async () => {
             totalClaimableMgn2,
             pool1MgnUnlockedBalance,
             pool2MgnUnlockedBalance,
+            pool1MgnLockedBalance,
+            pool2MgnLockedBalance,
+            userGeneratedMGNPool1,
+            userGeneratedMGNPool2,
         ].map(i => cleanDataFromWei(i))
 
         return {
@@ -120,7 +132,9 @@ const fetchMgnPoolData = async () => {
                 UNLOCK_PERIOD: unlockTime1.toString(),
                 TOTAL_SHARE: ts1,
                 YOUR_SHARE: tc1,
+                CURRENT_GENERATED_MGN: p1MgnLocked,
                 TOTAL_GENERATED_MGN: p1MgnUnlocked,
+                USER_GENERATED_MGN: p1UserMgn,
                 TOTAL_CLAIMABLE_MGN: tcMgnEth,
                 TOTAL_CLAIMABLE_DEPOSIT: cleanDataNative(totalClaimableDeposit, decimals), // (totalClaimableDeposit.toString() / (10 ** decimals)),
                 TOKEN_BALANCE: cleanDataNative(balance, decimals), // (balance.toString() / (10 ** decimals)),
@@ -131,7 +145,9 @@ const fetchMgnPoolData = async () => {
                 UNLOCK_PERIOD: unlockTime2.toString(),
                 TOTAL_SHARE: ts2,
                 YOUR_SHARE: tc2,
+                CURRENT_GENERATED_MGN: p2MgnLocked,
                 TOTAL_GENERATED_MGN: p2MgnUnlocked,
+                USER_GENERATED_MGN: p2UserMgn,
                 TOTAL_CLAIMABLE_MGN: tcMgnEth2,
                 TOTAL_CLAIMABLE_DEPOSIT: cleanDataNative(totalClaimableDeposit2, decimals2), // (totalClaimableDeposit2.toString() / (10 ** decimals2)),
                 TOKEN_BALANCE: cleanDataNative(balance2, decimals2), // (balance2.toString() / (10 ** decimals2)),
