@@ -579,6 +579,7 @@ async function init(force) {
 
   const Contracts = await getAppContracts()
 
-  console.debug('​API init -> ', { Web3, Tokens, DxPool, Contracts })
+  // eslint-disable-next-line no-unused-expressions
+  process.env.FE_CONDITIONAL_ENV !== 'production' && console.debug('​API init -> ', { Web3, Tokens, DxPool, Contracts })
   return { Web3, Tokens, DxPool, Contracts }
 }
