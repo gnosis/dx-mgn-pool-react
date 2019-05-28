@@ -92,8 +92,6 @@ export const LOCALFORAGE_KEYS = {
 export const COLOUR_ARRAY = [
   'violet',
   'green',
-  'lightSalmon',
-  'pink',
   'yellow',
   'purple',
   'salmon',
