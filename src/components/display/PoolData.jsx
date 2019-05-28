@@ -23,6 +23,7 @@ const PoolData = ({
     DX_MGN_POOL,
     POOL_STATES: { POOL1STATE, POOL2STATE },
     // dispatch
+    setAppBusy,
     setDepositAmount,
     withdrawDepositAndMGN,
     // misc
@@ -96,6 +97,7 @@ const PoolData = ({
                                     : 
                                     `[${DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL}] You may need to sign up to 2 TXs [Approve, Deposit]`}
                                 title={`deposit [${DX_MGN_POOL.POOL1.DEPOSIT_TOKEN.toLowerCase()}]`}
+                                useGlobalAppBlocker={setAppBusy}
                                 {...DX_MGN_POOL}
                             />
                         </>
@@ -119,6 +121,7 @@ const PoolData = ({
                                     buttonText="Withdraw"
                                     buttonOnly
                                     info="Withdraw any available MGN + Deposits from Pool #1"
+                                    useGlobalAppBlocker={setAppBusy}
                                 />
                             }
                         </DataDisplayVisualContainer>
@@ -174,6 +177,7 @@ const PoolData = ({
                                     `[${DX_MGN_POOL.POOL1.SECONDARY_SYMBOL}] You may need to sign up to 2 TXs [Approve, Deposit]`
                                 }
                                 title={`deposit [${DX_MGN_POOL.POOL1.SECONDARY_TOKEN.toLowerCase()}]`}
+                                useGlobalAppBlocker={setAppBusy}
                                 {...DX_MGN_POOL}
                             />
                         </>}
@@ -196,6 +200,7 @@ const PoolData = ({
                                     buttonText="Withdraw"
                                     buttonOnly
                                     info="Withdraw any available MGN + Deposits from Pool #2"
+                                    useGlobalAppBlocker={setAppBusy}
                                 />
                             }
                         </DataDisplayVisualContainer>
@@ -227,6 +232,7 @@ const mapProps = ({
     },
     setDepositAmount,
     setInputAmount,
+    setAppBusy,
     withdrawDepositAndMGN,
 }) => ({
     BALANCE,
@@ -245,6 +251,7 @@ const mapProps = ({
         DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_DEPOSIT, 
         DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_MGN,
     ),
+    setAppBusy,
     setDepositAmount,
     setInputAmount,
     withdrawDepositAndMGN,
