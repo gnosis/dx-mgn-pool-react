@@ -62,7 +62,7 @@ const defaultState = {
   },
   CONTRACTS: {},
   SHOW_MODAL: undefined,
-  LOADING: false,
+  APP_BUSY: false,
   INPUT_AMOUNT: 0,
 }
 
@@ -72,7 +72,7 @@ const setToContext = new WeakMap()
 const memoizedContextValue = ({
   state,
   // Dispatchers
-  appLoading,
+  setAppBusy,
   setDxMgnPoolState,
   setUserState,
   registerProviders,
@@ -91,7 +91,7 @@ const memoizedContextValue = ({
 
   const contextValue = { 
     state, 
-    appLoading, 
+    setAppBusy, 
     setUserState, 
     setDxMgnPoolState, 
     registerProviders, 
@@ -114,7 +114,7 @@ const memoizedContextValue = ({
 // CONSTANTS
 const SET_ACTIVE_PROVIDER = 'SET_ACTIVE_PROVIDER'
 const REGISTER_PROVIDERS = 'REGISTER_PROVIDERS'
-const SET_APP_LOADING = 'SET_APP_LOADING'
+const SET_APP_BUSY = 'SET_APP_BUSY'
 const SHOW_MODAL = 'SHOW_MODAL'
 const SET_INPUT_AMOUNT = 'SET_INPUT_AMOUNT'
 const SET_USER_STATE = 'SET_USER_STATE'
@@ -271,10 +271,10 @@ function reducer(state, action) {
      * APP SPECIFIC REDUCERS
      */
       
-    case SET_APP_LOADING:
+    case SET_APP_BUSY:
       return {
         ...state,
-        LOADING: action.payload,
+        APP_BUSY: action.payload,
       }
 
     case SHOW_MODAL:
@@ -530,7 +530,7 @@ function AppProvider(props) {
         },
       } = state
 
-      // PoolData.jsx checks that values are nonZero AND not 'LOADING...'
+      // PoolData.jsx checks that values are nonZero AND not 'APP_BUSY...'
       // before showing button - so no need to check here as well
       if (!checkLoadingOrNonZero(tcd, tcm)) throw new Error('Nothing claimable!')
 
@@ -556,8 +556,8 @@ function AppProvider(props) {
     },
     
     // APP SPECIFIC DISPATCHERS
-    appLoading: loadingState => dispatch({
-      type: SET_APP_LOADING,
+    setAppBusy: loadingState => dispatch({
+      type: SET_APP_BUSY,
       payload: loadingState, 
     }),
     showModal: message => dispatch({ 
