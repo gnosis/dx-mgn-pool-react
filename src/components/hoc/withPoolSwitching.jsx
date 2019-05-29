@@ -45,6 +45,7 @@ import { COLOUR_ARRAY } from '../../globals'
 
 const PoolPicker = ({
     currentPool,
+    customStyle,
     disable,
     handlePoolSelect,
     netID,
@@ -61,6 +62,7 @@ const PoolPicker = ({
                 flexFlow: 'column nowrap',
                 flex: 1,
                 width: "100%",
+                ...customStyle,
             }}
             preformatted={false}
             startOpen={startOpen}
@@ -70,24 +72,26 @@ const PoolPicker = ({
             {() =>
                 <>
                     {currentPool && <h6 style={{ background: '#d0ffeb', textAlign: 'center', padding: 10, margin: 0 }}>current pool: {currentPool.toLowerCase()}</h6>}
-                    <div className="poolSwitcherContainer">
-                        {!disable && pools && pools.map(({ Coordinator, tokenA, tokenB }) => {
-                            // don't show current selected pool
-                            if (!Coordinator[netID] || Coordinator[netID] === currentPool) return null
-                            
-                            const { [netID]: coordinator } = Coordinator
-                            
-                            return (
-                                <div 
-                                    className={`poolSwitcherPool data-pre-${useColourArray ? chooseRandomColour() : 'yellow'}`}
-                                    key={`${coordinator}-${Math.random()}`}
-                                    onClick={() => handlePoolSelect(coordinator)}
-                                >
-                                    <p>{coordinator.toLowerCase()}</p>
-                                    <p>{tokenA.toLowerCase()}-{tokenB.toLowerCase()}</p>
-                                </div>
-                            )
-                        })}
+                    <div style={{ display: 'flex', flex: 1, height: '100%' }}>
+                        <div className="poolSwitcherContainer">
+                            {!disable && pools && pools.map(({ Coordinator, tokenA, tokenB }) => {
+                                // don't show current selected pool
+                                if (!Coordinator[netID] || Coordinator[netID] === currentPool) return null
+                                
+                                const { [netID]: coordinator } = Coordinator
+                                
+                                return (
+                                    <div 
+                                        className={`poolSwitcherPool data-pre-${useColourArray ? chooseRandomColour() : 'yellow'}`}
+                                        key={`${coordinator}-${Math.random()}`}
+                                        onClick={() => handlePoolSelect(coordinator)}
+                                    >
+                                        <h5>{coordinator.toLowerCase()}</h5>
+                                        <h5>{tokenA.toLowerCase()}-{tokenB.toLowerCase()}</h5>
+                                    </div>
+                                )
+                            })}
+                        </div>
                     </div>
                 </>}
         </DataDisplayVisualContainer>
@@ -168,7 +172,7 @@ export const withPoolSwitching = WrappedComponent =>
         if (!poolSelected) return <PoolPicker useColourArray netID={networkID} pools={pools} handlePoolSelect={setPoolSelected} />
         return (
             <>
-                {renderPoolPicker && <PoolPicker disable={APP_BUSY} netID={networkID} currentPool={poolSelected} pools={pools} handlePoolSelect={setPoolSelected} />}
+                {renderPoolPicker && <PoolPicker customStyle={{ maxHeight: 300, overflowY: 'scroll' }} disable={APP_BUSY} netID={networkID} currentPool={poolSelected} pools={pools} handlePoolSelect={setPoolSelected} />}
                 <WrappedComponent {...props} pools={pools} changePool={setPoolSelected} selectedPool={poolSelected} />
             </>
         )

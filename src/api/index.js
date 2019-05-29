@@ -1,3 +1,4 @@
+/* eslint-disable no-control-regex */
 /* eslint-disable eqeqeq */
 // API
 import { getTokensAPI } from './Tokens'
@@ -147,9 +148,25 @@ export const getAllMGNTokenBalances = async (userAddress) => {
   ])
 }
 
+export async function getTokenNameSymbol(tokenAddr, w3) {
+  if (!tokenAddr) throw new Error('Must pass token address!')
+	const w3API = w3 || (await getAPI()).Web3.web3
+	
+	const nameBytes32 = w3API.eth.abi.encodeFunctionSignature('name()')
+	const symbolBytes32 = w3API.eth.abi.encodeFunctionSignature('symbol()')
+
+	const nameHex = await w3API.eth.call({ data: nameBytes32, to: tokenAddr })
+	const symbolHex = await w3API.eth.call({ data: symbolBytes32, to: tokenAddr })
+
+	return {
+		name: w3API.utils.toUtf8(w3API.utils.toHex(nameHex)).replace(/^\s*[\u0000-\u0004]*/u, ''),
+		symbol: w3API.utils.toUtf8(w3API.utils.toHex(symbolHex)).replace(/^\s*[\u0000-\u0004]*/u, ''),
+	}
+}
+
 export const getPoolTokensInfo = async (userAccount) => {
   userAccount = await fillDefaultAccount(userAccount)
-  const [{ Contracts: { hft } }, [dxPool1]] = await Promise.all([
+  const [{ Contracts: { hft }, Web3: { web3 } }, [dxPool1]] = await Promise.all([
     getAPI(),
     getPoolContracts(),
   ])
@@ -159,23 +176,25 @@ export const getPoolTokensInfo = async (userAccount) => {
     dxPool1.secondaryToken.call(),
   ])
 
-  const [depositToken, secondaryToken] = await Promise.all([
+  const [depositToken, secondaryToken, { name: dtName, symbol: dtSymbol }, { name: stName, symbol: stSymbol }] = await Promise.all([
     hft.at(dtAddress),
     hft.at(stAddress),
+    getTokenNameSymbol(dtAddress, web3),
+    getTokenNameSymbol(stAddress, web3),
   ])
-
+  
   return [
     {
       title: 'Deposit Token',
-      name: await depositToken.name.call() || 'Unknown token name',
-      symbol: await depositToken.symbol.call() || 'Unknown token symbol',
+      name: dtName || 'Unknown token name',
+      symbol: dtSymbol || 'Unknown token symbol',
       decimals: (await depositToken.decimals.call()).toNumber() || 18,
       balance: await depositToken.balanceOf.call(userAccount),
     },
     {
       title: 'Secondary Token',
-      name: await secondaryToken.name.call() || 'Unknown token name',
-      symbol: await secondaryToken.symbol.call() || 'Unknown token symbol',
+      name: stName || 'Unknown token name',
+      symbol: stSymbol || 'Unknown token symbol',
       decimals: (await secondaryToken.decimals.call()).toNumber() || 18,
       balance: await secondaryToken.balanceOf.call(userAccount),
     },
