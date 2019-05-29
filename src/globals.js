@@ -97,3 +97,7 @@ export const COLOUR_ARRAY = [
   'salmon',
   'blue', 
 ]
+
+export const EMAILS = {
+  SUPPORT: 'support@slow.trade',
+}
