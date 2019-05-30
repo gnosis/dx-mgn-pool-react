@@ -156,11 +156,23 @@ export async function getTokenNameSymbol(tokenAddr, w3) {
 	const symbolBytes32 = w3API.eth.abi.encodeFunctionSignature('symbol()')
 
 	const nameHex = await w3API.eth.call({ data: nameBytes32, to: tokenAddr })
-	const symbolHex = await w3API.eth.call({ data: symbolBytes32, to: tokenAddr })
+  const symbolHex = await w3API.eth.call({ data: symbolBytes32, to: tokenAddr })
+  
+  let name, symbol
+  try {
+    name = w3API.eth.abi.decodeParameter('string', nameHex)
+  } catch (error) {
+    name = w3API.utils.toUtf8(nameHex).replace(/^\s*[\u0000-\u0006]*/u, '')
+  }
+  try {
+    symbol = w3API.eth.abi.decodeParameter('string', symbolHex)
+  } catch (error) {
+    symbol = w3API.utils.toUtf8(symbolHex).replace(/^\s*[\u0000-\u0006]*/u, '')
+  }
 
 	return {
-		name: w3API.utils.toUtf8(w3API.utils.toHex(nameHex)).replace(/^\s*[\u0000-\u0004]*/u, ''),
-		symbol: w3API.utils.toUtf8(w3API.utils.toHex(symbolHex)).replace(/^\s*[\u0000-\u0004]*/u, ''),
+		name,
+		symbol,
 	}
 }
 
