@@ -39,6 +39,12 @@ export const networkById = {
 export const GAS_LIMIT = 400000
 export const GAS_PRICE = 15e9
 
+export const GAS_STATION_URLS = {
+  MAIN_GAS_STATION: 'https://safe-relay.gnosis.pm/api/v1/gas-station/',
+  RINKEBY_GAS_STATION: 'https://safe-relay.staging.gnosisdev.com/api/v1/gas-station/',
+}
+
+
 export const FIXED_DECIMAL_AMOUNT = 4
 export const DATA_LOAD_STRING = 'loading...'
 
