@@ -1,4 +1,5 @@
 import { getAppContracts } from './Contracts'
+import { wrapAPIobjectInEstimation } from './utils/gasEstimates'
 
 /**
  * Tokens OWL and Tokens GNO API
@@ -119,17 +120,21 @@ async function init() {
    */
   const depositETH = async (tokenAddress, tx) => (await getWETHToken(tokenAddress)).deposit(tx)
 
+  const estimatedFuncs = wrapAPIobjectInEstimation({
+    approve,
+    transfer,
+    transferFrom,
+    depositETH,
+   })
+
   return {
     allowance,
-    approve,
     getToken,
     getTokenBalance,
     getTokenSymbol,
     getTokenName,
     getTotalSupply,
     tokens: contractMap,
-    transfer,
-    transferFrom,
-    depositETH,
+    ...estimatedFuncs,
   }
 }
