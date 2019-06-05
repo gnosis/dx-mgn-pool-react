@@ -70,15 +70,27 @@ const AppOnlineStatusBar = ({
       />
       {/* Warning */}
       <TopBanner 
-        backgroundColor="#f7aaaa"
+        backgroundColor="#fffcce"
         customStyle={{
           marginTop: '70px',
         }}
         render={() => 
           <>
-            please note that this pool has the sole purpose to easily generate Magnolia tokens by taking part in every auction on your behalf. 
-            you may only claim back your deposited funds at the end of the pooling period. 
-            by taking part in the pool, you understand that you might incur severe losses of your token.
+            <p>
+              <strong className="serious red-serious">
+                Due to the mechanism design of the MGN Pools, when participating in the MGN Pools it is very likely that any remaining Pool deposit of tokens will be significantly lower than the tokens initially deposited and may be nil (0). Moreover, where the Pool incurs losses the number of MGN generated decreases proportionally as MGN is generated at a rate of 1 MGN per 1 ETH traded.
+              </strong>
+            </p>
+            <p>
+              <strong className="serious red-serious">
+                Hence, please only participate in the MGN Pool, if you wish to accrue MGN and you value such MGN high enough to justify the significant risk of losing all your tokens initially deposited into the MGN Pools.
+              </strong>
+            </p>
+            <p>
+              <strong className="serious">
+                SINCE THE MGN POOLS HAVE INCREASED IN SIZE CONSIDERABLY, WE HAVE DISABLED THE DEPOSIT FUNCTION ON OUR SITE. YOUR REMAINING POOL SHARE MAY BE RECLAIMED AT THE END OF THE TRADING PERIOD.
+              </strong>
+            </p>
           </>}
       />
     </div>

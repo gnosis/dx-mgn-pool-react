@@ -82,7 +82,7 @@ const PoolPicker = ({
                                 
                                 return (
                                     <div 
-                                        className={`poolSwitcherPool data-pre-${useColourArray ? chooseRandomColour() : 'yellow'}`}
+                                        className={`poolSwitcherPool data-pre-${useColourArray ? chooseRandomColour() : 'grey'}`}
                                         key={`${coordinator}-${Math.random()}`}
                                         onClick={() => handlePoolSelect(coordinator)}
                                     >
