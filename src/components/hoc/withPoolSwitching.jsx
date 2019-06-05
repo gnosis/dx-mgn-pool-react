@@ -152,7 +152,7 @@ export const withPoolSwitching = WrappedComponent =>
             // Start logic
             showModal('loading available pools')
             grabPools()
-            .then(() => showModal(null))
+            .then(() => showModal(undefined))
         }, [])
         
         if (error) return <ErrorHandler />

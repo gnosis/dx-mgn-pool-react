@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import LoadingModal from '../display/Modals/LoadingModal'
 
 /**
@@ -6,12 +6,22 @@ import LoadingModal from '../display/Modals/LoadingModal'
  * @param {*} Component Component to wrap
  */
 export const withModal = Component =>
-  props => 
-    (
+  function ModalHOC(props) {
+    useEffect(() => {
+      // eslint-disable-next-line no-unused-expressions
+      props.state.SHOW_MODAL && document.body.classList.add('noScroll')
+
+      return () => {
+        document.body.classList.remove('noScroll')
+      }
+    }, [props.state.SHOW_MODAL])
+
+    return (
       <>
-        {props.state.SHOW_MODAL && <LoadingModal header={props.state.SHOW_MODAL} /* showOrHide={props.state.SHOW_MODAL}  *//>}
+        {props.state.SHOW_MODAL && <LoadingModal header={props.state.SHOW_MODAL} /* showOrHide={props.state.SHOW_MODAL}  */ />}
         <Component {...props} />
       </>
     )
+  }
 
 export default withModal
