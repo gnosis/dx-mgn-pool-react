@@ -88,7 +88,7 @@ const AppOnlineStatusBar = ({
             </p>
             <p>
               <strong className="serious red-serious">
-                By taking part in the MGN Pools, you understand that you might incur severe losses of your token.
+                By taking part in the MGN Pools, you understand that you might incur severe token losses.
               </strong>
             </p>
             <h2 style={{ textAlign: 'left' }}>
