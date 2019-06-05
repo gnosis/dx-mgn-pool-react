@@ -72,7 +72,7 @@ const PoolData = ({
                     {/* TOTAL GENERATED MGN */}
                     {DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN > 0 && <p><span className="data-title">TOTAL GENERATED MGN:</span> {DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN}</p>}
                     {/* CURRENT YOUR CURRENT GENERATED MGN */}
-                    {(DX_MGN_POOL.POOL1.CURRENT_GENERATED_MGN > 0 || DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN > 0) && <p><span className="data-title">YOUR CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL1.USER_GENERATED_MGN}</p>}
+                    {/* {(DX_MGN_POOL.POOL1.CURRENT_GENERATED_MGN > 0 || DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN > 0) && <p><span className="data-title">YOUR CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL1.USER_GENERATED_MGN}</p>} */}
                     {/* Only show if POOLING or in another state but with non-zero claimables */}
                     {showDataForState(DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_MGN, POOL1STATE, POOL_STATES.MGN_UNLOCKED) 
                         && <p><span className="data-title">TOTAL CLAIMABLE MGN:</span> {DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_MGN}</p>}
@@ -152,7 +152,7 @@ const PoolData = ({
                     {/* TOTAL GENERATED MGN */}
                     {DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN > 0 && <p><span className="data-title">TOTAL GENERATED MGN:</span> {DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN}</p>}
                     {/* CURRENT USER GENERATED MGN */}
-                    {(DX_MGN_POOL.POOL2.CURRENT_GENERATED_MGN > 0 || DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN > 0) && <p><span className="data-title">YOUR CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL2.USER_GENERATED_MGN}</p>}
+                    {/* {(DX_MGN_POOL.POOL2.CURRENT_GENERATED_MGN > 0 || DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN > 0) && <p><span className="data-title">YOUR CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL2.USER_GENERATED_MGN}</p>} */}
                     {/* Only show if POOLING or in another state but with non-zero claimables */}
                     {showDataForState(DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_MGN, POOL2STATE, POOL_STATES.MGN_UNLOCKED) 
                         && <p><span className="data-title">TOTAL CLAIMABLE MGN:</span> {DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_MGN}</p>}
