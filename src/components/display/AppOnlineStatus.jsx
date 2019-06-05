@@ -87,10 +87,15 @@ const AppOnlineStatusBar = ({
               </strong>
             </p>
             <p>
+              <strong className="serious red-serious">
+                By taking part in the MGN Pools, you understand that you might incur severe losses of your token.
+              </strong>
+            </p>
+            <h2 style={{ textAlign: 'left' }}>
               <strong className="serious">
                 SINCE THE MGN POOLS HAVE INCREASED IN SIZE CONSIDERABLY, WE HAVE DISABLED THE DEPOSIT FUNCTION ON OUR SITE. YOUR REMAINING POOL SHARE MAY BE RECLAIMED AT THE END OF THE TRADING PERIOD.
               </strong>
-            </p>
+            </h2>
           </>}
       />
     </div>
