@@ -70,7 +70,7 @@ const AppOnlineStatusBar = ({
       />
       {/* Warning */}
       <TopBanner 
-        backgroundColor="#e6e6e6"
+        backgroundColor="#f7aaaa"
         customStyle={{
           marginTop: '70px',
         }}
