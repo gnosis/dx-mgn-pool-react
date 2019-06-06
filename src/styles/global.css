@@ -242,6 +242,10 @@ section.PoolData, section.UserState {
     background-color: lightgray;
 }
 
+.data-pre-grey {
+    background-color: #d9d9d945
+}
+
 .data-pre-pink {
     background-color: lightpink;
 }
@@ -542,6 +546,14 @@ input[type="text"] {
 
 .helpShower {
     height: auto;
+}
+
+.serious {
+    font-family: monospace;
+}
+
+.red-serious {
+    color: #cd0000;
 }
 
 /* ANIMATION */

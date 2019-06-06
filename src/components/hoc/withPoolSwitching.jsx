@@ -82,7 +82,7 @@ const PoolPicker = ({
                                 
                                 return (
                                     <div 
-                                        className={`poolSwitcherPool data-pre-${useColourArray ? chooseRandomColour() : 'yellow'}`}
+                                        className={`poolSwitcherPool data-pre-${useColourArray ? chooseRandomColour() : 'grey'}`}
                                         key={`${coordinator}-${Math.random()}`}
                                         onClick={() => handlePoolSelect(coordinator)}
                                     >
@@ -152,7 +152,7 @@ export const withPoolSwitching = WrappedComponent =>
             // Start logic
             showModal('loading available pools')
             grabPools()
-            .then(() => showModal(null))
+            .then(() => showModal(undefined))
         }, [])
         
         if (error) return <ErrorHandler />

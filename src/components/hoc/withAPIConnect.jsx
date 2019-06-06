@@ -36,7 +36,7 @@ export const withAPIConnect = WrappedComponent =>
                 // eslint-disable-next-line no-return-assign
                 .then(res => unsubscribe = res)
                 // Hide modal
-                .then(() => showModal(null))
+                .then(() => showModal(undefined))
             }
 
             return () => unsubscribe && unsubscribe()

@@ -72,7 +72,7 @@ const PoolData = ({
                     {/* TOTAL GENERATED MGN */}
                     {DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN > 0 && <p><span className="data-title">TOTAL GENERATED MGN:</span> {DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN}</p>}
                     {/* CURRENT YOUR CURRENT GENERATED MGN */}
-                    {(DX_MGN_POOL.POOL1.CURRENT_GENERATED_MGN > 0 || DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN > 0) && <p><span className="data-title">YOUR CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL1.USER_GENERATED_MGN}</p>}
+                    {/* {(DX_MGN_POOL.POOL1.CURRENT_GENERATED_MGN > 0 || DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN > 0) && <p><span className="data-title">YOUR CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL1.USER_GENERATED_MGN}</p>} */}
                     {/* Only show if POOLING or in another state but with non-zero claimables */}
                     {showDataForState(DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_MGN, POOL1STATE, POOL_STATES.MGN_UNLOCKED) 
                         && <p><span className="data-title">TOTAL CLAIMABLE MGN:</span> {DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_MGN}</p>}
@@ -84,7 +84,7 @@ const PoolData = ({
                     {/* TOKEN WALLET BALANCE */}
                     <p><span className="data-title">[<strong>{DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL}</strong>] WALLET BALANCE:</span> {DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL === 'WETH' || DX_MGN_POOL.POOL1.DEPOSIT_SYMBOL === 'ETH' ? ((+DX_MGN_POOL.POOL1.TOKEN_BALANCE) + (+BALANCE)).toFixed(FIXED_DECIMAL_AMOUNT) : DX_MGN_POOL.POOL1.TOKEN_BALANCE}</p>
                     
-                    {checkPoolStateForEdgeCase(POOL1STATE, BLOCK_TIMESTAMP, DX_MGN_POOL.POOL1.POOLING_PERIOD_END) === POOL_STATES.POOLING 
+                    {/* checkPoolStateForEdgeCase(POOL1STATE, BLOCK_TIMESTAMP, DX_MGN_POOL.POOL1.POOLING_PERIOD_END) === POOL_STATES.POOLING 
                         && 
                         <>
                             <hr />
@@ -101,7 +101,7 @@ const PoolData = ({
                                 {...DX_MGN_POOL}
                             />
                         </>
-                    }
+                     */}
                     <Countdown POOLING_PERIOD_END={DX_MGN_POOL.POOL1.UNLOCK_PERIOD} />
                     {
                         // Non zero, claimable values?
@@ -152,7 +152,7 @@ const PoolData = ({
                     {/* TOTAL GENERATED MGN */}
                     {DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN > 0 && <p><span className="data-title">TOTAL GENERATED MGN:</span> {DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN}</p>}
                     {/* CURRENT USER GENERATED MGN */}
-                    {(DX_MGN_POOL.POOL2.CURRENT_GENERATED_MGN > 0 || DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN > 0) && <p><span className="data-title">YOUR CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL2.USER_GENERATED_MGN}</p>}
+                    {/* {(DX_MGN_POOL.POOL2.CURRENT_GENERATED_MGN > 0 || DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN > 0) && <p><span className="data-title">YOUR CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL2.USER_GENERATED_MGN}</p>} */}
                     {/* Only show if POOLING or in another state but with non-zero claimables */}
                     {showDataForState(DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_MGN, POOL2STATE, POOL_STATES.MGN_UNLOCKED) 
                         && <p><span className="data-title">TOTAL CLAIMABLE MGN:</span> {DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_MGN}</p>}
@@ -164,7 +164,7 @@ const PoolData = ({
                     {/* TOKEN BALANCE */}
                     <p><span className="data-title">[<strong>{DX_MGN_POOL.POOL1.SECONDARY_SYMBOL}</strong>] WALLET BALANCE:</span> {DX_MGN_POOL.POOL1.SECONDARY_SYMBOL === 'WETH' ? ((+DX_MGN_POOL.POOL2.TOKEN_BALANCE) + (+BALANCE)).toFixed(FIXED_DECIMAL_AMOUNT) : DX_MGN_POOL.POOL2.TOKEN_BALANCE}</p>
 
-                    {checkPoolStateForEdgeCase(POOL1STATE, BLOCK_TIMESTAMP, DX_MGN_POOL.POOL1.POOLING_PERIOD_END) === POOL_STATES.POOLING 
+                    {/* checkPoolStateForEdgeCase(POOL1STATE, BLOCK_TIMESTAMP, DX_MGN_POOL.POOL1.POOLING_PERIOD_END) === POOL_STATES.POOLING 
                         && 
                         <>
                             <hr />
@@ -180,7 +180,7 @@ const PoolData = ({
                                 useGlobalAppBlocker={setAppBusy}
                                 {...DX_MGN_POOL}
                             />
-                        </>}
+                        </> */}
                     <Countdown POOLING_PERIOD_END={DX_MGN_POOL.POOL2.UNLOCK_PERIOD} />
                     {
                         // Non zero, claimable values?
