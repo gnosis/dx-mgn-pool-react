@@ -64,9 +64,9 @@ export const getAccountAndTimestamp = async () => {
   }
 }
 
-export const fillDefaultAccount = account => (!account ? getCurrentAccount() : account)
+export const fillDefaultAccount = async account => (!account ? getCurrentAccount() : account)
 
-export const fillNetworkId = netId => (!netId ? getCurrentNetworkId() : netId)
+export const fillNetworkId = async netId => (!netId ? getCurrentNetworkId() : netId)
 
 // ============
 // DX MGN POOL

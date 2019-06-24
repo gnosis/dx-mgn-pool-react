@@ -204,7 +204,7 @@ async function init() {
    * @description - Withdraws all of users MGN from Pool 2
    * @param { string } userAccount 
    */
-  const withdrawDepositAndMagnoliaPool2 = async (userAccount, tx) => dxMP2.withdrawDepositandMagnolia({ from: userAccount, gas: GAS_LIMIT, ...tx })
+  const withdrawDepositAndMagnoliaPool2 = async (userAccount, tx) => dxMP2.withdrawDepositandMagnolia({ from: userAccount.toUpperCase(), gas: GAS_LIMIT, ...tx })
   withdrawDepositAndMagnoliaPool2.call = async (userAccount, tx) => dxMP2.withdrawDepositandMagnolia.call({ from: userAccount, gas: GAS_LIMIT, ...tx })
 
   /**
@@ -242,8 +242,8 @@ async function init() {
   withdrawDepositPool2,
   withdrawMagnoliaPool1,
   withdrawMagnoliaPool2,
-  withdrawDepositAndMagnoliaPool1,
-  withdrawDepositAndMagnoliaPool2,
+  // withdrawDepositAndMagnoliaPool1,
+  // withdrawDepositAndMagnoliaPool2,
  })
 
   return {
@@ -271,6 +271,8 @@ async function init() {
     calculateClaimableMgnAndDeposits2,
     getParticipationStatus1,
     getParticipationStatus2,
+    withdrawDepositAndMagnoliaPool1,
+    withdrawDepositAndMagnoliaPool2,
     ...estimatedFuncs,
     // event,
     // allEvents,
