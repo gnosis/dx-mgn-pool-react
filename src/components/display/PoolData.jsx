@@ -5,14 +5,14 @@ import DataDisplayVisualContainer from './DataDisplay'
 import InfoShower from './InfoShower'
 import Countdown from './Countdown'
 import { withAsyncActions } from '../hoc'
-import { TextInput } from '../controls/ControlledInput'
+// import { TextInput } from '../controls/ControlledInput'
 
 import { checkLoadingOrNonZero, poolTimeFormat } from '../../api/utils'
 
 import { POOL_STATES, POOL_STATES_READABLE, POOL_STATES_READABLE_LONG, DATA_LOAD_STRING, FIXED_DECIMAL_AMOUNT } from '../../globals'
 
 // Deposit Token BUTTON
-const DepositToken = withAsyncActions(TextInput)
+// const DepositToken = withAsyncActions(TextInput)
 // WithdrawMGNandDepositsFromBothPools BUTTON
 const WithdrawMGNandDepositsFromBothPools = withAsyncActions()
 
@@ -24,7 +24,7 @@ const PoolData = ({
     POOL_STATES: { POOL1STATE, POOL2STATE },
     // dispatch
     setAppBusy,
-    setDepositAmount,
+    // setDepositAmount,
     withdrawDepositAndMGN,
     // misc
     hasClaimables1,
@@ -72,7 +72,12 @@ const PoolData = ({
                     {/* TOTAL GENERATED MGN */}
                     {DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN > 0 && <p><span className="data-title">TOTAL GENERATED MGN:</span> {DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN}</p>}
                     {/* CURRENT YOUR CURRENT GENERATED MGN */}
-                    {/* {(DX_MGN_POOL.POOL1.CURRENT_GENERATED_MGN > 0 || DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN > 0) && <p><span className="data-title">YOUR CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL1.USER_GENERATED_MGN}</p>} */}
+                    {/* 
+                        {
+                            (DX_MGN_POOL.POOL1.CURRENT_GENERATED_MGN > 0 || DX_MGN_POOL.POOL1.TOTAL_GENERATED_MGN > 0) && 
+                                <p><span className="data-title">YOUR CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL1.USER_GENERATED_MGN}</p>
+                        } 
+                    */}
                     {/* Only show if POOLING or in another state but with non-zero claimables */}
                     {showDataForState(DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_MGN, POOL1STATE, POOL_STATES.MGN_UNLOCKED) 
                         && <p><span className="data-title">TOTAL CLAIMABLE MGN:</span> {DX_MGN_POOL.POOL1.TOTAL_CLAIMABLE_MGN}</p>}
@@ -152,7 +157,12 @@ const PoolData = ({
                     {/* TOTAL GENERATED MGN */}
                     {DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN > 0 && <p><span className="data-title">TOTAL GENERATED MGN:</span> {DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN}</p>}
                     {/* CURRENT USER GENERATED MGN */}
-                    {/* {(DX_MGN_POOL.POOL2.CURRENT_GENERATED_MGN > 0 || DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN > 0) && <p><span className="data-title">YOUR CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL2.USER_GENERATED_MGN}</p>} */}
+                    {/* 
+                        {
+                            (DX_MGN_POOL.POOL2.CURRENT_GENERATED_MGN > 0 || DX_MGN_POOL.POOL2.TOTAL_GENERATED_MGN > 0) && 
+                                <p><span className="data-title">YOUR CURRENT GENERATED MGN:</span> {DX_MGN_POOL.POOL2.USER_GENERATED_MGN}</p>
+                        } 
+                    */}
                     {/* Only show if POOLING or in another state but with non-zero claimables */}
                     {showDataForState(DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_MGN, POOL2STATE, POOL_STATES.MGN_UNLOCKED) 
                         && <p><span className="data-title">TOTAL CLAIMABLE MGN:</span> {DX_MGN_POOL.POOL2.TOTAL_CLAIMABLE_MGN}</p>}
