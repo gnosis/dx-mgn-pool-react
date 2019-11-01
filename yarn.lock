@@ -851,10 +851,10 @@
     ethereumjs-abi "^0.6.5"
     openzeppelin-solidity "2.1.1"
 
-"@gnosis.pm/dutchx-verification-react@^0.0.1-RC3":
-  version "0.0.1-RC3"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/dutchx-verification-react/-/dutchx-verification-react-0.0.1-RC3.tgz#87f8e2320d554c01d0809bc5e65a6ded23e2a03c"
-  integrity sha512-4+gD4YDb3KrpOA1hGpOvcMh2X0+VffN9xiwjxSjKu0a+tXm2T1Z9HSOTYnJ9kETsiEm7vTdS4DONZvEnxyOf8Q==
+"@gnosis.pm/dutchx-verification-react@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/dutchx-verification-react/-/dutchx-verification-react-0.2.0.tgz#0388b0338096df45cd7f2172ecfb0504f9c3dbe2"
+  integrity sha512-L9+igCp17gVQqhVS+xep0b00HCcbXnem5sOhSkbjhH94/3jjKCmI5ObgWPMVidg5WgRv/johXzyMZPaFy8qKMw==
   dependencies:
     localforage "^1.7.1"
 
@@ -867,16 +867,16 @@
     "@gnosis.pm/owl-token" "^2.0.0"
     "@gnosis.pm/util-contracts" "^2.0.0"
 
-"@gnosis.pm/dx-mgn-pool@0.2.7":
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/dx-mgn-pool/-/dx-mgn-pool-0.2.7.tgz#37d9adc2b577499faab0c4d4ef4f1232043c3976"
-  integrity sha512-mE6X5D7Codfl/b+VH8TYSp6J4orlimn7MU9gOODcb0M3NmJy70roRExBDN4X7dQmkgMI+UywNbw6JMeErc6LSQ==
+"@gnosis.pm/dx-mgn-pool@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/dx-mgn-pool/-/dx-mgn-pool-0.3.0.tgz#f3018aac53e5c834f2043776f2432c8dd73a392b"
+  integrity sha512-oVMGJAvAq4XFuHl4GQTV7pJO1G+MUxx9EUNt8K9VN+J8Ww4QT94M+o3TUkIVShVxdSL/QwA5xYb4v5wU7szckg==
   dependencies:
     "@daostack/arc" "0.0.1-rc.8"
     "@gnosis.pm/dx-contracts" "2.0.0"
     "@gnosis.pm/gno-token" "2.0.0"
     "@gnosis.pm/mock-contract" "^3.0.7"
-    "@gnosis.pm/util-contracts" "2.0.0"
+    "@gnosis.pm/util-contracts" "^2.0.1"
     chai "^4.2.0"
     got "^9.6.0"
     i "^0.3.6"
@@ -911,6 +911,11 @@
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@gnosis.pm/util-contracts/-/util-contracts-2.0.0.tgz#562b14a2d6cb4a59189476dd0f6aaeba5f65abe2"
   integrity sha512-vRgTV36d4ZFdcetKcNbnAtSDrP3OSWEj8YmG3RHK4DBMulPX2asRh8VnopTrZnZQ8enZIDbT1pT7buW+UJqd4g==
+
+"@gnosis.pm/util-contracts@^2.0.1":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/util-contracts/-/util-contracts-2.0.4.tgz#fe16753f13f1a7382d9005b7ce18f4dd8b6a0177"
+  integrity sha512-v+gpWDW0hZ9nZ2FgDI5cfkpXZIsVXP51SXzVLdres6GrERcYx+WJsz2RqIQ1nyehKTyS+el1TTkhIKdbBAFtDg==
 
 "@sailshq/lodash@^3.10.2":
   version "3.10.3"
@@ -4079,14 +4084,16 @@ eslint-scope@^4.0.0, eslint-scope@^4.0.3:
     estraverse "^4.1.1"
 
 eslint-utils@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/eslint-utils/-/eslint-utils-1.3.1.tgz#9a851ba89ee7c460346f97cf8939c7298827e512"
-  integrity sha512-Z7YjnIldX+2XMcjr7ZkgEsOj/bREONV60qYeB/bjMAqqqZ4zxKyWX+BOUkdmRmA9riiIPVvo5x86m5elviOk0Q==
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/eslint-utils/-/eslint-utils-1.4.3.tgz#74fec7c54d0776b6f67e0251040b5806564e981f"
+  integrity sha512-fbBN5W2xdY45KulGXmLHZ3c3FHfVYmKg0IrAKGOkT/464PQsx2UeIzfz1RmEci+KLm1bBaAzZAh8+/E+XAeZ8Q==
+  dependencies:
+    eslint-visitor-keys "^1.1.0"
 
-eslint-visitor-keys@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz#3f3180fb2e291017716acb4c9d6d5b5c34a6a81d"
-  integrity sha512-qzm/XxIbxm/FHyH341ZrbnMUpe+5Bocte9xkmFMzPMjRaZMcXww+MpBptFvtU+79L362nqiLhekCxCxDPaUMBQ==
+eslint-visitor-keys@^1.0.0, eslint-visitor-keys@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-1.1.0.tgz#e2a82cea84ff246ad6fb57f9bde5b46621459ec2"
+  integrity sha512-8y9YjtM1JBJU/A9Kc+SbaOV4y29sSWckBwMHa+FGtVj5gN/sbnKDf6xJUl+8g7FAij9LVaP8C24DUiH/f/2Z9A==
 
 eslint@^4.19.1:
   version "4.19.1"
@@ -11063,7 +11070,7 @@ web3-eth@1.0.0-beta.37:
     web3-net "1.0.0-beta.37"
     web3-utils "1.0.0-beta.37"
 
-web3-eth@1.0.0-beta.53, web3-eth@^1.0.0-beta.37:
+web3-eth@1.0.0-beta.53:
   version "1.0.0-beta.53"
   resolved "https://registry.yarnpkg.com/web3-eth/-/web3-eth-1.0.0-beta.53.tgz#73bcf16a8bb8f66f489f0a883600ff1847ab4b6d"
   integrity sha512-HWU3Js2GT3c3H0xzckW97edFbSX0+hsYDRxco0G5vkd+ROjU2ZAAAWLZFCVABSShslycmBOp3tSQD6oXlgpFPA==
@@ -11209,7 +11216,7 @@ web3-utils@1.0.0-beta.37:
     underscore "1.8.3"
     utf8 "2.1.1"
 
-web3-utils@1.0.0-beta.53, web3-utils@^1.0.0-beta.37:
+web3-utils@1.0.0-beta.53:
   version "1.0.0-beta.53"
   resolved "https://registry.yarnpkg.com/web3-utils/-/web3-utils-1.0.0-beta.53.tgz#8163904ca897f5801efd96138916b155e21e3bf5"
   integrity sha512-gyT3bFoNCMP9NwP6V1VSMnkm923GiZoRrKyQgeHiS9XphjtgDRbOi3UeV2yoFmphshS13NSsuMXiwPSzcBL1Zg==
